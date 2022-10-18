@@ -1,0 +1,27 @@
+mutation CreateListing(
+  $name: String!
+  $category: String!
+  $description: String!
+  $price: Int!
+  $beds: Int!
+  $guests: Int!
+  $latitude: Float!
+  $longitude: Float!
+  $amenities: [String!]!
+  $img: File
+) {
+  createListing(
+    input: {
+      name: $name
+      category: $category
+      description: $description
+      price: $price
+      beds: $beds
+      guests: $guests
+      latitude: $latitude
+      longitude: $longitude
+      amenities: $amenities
+      img: $img
+    }
+  )
+}

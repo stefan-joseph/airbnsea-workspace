@@ -1,0 +1,11 @@
+query ViewMessages($listingId: String!) {
+  messages(listingId: $listingId) {
+    text
+    listingId
+    userId
+    user {
+      email
+      name
+    }
+  }
+}

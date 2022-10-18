@@ -1,0 +1,16 @@
+query viewListing($id: String!) {
+  viewListing(id: $id) {
+    id
+    name
+    category
+    price
+    description
+    guests
+    beds
+    imgUrl
+    owner {
+      email
+      name
+    }
+  }
+}

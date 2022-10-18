@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "airbnb-clone",
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "build:server": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/server}",
+    "build:web": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/controller,@airbnb-clone/web}"
+  },
+  "devDependencies": {
+    "lerna": "^5.5.4",
+    "nx": "^14.8.2"
+  }
+}

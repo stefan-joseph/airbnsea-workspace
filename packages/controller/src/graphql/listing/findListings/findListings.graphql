@@ -1,0 +1,10 @@
+query findListings {
+  findListings {
+    id
+    name
+    imgUrl
+    owner {
+      email
+    }
+  }
+}

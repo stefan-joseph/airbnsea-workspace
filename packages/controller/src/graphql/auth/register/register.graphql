@@ -1,0 +1,6 @@
+mutation RegisterUser($email: String!, $password: String!) {
+  register(email: $email, password: $password) {
+    path
+    message
+  }
+}
