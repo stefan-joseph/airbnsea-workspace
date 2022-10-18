@@ -293,32 +293,32 @@ export declare type ViewMessagesQuery = {
         } | null;
     }> | null;
 };
-export declare const SendForgotPasswordEmailDocument: Apollo.DocumentNode;
+export declare const SendForgotPasswordEmailDocument: import("graphql").DocumentNode;
 export declare type SendForgotPasswordEmailMutationFn = Apollo.MutationFunction<SendForgotPasswordEmailMutation, SendForgotPasswordEmailMutationVariables>;
 export declare function useSendForgotPasswordEmailMutation(baseOptions?: Apollo.MutationHookOptions<SendForgotPasswordEmailMutation, SendForgotPasswordEmailMutationVariables>): Apollo.MutationTuple<SendForgotPasswordEmailMutation, Exact<{
     email: string;
-}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+}>, DefaultContext, ApolloCache<any>>;
 export declare type SendForgotPasswordEmailMutationHookResult = ReturnType<typeof useSendForgotPasswordEmailMutation>;
 export declare type SendForgotPasswordEmailMutationResult = Apollo.MutationResult<SendForgotPasswordEmailMutation>;
 export declare type SendForgotPasswordEmailMutationOptions = Apollo.BaseMutationOptions<SendForgotPasswordEmailMutation, SendForgotPasswordEmailMutationVariables>;
-export declare const LoginUserDocument: Apollo.DocumentNode;
+export declare const LoginUserDocument: import("graphql").DocumentNode;
 export declare type LoginUserMutationFn = Apollo.MutationFunction<LoginUserMutation, LoginUserMutationVariables>;
 export declare function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<LoginUserMutation, LoginUserMutationVariables>): Apollo.MutationTuple<LoginUserMutation, Exact<{
     email: string;
     password: string;
-}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+}>, DefaultContext, ApolloCache<any>>;
 export declare type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
 export declare type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
 export declare type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
-export declare const LogoutUserDocument: Apollo.DocumentNode;
+export declare const LogoutUserDocument: import("graphql").DocumentNode;
 export declare type LogoutUserMutationFn = Apollo.MutationFunction<LogoutUserMutation, LogoutUserMutationVariables>;
 export declare function useLogoutUserMutation(baseOptions?: Apollo.MutationHookOptions<LogoutUserMutation, LogoutUserMutationVariables>): Apollo.MutationTuple<LogoutUserMutation, Exact<{
     [key: string]: never;
-}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+}>, DefaultContext, ApolloCache<any>>;
 export declare type LogoutUserMutationHookResult = ReturnType<typeof useLogoutUserMutation>;
 export declare type LogoutUserMutationResult = Apollo.MutationResult<LogoutUserMutation>;
 export declare type LogoutUserMutationOptions = Apollo.BaseMutationOptions<LogoutUserMutation, LogoutUserMutationVariables>;
-export declare const MeDocument: Apollo.DocumentNode;
+export declare const MeDocument: import("graphql").DocumentNode;
 export declare function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>): Apollo.QueryResult<MeQuery, Exact<{
     [key: string]: never;
 }>>;
@@ -328,25 +328,25 @@ export declare function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export declare type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export declare type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export declare type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export declare const RegisterUserDocument: Apollo.DocumentNode;
+export declare const RegisterUserDocument: import("graphql").DocumentNode;
 export declare type RegisterUserMutationFn = Apollo.MutationFunction<RegisterUserMutation, RegisterUserMutationVariables>;
 export declare function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserMutation, RegisterUserMutationVariables>): Apollo.MutationTuple<RegisterUserMutation, Exact<{
     email: string;
     password: string;
-}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+}>, DefaultContext, ApolloCache<any>>;
 export declare type RegisterUserMutationHookResult = ReturnType<typeof useRegisterUserMutation>;
 export declare type RegisterUserMutationResult = Apollo.MutationResult<RegisterUserMutation>;
 export declare type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUserMutation, RegisterUserMutationVariables>;
-export declare const ResetPasswordDocument: Apollo.DocumentNode;
+export declare const ResetPasswordDocument: import("graphql").DocumentNode;
 export declare type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
 export declare function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>): Apollo.MutationTuple<ResetPasswordMutation, Exact<{
     newPassword: string;
     key: string;
-}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+}>, DefaultContext, ApolloCache<any>>;
 export declare type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
 export declare type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
 export declare type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
-export declare const CreateListingDocument: Apollo.DocumentNode;
+export declare const CreateListingDocument: import("graphql").DocumentNode;
 export declare type CreateListingMutationFn = Apollo.MutationFunction<CreateListingMutation, CreateListingMutationVariables>;
 export declare function useCreateListingMutation(baseOptions?: Apollo.MutationHookOptions<CreateListingMutation, CreateListingMutationVariables>): Apollo.MutationTuple<CreateListingMutation, Exact<{
     name: string;
@@ -359,11 +359,11 @@ export declare function useCreateListingMutation(baseOptions?: Apollo.MutationHo
     longitude: number;
     amenities: string | string[];
     img?: any;
-}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+}>, DefaultContext, ApolloCache<any>>;
 export declare type CreateListingMutationHookResult = ReturnType<typeof useCreateListingMutation>;
 export declare type CreateListingMutationResult = Apollo.MutationResult<CreateListingMutation>;
 export declare type CreateListingMutationOptions = Apollo.BaseMutationOptions<CreateListingMutation, CreateListingMutationVariables>;
-export declare const FindListingsDocument: Apollo.DocumentNode;
+export declare const FindListingsDocument: import("graphql").DocumentNode;
 export declare function useFindListingsQuery(baseOptions?: Apollo.QueryHookOptions<FindListingsQuery, FindListingsQueryVariables>): Apollo.QueryResult<FindListingsQuery, Exact<{
     [key: string]: never;
 }>>;
@@ -373,7 +373,7 @@ export declare function useFindListingsLazyQuery(baseOptions?: Apollo.LazyQueryH
 export declare type FindListingsQueryHookResult = ReturnType<typeof useFindListingsQuery>;
 export declare type FindListingsLazyQueryHookResult = ReturnType<typeof useFindListingsLazyQuery>;
 export declare type FindListingsQueryResult = Apollo.QueryResult<FindListingsQuery, FindListingsQueryVariables>;
-export declare const ViewListingDocument: Apollo.DocumentNode;
+export declare const ViewListingDocument: import("graphql").DocumentNode;
 export declare function useViewListingQuery(baseOptions: Apollo.QueryHookOptions<ViewListingQuery, ViewListingQueryVariables>): Apollo.QueryResult<ViewListingQuery, Exact<{
     id: string;
 }>>;
@@ -383,19 +383,19 @@ export declare function useViewListingLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export declare type ViewListingQueryHookResult = ReturnType<typeof useViewListingQuery>;
 export declare type ViewListingLazyQueryHookResult = ReturnType<typeof useViewListingLazyQuery>;
 export declare type ViewListingQueryResult = Apollo.QueryResult<ViewListingQuery, ViewListingQueryVariables>;
-export declare const CreateMessageDocument: Apollo.DocumentNode;
+export declare const CreateMessageDocument: import("graphql").DocumentNode;
 export declare type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
 export declare function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>): Apollo.MutationTuple<CreateMessageMutation, Exact<{
     message: MessageInput;
-}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+}>, DefaultContext, ApolloCache<any>>;
 export declare type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
 export declare type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
 export declare type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
-export declare const NewMessageSubscriptionDocument: Apollo.DocumentNode;
+export declare const NewMessageSubscriptionDocument: import("graphql").DocumentNode;
 export declare function useNewMessageSubscriptionSubscription(baseOptions: Apollo.SubscriptionHookOptions<NewMessageSubscriptionSubscription, NewMessageSubscriptionSubscriptionVariables>): Apollo.SubscriptionResult<NewMessageSubscriptionSubscription, any>;
 export declare type NewMessageSubscriptionSubscriptionHookResult = ReturnType<typeof useNewMessageSubscriptionSubscription>;
 export declare type NewMessageSubscriptionSubscriptionResult = Apollo.SubscriptionResult<NewMessageSubscriptionSubscription>;
-export declare const ViewMessagesDocument: Apollo.DocumentNode;
+export declare const ViewMessagesDocument: import("graphql").DocumentNode;
 export declare function useViewMessagesQuery(baseOptions: Apollo.QueryHookOptions<ViewMessagesQuery, ViewMessagesQueryVariables>): Apollo.QueryResult<ViewMessagesQuery, Exact<{
     listingId: string;
 }>>;

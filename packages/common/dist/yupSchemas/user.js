@@ -25,14 +25,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetPasswordSchema = exports.forgotPasswordSchema = exports.loginSchema = exports.validUserSchema = exports.registerPasswordValidation = exports.passwordNotLongEnough = exports.invalidEmail = exports.emailNotLongEnough = void 0;
 const yup = __importStar(require("yup"));
-exports.emailNotLongEnough = "email must be at least 3 characters";
-exports.invalidEmail = "email must be a valid email";
-exports.passwordNotLongEnough = "password must be at least 6 characters";
+exports.emailNotLongEnough = "Email must be at least 3 characters";
+exports.invalidEmail = "Email must be a valid email";
+exports.passwordNotLongEnough = "Password must be at least 6 characters";
 exports.registerPasswordValidation = yup
     .string()
-    .required()
-    .min(6, exports.passwordNotLongEnough)
-    .max(255);
+    .required("Required")
+    .min(6, "Must be at least 6 characters")
+    .max(255, "Must not exceed 255 characters");
 exports.validUserSchema = yup.object().shape({
     email: yup
         .string()

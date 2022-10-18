@@ -1,7 +1,7 @@
 import * as yup from "yup";
-export declare const emailNotLongEnough = "email must be at least 3 characters";
-export declare const invalidEmail = "email must be a valid email";
-export declare const passwordNotLongEnough = "password must be at least 6 characters";
+export declare const emailNotLongEnough = "Email must be at least 3 characters";
+export declare const invalidEmail = "Email must be a valid email";
+export declare const passwordNotLongEnough = "Password must be at least 6 characters";
 export declare const registerPasswordValidation: import("yup/lib/string").RequiredStringSchema<string | undefined, import("yup/lib/types").AnyObject>;
 export declare const validUserSchema: yup.ObjectSchema<import("yup/lib/object").Assign<import("yup/lib/object").ObjectShape, {
     email: import("yup/lib/string").RequiredStringSchema<string | undefined, import("yup/lib/types").AnyObject>;
