@@ -1,59 +1,67 @@
 import "dotenv/config";
 import { createServer } from "@graphql-yoga/node";
 import { RedisPubSub } from "graphql-redis-subscriptions";
-import { createTypeormConnection } from "./utils/createTypeormConnection";
-import { redis } from "./redis";
-// import { confirmEmail } from "./routes/confirmEmail";
-import { redisSessionPrefix } from "./utils/constants";
+// import { runSeeders } from "typeorm-extension";
 // import rateLimit from "express-rate-limit";
 // import RateLimitRedisStore from "rate-limit-redis";
 // import passport = require("passport");
 // import { Strategy } from "passport-facebook";
-// import { User } from "./entity/User";
+import cloudinary = require("cloudinary");
 import express = require("express");
-import { generateModularSchema } from "./utils/generateModularSchema";
 import { applyMiddleware } from "graphql-middleware";
-import { middleware } from "./middleware";
-import { userLoader } from "./loaders/userLoader";
-// import { WebSocketServer } from "ws";
-// const cors = require("cors");
-const expressSession = require("express-session");
+const cors = require("cors");
+import expressSession = require("express-session");
 const RedisStore = require("connect-redis")(expressSession);
-// import { createPubSub } from "@graphql-yoga/common";
-// import { createRedisEventTarget } from "@graphql-yoga/redis-event-target";
 
-const SESSION_SECRET = "mdsnkjavnasdjv";
+import { confirmEmail } from "./routes/confirmEmail";
+import { redisSessionPrefix } from "./utils/constants";
+import { redis } from "./redis";
+import { generateModularSchema } from "./utils/generateModularSchema";
+import { middleware } from "./middleware/middleware";
+import { userLoader } from "./loaders/userLoader";
+import { getTypeormConnection } from "./utils/getTypeormConnection";
 
 export const startServer = async () => {
-  const session = expressSession({
-    store: new RedisStore({ client: redis, prefix: redisSessionPrefix }),
-    name: "qid",
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    },
-  });
+  const app = express();
+
+  app.use(
+    expressSession({
+      store: new RedisStore({ client: redis, prefix: redisSessionPrefix }),
+      name: "qid",
+      secret: process.env.SESSION_SECRET as string,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      },
+    })
+  );
 
   const schema = generateModularSchema();
   const schemaWithMiddleware = applyMiddleware(schema, middleware);
 
-  const pubSub = new RedisPubSub();
+  const pubSub = new RedisPubSub(
+    process.env.NODE_ENV === "development"
+      ? {}
+      : { connection: process.env.REDIS_URL as string }
+  );
 
-  // const publishClient = redis;
-  // const subscribeClient = redis;
-
-  // const eventTarget = createRedisEventTarget({
-  //   publishClient,
-  //   subscribeClient,
+  await getTypeormConnection().initialize();
+  // .then(async () => {
+  //   await getTypeormConnection().synchronize(true);
+  //   await runSeeders(getTypeormConnection());
   // });
 
-  // const pubSub = createPubSub({ eventTarget });
+  // clear cache
+  // await redis.del(listingCacheKey);
 
-  await createTypeormConnection();
+  // fill cache
+  // const listings = await Listing.find();
+  // const listingStrings = listings.map((listing) => JSON.stringify(listing));
+  // await redis.lpush(listingCacheKey, ...listingStrings);
 
   const yoga = createServer({
     schema: schemaWithMiddleware,
@@ -62,27 +70,21 @@ export const startServer = async () => {
       url: request.url,
       userLoader: userLoader(),
       pubSub,
-      session,
     }),
-    // graphiql: {
-    //   subscriptionsProtocol: "WS",
-    // },
   });
-  // app.use("/graphql", yoga);
-  await yoga.start();
+  app.use("/graphql", yoga);
 
-  // const wsServer = new WebSocketServer({
-  //   server: yogaServer,
-  //   path: yoga.getAddressInfo().endpoint,
-  // });
-
-  // console.log(wsServer);
-
-  // const corsOptions = {
-  //   credentials: true,
-  //   origin: process.env.NODE_ENV === "test" ? "*" : process.env.FRONTEND_HOST,
-  // };
-  // app.use(cors(corsOptions));
+  const corsOptions = {
+    credentials: true,
+    // origin:
+    //   process.env.NODE_ENV === "test"
+    //     ? "*"
+    //     : process.env.NODE_ENV === "development"
+    //     ? process.env.FRONTEND_HOST_DEV
+    //     : process.env.FRONTEND_HOST_PROD,
+    origin: "*",
+  };
+  app.use(cors(corsOptions));
 
   // const limiter = rateLimit({
   //   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -94,7 +96,6 @@ export const startServer = async () => {
   //     sendCommand: (...args: string[]) => redis.call(...args),
   //   }),
   // });
-
   // app.use(limiter);
 
   // passport.use(
@@ -156,11 +157,21 @@ export const startServer = async () => {
   //     res.redirect("/graphql");
   //   }
   // );
-  const app = express();
+
+  cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+
+  app.set("trust proxy", 1);
   app.use("/images", express.static("images"));
 
-  // app.get("/confirm-email/:id", confirmEmail);
+  app.get("/confirm-email/:id", confirmEmail);
+  app.get("/", (_, res) => res.send("hello2"));
 
-  // const port = process.env.PORT || 4000;
-  await app.listen(4001);
+  const port = process.env.PORT || 8080;
+  console.log(`running app on port ${port}`);
+
+  await app.listen(port);
 };

@@ -21,7 +21,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const bcryptjs_1 = require("bcryptjs");
 const typeorm_1 = require("typeorm");
+const Booking_1 = require("./Booking");
 const Listing_1 = require("./Listing");
+const Draft_1 = require("./Draft");
 let User = class User extends typeorm_1.BaseEntity {
     hashPasswordBeforeInsert() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -36,13 +38,27 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { length: 255, nullable: true }),
-    __metadata("design:type", Object)
+    (0, typeorm_1.Column)("varchar", {
+        length: 255,
+    }),
+    __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)("text", { nullable: true }),
     __metadata("design:type", Object)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar", { length: 50, nullable: true }),
+    __metadata("design:type", Object)
+], User.prototype, "firstName", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar", { length: 50, nullable: true }),
+    __metadata("design:type", Object)
+], User.prototype, "lastName", void 0);
+__decorate([
+    (0, typeorm_1.Column)("text", { nullable: true }),
+    __metadata("design:type", Object)
+], User.prototype, "avatar", void 0);
 __decorate([
     (0, typeorm_1.Column)("boolean", { default: false }),
     __metadata("design:type", Boolean)
@@ -59,6 +75,14 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Listing_1.Listing, (listing) => listing.user),
     __metadata("design:type", Array)
 ], User.prototype, "listings", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Draft_1.Draft, (draft) => draft.user),
+    __metadata("design:type", Array)
+], User.prototype, "drafts", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Booking_1.Booking, (booking) => booking.user),
+    __metadata("design:type", Array)
+], User.prototype, "bookings", void 0);
 __decorate([
     (0, typeorm_1.BeforeInsert)(),
     __metadata("design:type", Function),

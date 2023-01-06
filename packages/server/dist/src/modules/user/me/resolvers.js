@@ -8,25 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const User_1 = require("../../../entity/User");
-const createMiddleware_1 = require("../../../utils/createMiddleware");
-const middleware_1 = __importDefault(require("./middleware"));
 exports.resolvers = {
     Query: {
-        me: (0, createMiddleware_1.createMiddleware)(middleware_1.default, (_, __, { req }) => __awaiter(void 0, void 0, void 0, function* () {
-            let user = null;
-            if (req.session.userId) {
-                user = yield User_1.User.findOne({
-                    where: { id: req.session.userId },
-                });
-            }
-            return user;
-        })),
+        me: (_, __, { req }) => __awaiter(void 0, void 0, void 0, function* () {
+            return User_1.User.findOne({
+                where: { id: req.session.userId },
+            });
+        }),
     },
 };
 //# sourceMappingURL=resolvers.js.map

@@ -1,19 +1,32 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppDataSourceTEST = exports.AppDataSourceDEV = exports.AppDataSourcePROD = void 0;
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
-exports.AppDataSourcePROD = new typeorm_1.DataSource({
+const listing_factory_1 = require("./src/db/seeding/factories/listing.factory");
+const user_factory_1 = require("./src/db/seeding/factories/user.factory");
+const initialSeed_1 = __importDefault(require("./src/db/seeding/seeds/initialSeed"));
+const Booking_1 = require("./src/entity/Booking");
+const Draft_1 = require("./src/entity/Draft");
+const Listing_1 = require("./src/entity/Listing");
+const Message_1 = require("./src/entity/Message");
+const User_1 = require("./src/entity/User");
+const optionsPROD = {
     type: "postgres",
     url: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
     synchronize: true,
     logging: true,
-    entities: ["src/entity/**/*.ts"],
-    migrations: ["src/migration/**/*.ts"],
+    entities: [User_1.User, Listing_1.Listing, Draft_1.Draft, Message_1.Message, Booking_1.Booking],
+    migrations: [],
     subscribers: [],
-});
-exports.AppDataSourceDEV = new typeorm_1.DataSource({
+    factories: [user_factory_1.UserFactory, listing_factory_1.ListingFactory],
+    seeds: [initialSeed_1.default],
+};
+exports.AppDataSourcePROD = new typeorm_1.DataSource(optionsPROD);
+const optionsDEV = {
     name: "development",
     type: "postgres",
     host: "localhost",
@@ -23,11 +36,13 @@ exports.AppDataSourceDEV = new typeorm_1.DataSource({
     database: "airbnb-clone",
     synchronize: true,
     logging: true,
-    dropSchema: true,
-    entities: ["src/entity/**/*.ts"],
-    migrations: ["src/migration/**/*.ts"],
+    entities: [User_1.User, Listing_1.Listing, Draft_1.Draft, Message_1.Message, Booking_1.Booking],
+    migrations: [],
     subscribers: [],
-});
+    factories: [user_factory_1.UserFactory, listing_factory_1.ListingFactory],
+    seeds: [initialSeed_1.default],
+};
+exports.AppDataSourceDEV = new typeorm_1.DataSource(optionsDEV);
 exports.AppDataSourceTEST = new typeorm_1.DataSource({
     type: "postgres",
     host: "localhost",
@@ -38,8 +53,8 @@ exports.AppDataSourceTEST = new typeorm_1.DataSource({
     synchronize: true,
     logging: false,
     dropSchema: true,
-    entities: ["src/entity/**/*.ts"],
-    migrations: ["src/migration/**/*.ts"],
+    entities: [User_1.User, Listing_1.Listing, Draft_1.Draft, Message_1.Message, Booking_1.Booking],
+    migrations: [],
     subscribers: [],
 });
 //# sourceMappingURL=data-source.js.map

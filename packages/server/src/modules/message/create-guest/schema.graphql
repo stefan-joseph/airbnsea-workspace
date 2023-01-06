@@ -1,0 +1,3 @@
+type Mutation {
+  createGuestMessage(listingId: ID!, text: String!): Boolean!
+}

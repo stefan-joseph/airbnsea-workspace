@@ -1,16 +1,13 @@
 import { Link } from "react-router-dom";
-import { Button, Checkbox, Form, Input } from "antd";
-import { Field, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import { loginSchema } from "@airbnb-clone/common";
-import { InputField } from "../../../components/InputField";
-import {
-  UserOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  LockOutlined,
-} from "@ant-design/icons";
 import { LoginUserMutationVariables } from "@airbnb-clone/controller";
 import { NormalizedErrorMap } from "@airbnb-clone/controller/dist/types/NormalizedErrorMap";
+import { Box, Button, Skeleton, Stack, Typography } from "@mui/material";
+
+import { TextInput2 } from "../../../components/fields/TextInput2";
+import { HomeIcon } from "../../../components/HomeIcon";
+import { useGetRandomUserCredentailsLazyQuery } from "@airbnb-clone/controller";
 
 interface Props {
   submit: (
@@ -20,15 +17,26 @@ interface Props {
 }
 
 export const LoginView = ({ onFinish, submit }: Props) => {
+  const [getRandomUserCredentails, { data, loading }] =
+    useGetRandomUserCredentailsLazyQuery();
+
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
       }}
     >
+      <HomeIcon
+        sx={{
+          position: "absolute",
+          top: { xs: 16, md: 24 },
+          left: { xs: 16, md: 24 },
+          fontSize: { xs: 26, md: 30 },
+        }}
+      />
       <Formik
         initialValues={{
           email: "",
@@ -38,47 +46,83 @@ export const LoginView = ({ onFinish, submit }: Props) => {
         validateOnBlur={false}
         validateOnChange={false}
         onSubmit={async (values, { setErrors }) => {
+          console.log(values);
           const error = await submit(values);
           if (error) setErrors(error);
           else onFinish();
         }}
       >
-        {({ handleSubmit }) => (
-          <Form onFinish={handleSubmit}>
-            <Field
-              name="email"
-              placeholder="Email"
-              prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25" }} />}
-              component={InputField}
-            />
-            <Field
-              name="password"
-              inputType="password"
-              placeholder="Password"
-              prefix={<LockOutlined style={{ color: "rgba(0,0,0,.25" }} />}
-              component={InputField}
-              iconRender={(visible: boolean) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-            />
-            <Form.Item name="remember" valuePropName="checked">
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Login
+        {({ setSubmitting, setFieldValue, setErrors }) => (
+          <Form>
+            <Stack
+              sx={{
+                maxWidth: "35ch",
+              }}
+              spacing={2}
+            >
+              <Button
+                onClick={async () => {
+                  const { data, error } = await getRandomUserCredentails();
+
+                  console.log(data);
+                  console.log(error?.message);
+
+                  if (data?.getRandomUserCredentails) {
+                    setFieldValue(
+                      "email",
+                      data?.getRandomUserCredentails.email
+                    );
+                    setFieldValue(
+                      "password",
+                      data?.getRandomUserCredentails.password
+                    );
+                  } else if (error) {
+                    // make general error with useState instead of error for specific field ??
+                  }
+                }}
+              >
+                Test User
               </Button>
-            </Form.Item>
-            <Form.Item>
-              Not a member? <Link to="/">Register</Link>
-            </Form.Item>
-            <Form.Item>
-              Minds blanking? <Link to="/forgot-password">Forgot Password</Link>
-            </Form.Item>
-            <Link to="/create-listing">Create Listing</Link>
+              {loading ? (
+                <Skeleton variant="rounded" height={34} />
+              ) : (
+                <Field
+                  name="email"
+                  label="Email"
+                  size="small"
+                  component={TextInput2}
+                />
+              )}
+              {loading ? (
+                <Skeleton variant="rounded" height={34} />
+              ) : (
+                <Field
+                  name="password"
+                  type="password"
+                  label="Password"
+                  size="small"
+                  component={TextInput2}
+                />
+              )}
+              <Button type="submit" variant="contained" fullWidth>
+                Log in
+              </Button>
+              <Typography>
+                Not a member?{" "}
+                <Link to="/register">
+                  <Button type="button">Register</Button>
+                </Link>
+              </Typography>
+              <Typography>
+                Minds blanking?{" "}
+                <Link to="/forgot-password">
+                  <Button type="button">Forgot Password</Button>
+                </Link>
+              </Typography>
+            </Stack>
           </Form>
         )}
       </Formik>
-    </div>
+    </Box>
   );
 };

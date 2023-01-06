@@ -1,0 +1,3 @@
+mutation CreateBooking($listingId: ID!, $input: BookingInput!) {
+  createBooking(listingId: $listingId, input: $input)
+}

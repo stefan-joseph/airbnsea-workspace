@@ -2,14 +2,13 @@ import { LoginController } from "@airbnb-clone/controller";
 import { LoginView } from "./LoginView";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import Cookies from "js-cookie";
 
 export const LoginConnector = () => {
   const { state } = useLocation();
 
   const navigate = useNavigate();
   const onFinish = async () => {
-    if (state.redirect) {
+    if (state?.redirect) {
       navigate(state.redirect);
     } else navigate("/");
   };

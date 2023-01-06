@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ioredis_1 = __importDefault(require("ioredis"));
 const User_1 = require("../../../entity/User");
-const TestClient_1 = require("../../../testUtils/TestClient");
+const TestClient_1 = require("../../shared/test-utils/TestClient");
 const createForgotPasswordLink_1 = require("../../../utils/createForgotPasswordLink");
 const createTypeormConnection_1 = require("../../../utils/createTypeormConnection");
 const forgotPasswordLockAccount_1 = require("../../../utils/forgotPasswordLockAccount");

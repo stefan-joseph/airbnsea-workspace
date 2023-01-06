@@ -1,0 +1,8 @@
+type Query {
+  getRandomUserCredentails: RandomUser
+}
+
+type RandomUser {
+  email: String!
+  password: String!
+}

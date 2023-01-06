@@ -1,21 +1,17 @@
 import { ApolloClient, split, InMemoryCache } from "@apollo/client";
 import { createUploadLink } from "apollo-upload-client";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 
 import {
   ApolloLink,
   Operation,
   FetchResult,
   Observable,
-  gql,
 } from "@apollo/client/core";
-import { print, getOperationAST } from "graphql";
+import { print } from "graphql";
+import { getServerUrl } from "./utils/getServerURL";
 
-const uri =
-  (process.env.NODE_ENV === "development"
-    ? process.env.REACT_APP_SERVER_URL_DEV
-    : process.env.REACT_APP_SERVER_URL_PROD) + "/graphql";
+const uri = getServerUrl() + "/graphql";
 
 const httpLink = createUploadLink({
   uri,
@@ -74,6 +70,7 @@ const link = split(
     return kind === "OperationDefinition" && operation === "subscription";
   },
   sseLink,
+  // httpLink,
   httpLink
 );
 

@@ -1,9 +1,10 @@
-import { Button, Form } from "antd";
-import { Field, Formik } from "formik";
-import { InputField } from "../../../components/InputField";
-import { UserOutlined } from "@ant-design/icons";
+import { Field, Form, Formik } from "formik";
 import { forgotPasswordSchema } from "@airbnb-clone/common";
 import { SendForgotPasswordEmailMutationVariables } from "@airbnb-clone/controller";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { TextInput2 } from "../../../components/fields/TextInput2";
+import { Link } from "react-router-dom";
+import { HomeIcon } from "../../../components/HomeIcon";
 
 interface Props {
   submit: (values: SendForgotPasswordEmailMutationVariables) => Promise<null>;
@@ -12,14 +13,22 @@ interface Props {
 
 export const ForgotPasswordView = ({ submit, onFinish }: Props) => {
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
       }}
     >
+      <HomeIcon
+        sx={{
+          position: "absolute",
+          top: { xs: 16, md: 24 },
+          left: { xs: 16, md: 24 },
+          fontSize: { xs: 26, md: 30 },
+        }}
+      />
       <Formik
         initialValues={{
           email: "",
@@ -33,22 +42,33 @@ export const ForgotPasswordView = ({ submit, onFinish }: Props) => {
           else onFinish();
         }}
       >
-        {({ handleSubmit }) => (
-          <Form onFinish={handleSubmit}>
-            <Field
-              name="email"
-              placeholder="Email"
-              prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25" }} />}
-              component={InputField}
-            />
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
+        {() => (
+          <Form>
+            <Stack
+              sx={{
+                maxWidth: "35ch",
+              }}
+              spacing={2}
+            >
+              <Field
+                name="email"
+                label="Email"
+                size="small"
+                component={TextInput2}
+              />
+              <Button type="submit" variant="contained">
                 Reset Password
               </Button>
-            </Form.Item>
+              <Typography>
+                Remember something?{" "}
+                <Link to="/login">
+                  <Button>Login</Button>
+                </Link>
+              </Typography>
+            </Stack>
           </Form>
         )}
       </Formik>
-    </div>
+    </Box>
   );
 };

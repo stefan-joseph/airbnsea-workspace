@@ -1,3 +1,4 @@
+// import { runSeeders } from "typeorm-extension";
 import {
   AppDataSourceDEV,
   AppDataSourceTEST,
@@ -7,9 +8,15 @@ import {
 export const createTypeormConnection = async () => {
   if (process.env.NODE_ENV === "test") {
     return await AppDataSourceTEST.initialize();
-  } else if (process.env.NODE_ENV === "production") {
-    return await AppDataSourcePROD.initialize();
-  } else {
+  } else if (process.env.NODE_ENV === "development") {
+    console.log("NODE_ENV", process.env.NODE_ENV);
+
     return await AppDataSourceDEV.initialize();
+    // .then(async () => {
+    //   await AppDataSourceDEV.synchronize(true);
+    //   await runSeeders(AppDataSourceDEV);
+    // });
+  } else {
+    return await AppDataSourcePROD.initialize();
   }
 };

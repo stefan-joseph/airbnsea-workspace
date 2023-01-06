@@ -6,9 +6,9 @@ export const passwordNotLongEnough = "Password must be at least 6 characters";
 
 export const registerPasswordValidation = yup
   .string()
-  .required("Required")
-  .min(6, "Must be at least 6 characters")
-  .max(255, "Must not exceed 255 characters");
+  .required("You need to create a password")
+  .min(6, passwordNotLongEnough)
+  .max(255, "Password must not exceed 255 characters");
 
 export const validUserSchema = yup.object().shape({
   email: yup
@@ -38,4 +38,7 @@ export const forgotPasswordSchema = yup.object().shape({
 
 export const resetPasswordSchema = yup.object().shape({
   newPassword: registerPasswordValidation,
+  newPassword2: yup
+    .string()
+    .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
 });

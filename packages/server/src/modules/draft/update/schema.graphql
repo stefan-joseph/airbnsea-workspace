@@ -1,0 +1,41 @@
+type Mutation {
+  updateListing(listingId: String!, fields: UpdateListingFields!): ID
+}
+
+input UpdateListingFields {
+  vesselType: VesselType
+  name: String
+  address: Address
+  photos: PhotoUpdate
+}
+
+scalar Image
+
+input PhotoUpdate {
+  photos: [String!]
+  photoToAdd: Image
+  photoToDelete: String
+}
+
+input Address {
+  street: String!
+  apt: String
+  city: String!
+  state: String!
+  zipcode: String!
+  country: String!
+}
+
+# union UpdateListingPayload = ListingId | NoListingError
+
+# type ListingId {
+#   id: ID!
+# }
+
+# interface Error {
+#   message: String!
+# }
+
+# type NoListingError implements Error {
+#   message: String!
+# }

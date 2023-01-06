@@ -1,0 +1,41 @@
+input SearchListingsInput {
+  where: String
+  guests: Int
+  beds: Int
+  start: String
+  end: String
+}
+
+type Query {
+  searchListings(
+    input: SearchListingsInput
+    offset: Int!
+    limit: Int!
+  ): SearchListingsResponse!
+}
+
+type SearchListingsResponse {
+  results: [SearchListingResult!]!
+  searchLocation: SearchLocation
+}
+
+type SearchLocation {
+  lat: Float!
+  lng: Float!
+}
+
+type SearchListingResult {
+  id: ID!
+  vesselType: VesselType!
+  city: String!
+  state: String
+  country: String!
+  price: Int!
+  beds: Int!
+  guests: Int!
+  rating: Float
+  latitude: Float!
+  longitude: Float!
+  distance: Float
+  photos: [String!]!
+}

@@ -1,16 +1,27 @@
-query viewListing($id: String!) {
-  viewListing(id: $id) {
+query ViewListing($listingId: ID!) {
+  viewListing(listingId: $listingId) {
     id
     name
-    category
+    vesselType
     price
     description
     guests
     beds
-    imgUrl
+    rating
+    amenities
+    street
+    apt
+    city
+    state
+    country
+    zipcode
+    longitude
+    latitude
+    photos
     owner {
-      email
-      name
+      firstName
+      lastName
+      avatar
     }
   }
 }

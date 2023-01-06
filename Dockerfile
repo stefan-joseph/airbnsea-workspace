@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node
+FROM node
 
 WORKDIR /airbnb-clone
 
@@ -18,4 +18,4 @@ ENV NODE_ENV=production
 
 EXPOSE 4000
 
-CMD [ "node", "dist/index.js" ]
+CMD [ "node", "dist/src/index.js" ]

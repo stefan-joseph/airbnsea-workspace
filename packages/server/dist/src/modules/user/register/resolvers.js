@@ -12,17 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const User_1 = require("../../../entity/User");
 const formatYupError_1 = require("../../../utils/formatYupError");
-const errorMessages_1 = require("./errorMessages");
+const errorMessages_1 = require("./utils/errorMessages");
+const createConfirmEmailLink_1 = require("../../../utils/createConfirmEmailLink");
+const sendEmail_1 = require("../../../utils/sendEmail");
 const common_1 = require("@airbnb-clone/common");
 exports.resolvers = {
     Mutation: {
-        register: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+        register: (_, args, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
             const { email, password } = args;
             try {
                 yield common_1.validUserSchema.validate(args, { abortEarly: false });
             }
             catch (error) {
-                return (0, formatYupError_1.formatYupError)(error);
+                const errors = (0, formatYupError_1.formatYupError)(error);
+                console.log("errors", errors);
+                return errors;
             }
             const userAlreadyExists = yield User_1.User.findOne({
                 where: { email },
@@ -41,6 +45,12 @@ exports.resolvers = {
                 password,
             });
             yield user.save();
+            const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)((process.env.NODE_ENV === "development"
+                ? process.env.FRONTEND_HOST_DEV
+                : process.env.FRONTEND_HOST_PROD), user.id, redis);
+            if (process.env.NODE_ENV !== "test") {
+                yield (0, sendEmail_1.sendEmail)(email, url, "Click here to confirm your email");
+            }
             return null;
         }),
     },

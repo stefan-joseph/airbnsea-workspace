@@ -32,8 +32,11 @@ export declare const forgotPasswordSchema: yup.ObjectSchema<import("yup/lib/obje
 }>>>;
 export declare const resetPasswordSchema: yup.ObjectSchema<import("yup/lib/object").Assign<import("yup/lib/object").ObjectShape, {
     newPassword: import("yup/lib/string").RequiredStringSchema<string | undefined, import("yup/lib/types").AnyObject>;
+    newPassword2: yup.StringSchema<string | undefined, import("yup/lib/types").AnyObject, string | undefined>;
 }>, import("yup/lib/object").AnyObject, import("yup/lib/object").TypeOfShape<import("yup/lib/object").Assign<import("yup/lib/object").ObjectShape, {
     newPassword: import("yup/lib/string").RequiredStringSchema<string | undefined, import("yup/lib/types").AnyObject>;
+    newPassword2: yup.StringSchema<string | undefined, import("yup/lib/types").AnyObject, string | undefined>;
 }>>, import("yup/lib/object").AssertsShape<import("yup/lib/object").Assign<import("yup/lib/object").ObjectShape, {
     newPassword: import("yup/lib/string").RequiredStringSchema<string | undefined, import("yup/lib/types").AnyObject>;
+    newPassword2: yup.StringSchema<string | undefined, import("yup/lib/types").AnyObject, string | undefined>;
 }>>>;

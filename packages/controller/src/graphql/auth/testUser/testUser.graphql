@@ -1,0 +1,6 @@
+query GetRandomUserCredentails {
+  getRandomUserCredentails {
+    email
+    password
+  }
+}

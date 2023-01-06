@@ -15,11 +15,12 @@ const createTypeormConnection = () => __awaiter(void 0, void 0, void 0, function
     if (process.env.NODE_ENV === "test") {
         return yield data_source_1.AppDataSourceTEST.initialize();
     }
-    else if (process.env.NODE_ENV === "production") {
-        return yield data_source_1.AppDataSourcePROD.initialize();
+    else if (process.env.NODE_ENV === "development") {
+        console.log("NODE_ENV", process.env.NODE_ENV);
+        return yield data_source_1.AppDataSourceDEV.initialize();
     }
     else {
-        return yield data_source_1.AppDataSourceDEV.initialize();
+        return yield data_source_1.AppDataSourcePROD.initialize();
     }
 });
 exports.createTypeormConnection = createTypeormConnection;

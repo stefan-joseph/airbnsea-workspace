@@ -1,0 +1,12 @@
+enum VesselType {
+  sailboat
+  catamaran
+}
+
+input VesselTypeInput {
+  vesselType: VesselType!
+}
+
+type Mutation {
+  createListing(input: VesselTypeInput!): ID!
+}

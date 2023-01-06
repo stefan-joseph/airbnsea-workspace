@@ -4,7 +4,7 @@ import { Resolvers } from "../../../types/types";
 
 export const resolvers: Resolvers = {
   Mutation: {
-    deleteListing: async (_, { id }, { session }) => {
+    deleteListing: async (_, { id }, { req: { session } }) => {
       const listing = await Listing.findOne({ where: { id } });
 
       if (!listing) {

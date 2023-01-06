@@ -1,0 +1,19 @@
+scalar File
+
+# input PublishListingInput {
+#   category: VesselType!
+#   address: AddressInput!
+#   name: String!
+#   description: String!
+#   price: Int!
+#   beds: Int!
+#   guests: Int!
+#   latitude: Float!
+#   longitude: Float!
+#   amenities: [String!]!
+#   img: File
+# }
+
+# type Mutation {
+#   publishListing(input: PublishListingInput!): Boolean!
+# }

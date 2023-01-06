@@ -30,9 +30,9 @@ exports.invalidEmail = "Email must be a valid email";
 exports.passwordNotLongEnough = "Password must be at least 6 characters";
 exports.registerPasswordValidation = yup
     .string()
-    .required("Required")
-    .min(6, "Must be at least 6 characters")
-    .max(255, "Must not exceed 255 characters");
+    .required("You need to create a password")
+    .min(6, exports.passwordNotLongEnough)
+    .max(255, "Password must not exceed 255 characters");
 exports.validUserSchema = yup.object().shape({
     email: yup
         .string()
@@ -57,5 +57,8 @@ exports.forgotPasswordSchema = yup.object().shape({
 });
 exports.resetPasswordSchema = yup.object().shape({
     newPassword: exports.registerPasswordValidation,
+    newPassword2: yup
+        .string()
+        .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
 });
 //# sourceMappingURL=user.js.map

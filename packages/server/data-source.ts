@@ -1,25 +1,32 @@
 import "reflect-metadata";
-import { DataSource } from "typeorm";
-// import { User } from "./src/entity/User";
+import { DataSource, DataSourceOptions } from "typeorm";
+import { SeederOptions } from "typeorm-extension";
+import { ListingFactory } from "./src/db/seeding/factories/listing.factory";
+import { UserFactory } from "./src/db/seeding/factories/user.factory";
+import InitialSeeder from "./src/db/seeding/seeds/initialSeed";
+import { Booking } from "./src/entity/Booking";
+import { Draft } from "./src/entity/Draft";
+import { Listing } from "./src/entity/Listing";
+import { Message } from "./src/entity/Message";
+import { User } from "./src/entity/User";
 
-export const AppDataSourcePROD = new DataSource({
+const optionsPROD: DataSourceOptions & SeederOptions = {
   type: "postgres",
   url: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  // host: "localhost",
-  // port: 5432,
-  // username: "postgres",
-  // password: "",
-  // database: "airbnb-clone",
+  // ssl: { rejectUnauthorized: false },
   synchronize: true,
   logging: true,
   // dropSchema: true,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migration/**/*.ts"],
+  entities: [User, Listing, Draft, Message, Booking],
+  migrations: [],
   subscribers: [],
-});
+  factories: [UserFactory, ListingFactory],
+  seeds: [InitialSeeder],
+};
 
-export const AppDataSourceDEV = new DataSource({
+export const AppDataSourcePROD = new DataSource(optionsPROD);
+
+const optionsDEV: DataSourceOptions & SeederOptions = {
   name: "development",
   type: "postgres",
   host: "localhost",
@@ -30,10 +37,15 @@ export const AppDataSourceDEV = new DataSource({
   synchronize: true,
   logging: true,
   // dropSchema: true,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migration/**/*.ts"],
+  entities: [User, Listing, Draft, Message, Booking],
+  migrations: [],
   subscribers: [],
-});
+  // additional config options brought by typeorm-extension
+  factories: [UserFactory, ListingFactory],
+  seeds: [InitialSeeder],
+};
+
+export const AppDataSourceDEV = new DataSource(optionsDEV);
 
 export const AppDataSourceTEST = new DataSource({
   type: "postgres",
@@ -45,7 +57,7 @@ export const AppDataSourceTEST = new DataSource({
   synchronize: true,
   logging: false,
   dropSchema: true,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migration/**/*.ts"],
+  entities: [User, Listing, Draft, Message, Booking],
+  migrations: [],
   subscribers: [],
 });

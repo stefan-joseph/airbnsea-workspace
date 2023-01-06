@@ -1,0 +1,23 @@
+query SearchListings($input: SearchListingsInput, $offset: Int!, $limit: Int!) {
+  searchListings(input: $input, offset: $offset, limit: $limit) {
+    results {
+      id
+      vesselType
+      photos
+      price
+      beds
+      guests
+      rating
+      city
+      state
+      country
+      longitude
+      latitude
+      distance
+    }
+    searchLocation {
+      lat
+      lng
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation UpdateListing($listingId: String!, $fields: UpdateListingFields!) {
+  updateListing(listingId: $listingId, fields: $fields)
+}

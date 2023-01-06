@@ -8,8 +8,9 @@
     "build": "rm -rf ./dist && tsc"
   },
   "dependencies": {
-    "yup": "^0.32.11",
-    "cross-env": "5.0.5"
+    "cross-env": "5.0.5",
+    "dayjs": "^1.11.7",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "tslint": "^6.1.3",

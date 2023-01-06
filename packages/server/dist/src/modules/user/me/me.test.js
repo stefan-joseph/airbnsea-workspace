@@ -11,18 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../../../entity/User");
 const createTypeormConnection_1 = require("../../../utils/createTypeormConnection");
-const TestClient_1 = require("../../../testUtils/TestClient");
-let userId;
-const email = "bob@bob.com";
-const password = "cjdkvbndsjvk";
+const TestClient_1 = require("../../shared/test-utils/TestClient");
+const testConstants_1 = require("../../shared/test-utils/testConstants");
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, createTypeormConnection_1.createTypeormConnection)();
-    const user = yield User_1.User.create({
-        email,
-        password,
-        confirmed: true,
-    }).save();
-    userId = user.id;
+    yield User_1.User.create(Object.assign(Object.assign({}, testConstants_1.testUser1), { confirmed: true })).save();
 }));
 describe("me", () => {
     const client = new TestClient_1.TestClient("graphql");
@@ -31,12 +24,13 @@ describe("me", () => {
         expect(response.data.me).toBeNull();
     }));
     test("get current user", () => __awaiter(void 0, void 0, void 0, function* () {
+        const { email, password, firstName, avatar } = testConstants_1.testUser1;
         yield client.login(email, password);
         const response = yield client.me();
         expect(response.data).toEqual({
             me: {
-                id: userId,
-                email,
+                firstName,
+                avatar,
             },
         });
     }));

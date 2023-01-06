@@ -1,0 +1,20 @@
+type Query {
+  populateInbox(type: InboxType): [ConversationHeader!]!
+}
+
+enum InboxType {
+  guest
+  host
+}
+
+type ConversationHeader {
+  interlocutor: Interlocutor
+  lastMessage: String!
+  location: String!
+}
+
+type Interlocutor {
+  firstName: String!
+  lastName: String!
+  avatar: String!
+}

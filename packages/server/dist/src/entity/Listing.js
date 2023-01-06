@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Listing = void 0;
 const typeorm_1 = require("typeorm");
+const types_1 = require("../types/types");
+const Booking_1 = require("./Booking");
 const User_1 = require("./User");
 let Listing = class Listing extends typeorm_1.BaseEntity {
 };
@@ -19,19 +21,62 @@ __decorate([
     __metadata("design:type", String)
 ], Listing.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { length: 255 }),
+    (0, typeorm_1.Column)({
+        type: "enum",
+        enum: types_1.Status,
+        default: types_1.Status.Active,
+    }),
     __metadata("design:type", String)
-], Listing.prototype, "name", void 0);
+], Listing.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: "enum",
+        enum: types_1.VesselType,
+    }),
+    __metadata("design:type", String)
+], Listing.prototype, "vesselType", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar"),
+    __metadata("design:type", String)
+], Listing.prototype, "street", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar", { nullable: true }),
+    __metadata("design:type", Object)
+], Listing.prototype, "apt", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar"),
+    __metadata("design:type", String)
+], Listing.prototype, "city", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar", { nullable: true }),
+    __metadata("design:type", Object)
+], Listing.prototype, "state", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar"),
+    __metadata("design:type", String)
+], Listing.prototype, "country", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar"),
+    __metadata("design:type", String)
+], Listing.prototype, "zipcode", void 0);
+__decorate([
+    (0, typeorm_1.Column)("double precision"),
+    __metadata("design:type", Number)
+], Listing.prototype, "latitude", void 0);
+__decorate([
+    (0, typeorm_1.Column)("double precision"),
+    __metadata("design:type", Number)
+], Listing.prototype, "longitude", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { length: 100 }),
     __metadata("design:type", String)
-], Listing.prototype, "category", void 0);
+], Listing.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)("text", { array: true }),
+    __metadata("design:type", Array)
+], Listing.prototype, "photos", void 0);
 __decorate([
     (0, typeorm_1.Column)("text"),
-    __metadata("design:type", String)
-], Listing.prototype, "imgUrl", void 0);
-__decorate([
-    (0, typeorm_1.Column)("boolean"),
     __metadata("design:type", String)
 ], Listing.prototype, "description", void 0);
 __decorate([
@@ -47,16 +92,12 @@ __decorate([
     __metadata("design:type", Number)
 ], Listing.prototype, "guests", void 0);
 __decorate([
-    (0, typeorm_1.Column)("double precision"),
-    __metadata("design:type", Number)
-], Listing.prototype, "latitude", void 0);
+    (0, typeorm_1.Column)("real", { nullable: true }),
+    __metadata("design:type", Object)
+], Listing.prototype, "rating", void 0);
 __decorate([
-    (0, typeorm_1.Column)("double precision"),
-    __metadata("design:type", Number)
-], Listing.prototype, "longitude", void 0);
-__decorate([
-    (0, typeorm_1.Column)("text", { array: true }),
-    __metadata("design:type", Array)
+    (0, typeorm_1.Column)("text", { array: true, nullable: true }),
+    __metadata("design:type", Object)
 ], Listing.prototype, "amenities", void 0);
 __decorate([
     (0, typeorm_1.Column)("uuid"),
@@ -66,6 +107,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.listings),
     __metadata("design:type", User_1.User)
 ], Listing.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Booking_1.Booking, (booking) => booking.listing),
+    __metadata("design:type", Array)
+], Listing.prototype, "bookings", void 0);
 Listing = __decorate([
     (0, typeorm_1.Entity)("listings")
 ], Listing);

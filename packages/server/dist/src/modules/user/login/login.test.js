@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../../../entity/User");
 const createTypeormConnection_1 = require("../../../utils/createTypeormConnection");
-const TestClient_1 = require("../../../testUtils/TestClient");
+const TestClient_1 = require("../../shared/test-utils/TestClient");
 const errorMessages_1 = require("./errorMessages");
 const email = "bob@bob.com";
 const password = "dsjkvd";

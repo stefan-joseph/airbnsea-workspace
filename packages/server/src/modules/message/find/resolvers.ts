@@ -7,7 +7,7 @@ export const resolvers: Resolvers = {
     userId: () => null, // don't return userId to client
   },
   Query: {
-    messages: async (_, { listingId }, { session }) =>
+    messages: async (_, { listingId }, { req: { session } }) =>
       Message.find({
         where: { listingId, userId: session.userId },
       }),

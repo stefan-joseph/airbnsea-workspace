@@ -8,70 +8,78 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.startServer = void 0;
 require("dotenv/config");
 const node_1 = require("@graphql-yoga/node");
-const createTypeormConnection_1 = require("./utils/createTypeormConnection");
-const redis_1 = require("./redis");
+const graphql_redis_subscriptions_1 = require("graphql-redis-subscriptions");
+const typeorm_extension_1 = require("typeorm-extension");
+const cloudinary = require("cloudinary");
+const express = require("express");
+const graphql_middleware_1 = require("graphql-middleware");
+const cors = require("cors");
+const expressSession = require("express-session");
+const RedisStore = require("connect-redis")(expressSession);
 const confirmEmail_1 = require("./routes/confirmEmail");
 const constants_1 = require("./utils/constants");
-const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
-const rate_limit_redis_1 = __importDefault(require("rate-limit-redis"));
-const express = require("express");
+const redis_1 = require("./redis");
 const generateModularSchema_1 = require("./utils/generateModularSchema");
-const cors = require("cors");
-const session = require("express-session");
-const RedisStore = require("connect-redis")(session);
-const app = express();
-const SESSION_SECRET = "mdsnkjavnasdjv";
+const middleware_1 = require("./middleware/middleware");
+const userLoader_1 = require("./loaders/userLoader");
+const getTypeormConnection_1 = require("./utils/getTypeormConnection");
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    app.use(session({
+    const app = express();
+    app.use(expressSession({
         store: new RedisStore({ client: redis_1.redis, prefix: constants_1.redisSessionPrefix }),
         name: "qid",
-        secret: SESSION_SECRET,
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             maxAge: 1000 * 60 * 60 * 24 * 7,
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         },
     }));
+    const schema = (0, generateModularSchema_1.generateModularSchema)();
+    const schemaWithMiddleware = (0, graphql_middleware_1.applyMiddleware)(schema, middleware_1.middleware);
+    const pubSub = new graphql_redis_subscriptions_1.RedisPubSub(process.env.NODE_ENV === "development"
+        ? {}
+        : { connection: process.env.REDIS_URL });
+    yield (0, getTypeormConnection_1.getTypeormConnection)()
+        .initialize()
+        .then(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, getTypeormConnection_1.getTypeormConnection)().synchronize(true);
+        yield (0, typeorm_extension_1.runSeeders)((0, getTypeormConnection_1.getTypeormConnection)());
+    }));
     const yoga = (0, node_1.createServer)({
-        schema: (0, generateModularSchema_1.generateModularSchema)(),
+        schema: schemaWithMiddleware,
         context: ({ request }) => ({
             redis: redis_1.redis,
             url: request.url,
+            userLoader: (0, userLoader_1.userLoader)(),
+            pubSub,
         }),
     });
     app.use("/graphql", yoga);
     const corsOptions = {
         credentials: true,
-        origin: process.env.NODE_ENV === "test" ? "*" : process.env.FRONTEND_HOST,
+        origin: "*",
     };
     app.use(cors(corsOptions));
-    const limiter = (0, express_rate_limit_1.default)({
-        windowMs: 15 * 60 * 1000,
-        max: 100,
-        standardHeaders: true,
-        legacyHeaders: false,
-        store: new rate_limit_redis_1.default({
-            sendCommand: (...args) => redis_1.redis.call(...args),
-        }),
+    cloudinary.v2.config({
+        cloud_name: process.env.CLOUDINARY_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
     });
-    app.use(limiter);
-    yield (0, createTypeormConnection_1.createTypeormConnection)();
-    app.get("/", (_, res) => {
-        res.send("Hello World!");
-    });
+    app.set("trust proxy", 1);
+    app.use("/images", express.static("images"));
     app.get("/confirm-email/:id", confirmEmail_1.confirmEmail);
-    const port = process.env.PORT || 4000;
+    app.get("/", (_, res) => res.send("hello2"));
+    const port = process.env.PORT || 8080;
+    console.log(`running app on port ${port}`);
     yield app.listen(port);
-    console.log(`server is running on port ${port}`);
 });
 exports.startServer = startServer;
 //# sourceMappingURL=startServer.js.map

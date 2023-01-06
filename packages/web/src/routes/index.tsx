@@ -1,22 +1,27 @@
 import { createBrowserRouter } from "react-router-dom";
 import ErrorPage from "../components/ErrorPage";
 import { ForgotPasswordConnector } from "../modules/auth/forgotPassword/ForgotPasswordConnector";
-import { CreateListingConnector } from "../modules/listing/create/CreateListingConnector";
 import { LoginConnector } from "../modules/auth/login/LoginConnector";
 import { RegisterConnector } from "../modules/auth/register/RegisterController";
 import { ResetPasswordConnector } from "../modules/auth/resetPassword/ResetPasswordConnector";
 import { TextPage } from "../modules/textPage/TextPage";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { FindListingsConnector } from "../modules/listing/find/findListingsConnector";
 import { Logout } from "../modules/auth/logout/logout";
-import { ViewListingConnector } from "../modules/listing/view/ViewListingConnector";
-import { MessageConnector } from "../modules/message/MessageConnector";
+import { Listing } from "../modules/listing/Listing";
+import { MessageConnector } from "../modules/inbox/MessageConnector";
+import { CreateListing } from "../modules/user/create-listing/CreateListing";
+import { Search } from "../modules/search/Search";
+import { Inbox } from "../modules/inbox/Inbox";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RegisterConnector />,
+    element: <Search />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterConnector />,
   },
   {
     path: "/login",
@@ -35,6 +40,10 @@ export const router = createBrowserRouter([
     element: <ResetPasswordConnector />,
   },
   {
+    path: "/listings/:listingId/view",
+    element: <Listing />,
+  },
+  {
     path: "/message/*",
     element: <TextPage />,
   },
@@ -42,20 +51,25 @@ export const router = createBrowserRouter([
     path: "/create-listing",
     element: (
       <ProtectedRoute redirect="/login">
-        <CreateListingConnector />
+        <CreateListing />
       </ProtectedRoute>
     ),
   },
   {
-    path: "/listings",
-    element: <FindListingsConnector />,
+    path: "/create-listing/:listingId/:step",
+    element: (
+      <ProtectedRoute redirect="/login">
+        <CreateListing />
+      </ProtectedRoute>
+    ),
   },
   {
-    path: "/listing/:listingId",
-    element: <ViewListingConnector />,
+    path: "/inbox",
+    element: <Inbox />,
   },
-  {
-    path: "/listing/:listingId/chat",
-    element: <MessageConnector />,
-  },
+
+  // {
+  //   path: "/listing/:listingId/chat",
+  //   element: <MessageConnector />,
+  // },
 ]);

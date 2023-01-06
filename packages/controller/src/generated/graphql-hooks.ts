@@ -14,19 +14,50 @@ export type Scalars = {
   Int: number;
   Float: number;
   File: any;
+  Image: any;
 };
 
-export type CreateListingInput = {
-  amenities: Array<Scalars['String']>;
-  beds: Scalars['Int'];
-  category: Scalars['String'];
-  description: Scalars['String'];
+export type Address = {
+  apt?: InputMaybe<Scalars['String']>;
+  city: Scalars['String'];
+  country: Scalars['String'];
+  state: Scalars['String'];
+  street: Scalars['String'];
+  zipcode: Scalars['String'];
+};
+
+export type Booking = {
+  __typename?: 'Booking';
+  end: Scalars['String'];
+  listingId: Scalars['ID'];
+  start: Scalars['String'];
+};
+
+export type BookingInput = {
+  end: Scalars['String'];
   guests: Scalars['Int'];
-  img?: InputMaybe<Scalars['File']>;
-  latitude: Scalars['Float'];
-  longitude: Scalars['Float'];
-  name: Scalars['String'];
-  price: Scalars['Int'];
+  start: Scalars['String'];
+};
+
+export type Draft = {
+  __typename?: 'Draft';
+  amenities?: Maybe<Array<Scalars['String']>>;
+  apt?: Maybe<Scalars['String']>;
+  beds?: Maybe<Scalars['Int']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  guests?: Maybe<Scalars['Int']>;
+  id: Scalars['ID'];
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
+  name?: Maybe<Scalars['String']>;
+  photos: Array<Scalars['String']>;
+  price?: Maybe<Scalars['Int']>;
+  state?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+  vesselType?: Maybe<VesselType>;
+  zipcode?: Maybe<Scalars['String']>;
 };
 
 export type Error = {
@@ -37,25 +68,38 @@ export type Error = {
 
 export type Listing = {
   __typename?: 'Listing';
-  amenities: Array<Scalars['String']>;
+  amenities?: Maybe<Array<Scalars['String']>>;
+  apt?: Maybe<Scalars['String']>;
   beds: Scalars['Int'];
-  category: Scalars['String'];
+  city: Scalars['String'];
+  country: Scalars['String'];
   description: Scalars['String'];
   guests: Scalars['Int'];
-  id: Scalars['ID'];
-  imgUrl: Scalars['String'];
+  id?: Maybe<Scalars['ID']>;
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
   name: Scalars['String'];
   owner?: Maybe<Owner>;
+  photos: Array<Scalars['String']>;
   price: Scalars['Int'];
+  rating?: Maybe<Scalars['Float']>;
+  state?: Maybe<Scalars['String']>;
+  street: Scalars['String'];
   userId?: Maybe<Scalars['String']>;
+  vesselType: VesselType;
+  zipcode: Scalars['String'];
 };
 
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   errors?: Maybe<Array<Error>>;
   sessionId?: Maybe<Scalars['String']>;
+};
+
+export type Me = {
+  __typename?: 'Me';
+  avatar?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
 };
 
 export type Message = {
@@ -74,7 +118,8 @@ export type MessageInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   confirmEmail: Scalars['Boolean'];
-  createListing: Scalars['Boolean'];
+  createBooking: Scalars['ID'];
+  createListing: Scalars['ID'];
   createMessage: Scalars['Boolean'];
   deleteListing: Scalars['Boolean'];
   login: LoginResponse;
@@ -82,6 +127,7 @@ export type Mutation = {
   register?: Maybe<Array<Error>>;
   resetPassword?: Maybe<Array<Error>>;
   sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
+  updateListing?: Maybe<Scalars['ID']>;
 };
 
 
@@ -90,8 +136,14 @@ export type MutationConfirmEmailArgs = {
 };
 
 
+export type MutationCreateBookingArgs = {
+  input: BookingInput;
+  listingId: Scalars['ID'];
+};
+
+
 export type MutationCreateListingArgs = {
-  input: CreateListingInput;
+  input: VesselTypeInput;
 };
 
 
@@ -127,18 +179,40 @@ export type MutationSendForgotPasswordEmailArgs = {
   email: Scalars['String'];
 };
 
+
+export type MutationUpdateListingArgs = {
+  fields: UpdateListingFields;
+  listingId: Scalars['String'];
+};
+
 export type Owner = {
   __typename?: 'Owner';
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  avatar: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+export type PhotoUpdate = {
+  photoToAdd?: InputMaybe<Scalars['Image']>;
+  photoToDelete?: InputMaybe<Scalars['String']>;
+  photos?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  findListings?: Maybe<Array<Listing>>;
-  me: Scalars['Boolean'];
+  getListingUnavailability: Array<Scalars['String']>;
+  getRandomUserCredentails?: Maybe<RandomUser>;
+  me?: Maybe<Me>;
   messages?: Maybe<Array<Message>>;
-  viewListing?: Maybe<Listing>;
+  populateForm: Draft;
+  searchListings: SearchListingsResponse;
+  viewListing: Listing;
+  viewUserBookings: Array<Booking>;
+};
+
+
+export type QueryGetListingUnavailabilityArgs = {
+  listingId: Scalars['ID'];
 };
 
 
@@ -147,9 +221,70 @@ export type QueryMessagesArgs = {
 };
 
 
-export type QueryViewListingArgs = {
-  id: Scalars['String'];
+export type QueryPopulateFormArgs = {
+  fields: Array<Scalars['String']>;
+  listingId: Scalars['ID'];
 };
+
+
+export type QuerySearchListingsArgs = {
+  input?: InputMaybe<SearchListingsInput>;
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+};
+
+
+export type QueryViewListingArgs = {
+  listingId: Scalars['ID'];
+};
+
+export type RandomUser = {
+  __typename?: 'RandomUser';
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type SearchListingResult = {
+  __typename?: 'SearchListingResult';
+  beds: Scalars['Int'];
+  city: Scalars['String'];
+  country: Scalars['String'];
+  distance?: Maybe<Scalars['Float']>;
+  guests: Scalars['Int'];
+  id: Scalars['ID'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+  photos: Array<Scalars['String']>;
+  price: Scalars['Int'];
+  rating?: Maybe<Scalars['Float']>;
+  state?: Maybe<Scalars['String']>;
+  vesselType: VesselType;
+};
+
+export type SearchListingsInput = {
+  beds?: InputMaybe<Scalars['Int']>;
+  end?: InputMaybe<Scalars['String']>;
+  guests?: InputMaybe<Scalars['Int']>;
+  start?: InputMaybe<Scalars['String']>;
+  where?: InputMaybe<Scalars['String']>;
+};
+
+export type SearchListingsResponse = {
+  __typename?: 'SearchListingsResponse';
+  results: Array<SearchListingResult>;
+  searchLocation?: Maybe<SearchLocation>;
+};
+
+export type SearchLocation = {
+  __typename?: 'SearchLocation';
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+};
+
+export enum Status {
+  Active = 'active',
+  Inactive = 'inactive'
+}
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -161,10 +296,26 @@ export type SubscriptionNewMessageArgs = {
   listingId: Scalars['String'];
 };
 
+export type UpdateListingFields = {
+  address?: InputMaybe<Address>;
+  name?: InputMaybe<Scalars['String']>;
+  photos?: InputMaybe<PhotoUpdate>;
+  vesselType?: InputMaybe<VesselType>;
+};
+
 export type User = {
   __typename?: 'User';
   email?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+};
+
+export enum VesselType {
+  Catamaran = 'catamaran',
+  Sailboat = 'sailboat'
+}
+
+export type VesselTypeInput = {
+  vesselType: VesselType;
 };
 
 export type SendForgotPasswordEmailMutationVariables = Exact<{
@@ -190,7 +341,7 @@ export type LogoutUserMutation = { __typename?: 'Mutation', logout?: boolean | n
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: boolean };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', firstName?: string | null, avatar?: string | null } | null };
 
 export type RegisterUserMutationVariables = Exact<{
   email: Scalars['String'];
@@ -208,33 +359,56 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword?: Array<{ __typename?: 'Error', path: string, message: string }> | null };
 
-export type CreateListingMutationVariables = Exact<{
-  name: Scalars['String'];
-  category: Scalars['String'];
-  description: Scalars['String'];
-  price: Scalars['Int'];
-  beds: Scalars['Int'];
-  guests: Scalars['Int'];
-  latitude: Scalars['Float'];
-  longitude: Scalars['Float'];
-  amenities: Array<Scalars['String']> | Scalars['String'];
-  img?: InputMaybe<Scalars['File']>;
+export type GetRandomUserCredentailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRandomUserCredentailsQuery = { __typename?: 'Query', getRandomUserCredentails?: { __typename?: 'RandomUser', email: string, password: string } | null };
+
+export type CreateBookingMutationVariables = Exact<{
+  listingId: Scalars['ID'];
+  input: BookingInput;
 }>;
 
 
-export type CreateListingMutation = { __typename?: 'Mutation', createListing: boolean };
+export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: string };
 
-export type FindListingsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetListingUnavailabilityQueryVariables = Exact<{
+  listingId: Scalars['ID'];
+}>;
 
 
-export type FindListingsQuery = { __typename?: 'Query', findListings?: Array<{ __typename?: 'Listing', id: string, name: string, imgUrl: string, owner?: { __typename?: 'Owner', email?: string | null } | null }> | null };
+export type GetListingUnavailabilityQuery = { __typename?: 'Query', getListingUnavailability: Array<string> };
+
+export type CreateListingMutationVariables = Exact<{
+  vesselType: VesselType;
+}>;
+
+
+export type CreateListingMutation = { __typename?: 'Mutation', createListing: string };
+
+export type SearchListingsQueryVariables = Exact<{
+  input?: InputMaybe<SearchListingsInput>;
+  offset: Scalars['Int'];
+  limit: Scalars['Int'];
+}>;
+
+
+export type SearchListingsQuery = { __typename?: 'Query', searchListings: { __typename?: 'SearchListingsResponse', results: Array<{ __typename?: 'SearchListingResult', id: string, vesselType: VesselType, photos: Array<string>, price: number, beds: number, guests: number, rating?: number | null, city: string, state?: string | null, country: string, longitude: number, latitude: number, distance?: number | null }>, searchLocation?: { __typename?: 'SearchLocation', lat: number, lng: number } | null } };
+
+export type UpdateListingMutationVariables = Exact<{
+  listingId: Scalars['String'];
+  fields: UpdateListingFields;
+}>;
+
+
+export type UpdateListingMutation = { __typename?: 'Mutation', updateListing?: string | null };
 
 export type ViewListingQueryVariables = Exact<{
-  id: Scalars['String'];
+  listingId: Scalars['ID'];
 }>;
 
 
-export type ViewListingQuery = { __typename?: 'Query', viewListing?: { __typename?: 'Listing', id: string, name: string, category: string, price: number, description: string, guests: number, beds: number, imgUrl: string, owner?: { __typename?: 'Owner', email?: string | null, name?: string | null } | null } | null };
+export type ViewListingQuery = { __typename?: 'Query', viewListing: { __typename?: 'Listing', id?: string | null, name: string, vesselType: VesselType, price: number, description: string, guests: number, beds: number, rating?: number | null, amenities?: Array<string> | null, street: string, apt?: string | null, city: string, state?: string | null, country: string, longitude: number, latitude: number, photos: Array<string>, owner?: { __typename?: 'Owner', firstName: string, lastName: string, avatar: string } | null } };
 
 export type CreateMessageMutationVariables = Exact<{
   message: MessageInput;
@@ -255,7 +429,7 @@ export type ViewMessagesQueryVariables = Exact<{
 }>;
 
 
-export type ViewMessagesQuery = { __typename?: 'Query', messages?: Array<{ __typename?: 'Message', text: string, listingId: string, userId?: string | null, user?: { __typename?: 'User', email?: string | null, name?: string | null } | null }> | null };
+export type ViewMessagesQuery = { __typename?: 'Query', messages?: Array<{ __typename?: 'Message', text: string, listingId: string, user?: { __typename?: 'User', email?: string | null, name?: string | null } | null }> | null };
 
 
 export const SendForgotPasswordEmailDocument = gql`
@@ -359,7 +533,10 @@ export type LogoutUserMutationResult = Apollo.MutationResult<LogoutUserMutation>
 export type LogoutUserMutationOptions = Apollo.BaseMutationOptions<LogoutUserMutation, LogoutUserMutationVariables>;
 export const MeDocument = gql`
     query Me {
-  me
+  me {
+    firstName
+    avatar
+  }
 }
     `;
 
@@ -459,11 +636,109 @@ export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOption
 export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
 export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
 export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
+export const GetRandomUserCredentailsDocument = gql`
+    query GetRandomUserCredentails {
+  getRandomUserCredentails {
+    email
+    password
+  }
+}
+    `;
+
+/**
+ * __useGetRandomUserCredentailsQuery__
+ *
+ * To run a query within a React component, call `useGetRandomUserCredentailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRandomUserCredentailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRandomUserCredentailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetRandomUserCredentailsQuery(baseOptions?: Apollo.QueryHookOptions<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>(GetRandomUserCredentailsDocument, options);
+      }
+export function useGetRandomUserCredentailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>(GetRandomUserCredentailsDocument, options);
+        }
+export type GetRandomUserCredentailsQueryHookResult = ReturnType<typeof useGetRandomUserCredentailsQuery>;
+export type GetRandomUserCredentailsLazyQueryHookResult = ReturnType<typeof useGetRandomUserCredentailsLazyQuery>;
+export type GetRandomUserCredentailsQueryResult = Apollo.QueryResult<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>;
+export const CreateBookingDocument = gql`
+    mutation CreateBooking($listingId: ID!, $input: BookingInput!) {
+  createBooking(listingId: $listingId, input: $input)
+}
+    `;
+export type CreateBookingMutationFn = Apollo.MutationFunction<CreateBookingMutation, CreateBookingMutationVariables>;
+
+/**
+ * __useCreateBookingMutation__
+ *
+ * To run a mutation, you first call `useCreateBookingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBookingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBookingMutation, { data, loading, error }] = useCreateBookingMutation({
+ *   variables: {
+ *      listingId: // value for 'listingId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBookingMutation(baseOptions?: Apollo.MutationHookOptions<CreateBookingMutation, CreateBookingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBookingMutation, CreateBookingMutationVariables>(CreateBookingDocument, options);
+      }
+export type CreateBookingMutationHookResult = ReturnType<typeof useCreateBookingMutation>;
+export type CreateBookingMutationResult = Apollo.MutationResult<CreateBookingMutation>;
+export type CreateBookingMutationOptions = Apollo.BaseMutationOptions<CreateBookingMutation, CreateBookingMutationVariables>;
+export const GetListingUnavailabilityDocument = gql`
+    query GetListingUnavailability($listingId: ID!) {
+  getListingUnavailability(listingId: $listingId)
+}
+    `;
+
+/**
+ * __useGetListingUnavailabilityQuery__
+ *
+ * To run a query within a React component, call `useGetListingUnavailabilityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetListingUnavailabilityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetListingUnavailabilityQuery({
+ *   variables: {
+ *      listingId: // value for 'listingId'
+ *   },
+ * });
+ */
+export function useGetListingUnavailabilityQuery(baseOptions: Apollo.QueryHookOptions<GetListingUnavailabilityQuery, GetListingUnavailabilityQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetListingUnavailabilityQuery, GetListingUnavailabilityQueryVariables>(GetListingUnavailabilityDocument, options);
+      }
+export function useGetListingUnavailabilityLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetListingUnavailabilityQuery, GetListingUnavailabilityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetListingUnavailabilityQuery, GetListingUnavailabilityQueryVariables>(GetListingUnavailabilityDocument, options);
+        }
+export type GetListingUnavailabilityQueryHookResult = ReturnType<typeof useGetListingUnavailabilityQuery>;
+export type GetListingUnavailabilityLazyQueryHookResult = ReturnType<typeof useGetListingUnavailabilityLazyQuery>;
+export type GetListingUnavailabilityQueryResult = Apollo.QueryResult<GetListingUnavailabilityQuery, GetListingUnavailabilityQueryVariables>;
 export const CreateListingDocument = gql`
-    mutation CreateListing($name: String!, $category: String!, $description: String!, $price: Int!, $beds: Int!, $guests: Int!, $latitude: Float!, $longitude: Float!, $amenities: [String!]!, $img: File) {
-  createListing(
-    input: {name: $name, category: $category, description: $description, price: $price, beds: $beds, guests: $guests, latitude: $latitude, longitude: $longitude, amenities: $amenities, img: $img}
-  )
+    mutation CreateListing($vesselType: VesselType!) {
+  createListing(input: {vesselType: $vesselType})
 }
     `;
 export type CreateListingMutationFn = Apollo.MutationFunction<CreateListingMutation, CreateListingMutationVariables>;
@@ -481,16 +756,7 @@ export type CreateListingMutationFn = Apollo.MutationFunction<CreateListingMutat
  * @example
  * const [createListingMutation, { data, loading, error }] = useCreateListingMutation({
  *   variables: {
- *      name: // value for 'name'
- *      category: // value for 'category'
- *      description: // value for 'description'
- *      price: // value for 'price'
- *      beds: // value for 'beds'
- *      guests: // value for 'guests'
- *      latitude: // value for 'latitude'
- *      longitude: // value for 'longitude'
- *      amenities: // value for 'amenities'
- *      img: // value for 'img'
+ *      vesselType: // value for 'vesselType'
  *   },
  * });
  */
@@ -501,59 +767,117 @@ export function useCreateListingMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateListingMutationHookResult = ReturnType<typeof useCreateListingMutation>;
 export type CreateListingMutationResult = Apollo.MutationResult<CreateListingMutation>;
 export type CreateListingMutationOptions = Apollo.BaseMutationOptions<CreateListingMutation, CreateListingMutationVariables>;
-export const FindListingsDocument = gql`
-    query findListings {
-  findListings {
-    id
-    name
-    imgUrl
-    owner {
-      email
+export const SearchListingsDocument = gql`
+    query SearchListings($input: SearchListingsInput, $offset: Int!, $limit: Int!) {
+  searchListings(input: $input, offset: $offset, limit: $limit) {
+    results {
+      id
+      vesselType
+      photos
+      price
+      beds
+      guests
+      rating
+      city
+      state
+      country
+      longitude
+      latitude
+      distance
+    }
+    searchLocation {
+      lat
+      lng
     }
   }
 }
     `;
 
 /**
- * __useFindListingsQuery__
+ * __useSearchListingsQuery__
  *
- * To run a query within a React component, call `useFindListingsQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindListingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSearchListingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchListingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFindListingsQuery({
+ * const { data, loading, error } = useSearchListingsQuery({
  *   variables: {
+ *      input: // value for 'input'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useFindListingsQuery(baseOptions?: Apollo.QueryHookOptions<FindListingsQuery, FindListingsQueryVariables>) {
+export function useSearchListingsQuery(baseOptions: Apollo.QueryHookOptions<SearchListingsQuery, SearchListingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindListingsQuery, FindListingsQueryVariables>(FindListingsDocument, options);
+        return Apollo.useQuery<SearchListingsQuery, SearchListingsQueryVariables>(SearchListingsDocument, options);
       }
-export function useFindListingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindListingsQuery, FindListingsQueryVariables>) {
+export function useSearchListingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchListingsQuery, SearchListingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindListingsQuery, FindListingsQueryVariables>(FindListingsDocument, options);
+          return Apollo.useLazyQuery<SearchListingsQuery, SearchListingsQueryVariables>(SearchListingsDocument, options);
         }
-export type FindListingsQueryHookResult = ReturnType<typeof useFindListingsQuery>;
-export type FindListingsLazyQueryHookResult = ReturnType<typeof useFindListingsLazyQuery>;
-export type FindListingsQueryResult = Apollo.QueryResult<FindListingsQuery, FindListingsQueryVariables>;
+export type SearchListingsQueryHookResult = ReturnType<typeof useSearchListingsQuery>;
+export type SearchListingsLazyQueryHookResult = ReturnType<typeof useSearchListingsLazyQuery>;
+export type SearchListingsQueryResult = Apollo.QueryResult<SearchListingsQuery, SearchListingsQueryVariables>;
+export const UpdateListingDocument = gql`
+    mutation UpdateListing($listingId: String!, $fields: UpdateListingFields!) {
+  updateListing(listingId: $listingId, fields: $fields)
+}
+    `;
+export type UpdateListingMutationFn = Apollo.MutationFunction<UpdateListingMutation, UpdateListingMutationVariables>;
+
+/**
+ * __useUpdateListingMutation__
+ *
+ * To run a mutation, you first call `useUpdateListingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateListingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateListingMutation, { data, loading, error }] = useUpdateListingMutation({
+ *   variables: {
+ *      listingId: // value for 'listingId'
+ *      fields: // value for 'fields'
+ *   },
+ * });
+ */
+export function useUpdateListingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateListingMutation, UpdateListingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateListingMutation, UpdateListingMutationVariables>(UpdateListingDocument, options);
+      }
+export type UpdateListingMutationHookResult = ReturnType<typeof useUpdateListingMutation>;
+export type UpdateListingMutationResult = Apollo.MutationResult<UpdateListingMutation>;
+export type UpdateListingMutationOptions = Apollo.BaseMutationOptions<UpdateListingMutation, UpdateListingMutationVariables>;
 export const ViewListingDocument = gql`
-    query viewListing($id: String!) {
-  viewListing(id: $id) {
+    query ViewListing($listingId: ID!) {
+  viewListing(listingId: $listingId) {
     id
     name
-    category
+    vesselType
     price
     description
     guests
     beds
-    imgUrl
+    rating
+    amenities
+    street
+    apt
+    city
+    state
+    country
+    longitude
+    latitude
+    photos
     owner {
-      email
-      name
+      firstName
+      lastName
+      avatar
     }
   }
 }
@@ -571,7 +895,7 @@ export const ViewListingDocument = gql`
  * @example
  * const { data, loading, error } = useViewListingQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      listingId: // value for 'listingId'
  *   },
  * });
  */
@@ -657,7 +981,6 @@ export const ViewMessagesDocument = gql`
   messages(listingId: $listingId) {
     text
     listingId
-    userId
     user {
       email
       name

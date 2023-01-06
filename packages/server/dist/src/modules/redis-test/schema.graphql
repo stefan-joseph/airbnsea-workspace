@@ -1,0 +1,7 @@
+type Mutation {
+  addFruit(fruit: String!): Boolean!
+}
+
+type Query {
+  getFruit: String!
+}

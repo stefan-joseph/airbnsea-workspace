@@ -1,1 +1,72 @@
-@import "antd/dist/antd.css";
+@font-face {
+  font-family: "Mori";
+  src: url("assets/fonts/PPMori-Regular.otf");
+  font-weight: 400 600;
+}
+
+@font-face {
+  font-family: "Mori";
+  src: url("assets/fonts/PPMori-Extralight.otf");
+  font-weight: 100 300;
+}
+@font-face {
+  font-family: "Mori";
+  src: url("assets/fonts/PPMori-SemiBold.otf");
+  font-weight: 700 900;
+}
+@font-face {
+  font-family: "Mori";
+  src: url("assets/fonts/PPMori-RegularItalic.otf");
+  font-weight: 400 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Mori";
+  src: url("assets/fonts/PPMori-ExtralightItalic.otf");
+  font-weight: 100 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Mori";
+  src: url("assets/fonts/PPMori-SemiBoldItalic.otf");
+  font-weight: 700 900;
+  font-style: italic;
+}
+
+body {
+  font-family: Mori;
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  overflow-x: visible;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  border: unset;
+  background-color: unset;
+}
+
+@keyframes expandSearch {
+  from {
+    width: "32px";
+  }
+
+  to {
+    width: "120px";
+  }
+}
+
+/* .ellipsis {
+  overflow: "hidden";
+  text-overflow: "ellipsis";
+  white-space: "nowrap";
+} */

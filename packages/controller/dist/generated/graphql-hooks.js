@@ -23,10 +23,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useViewMessagesLazyQuery = exports.useViewMessagesQuery = exports.ViewMessagesDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useFindListingsLazyQuery = exports.useFindListingsQuery = exports.FindListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = void 0;
+exports.useViewMessagesLazyQuery = exports.useViewMessagesQuery = exports.ViewMessagesDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useGetRandomUserCredentailsLazyQuery = exports.useGetRandomUserCredentailsQuery = exports.GetRandomUserCredentailsDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.VesselType = exports.Status = void 0;
 const client_1 = require("@apollo/client");
 const Apollo = __importStar(require("@apollo/client"));
 const defaultOptions = {};
+var Status;
+(function (Status) {
+    Status["Active"] = "active";
+    Status["Inactive"] = "inactive";
+})(Status = exports.Status || (exports.Status = {}));
+var VesselType;
+(function (VesselType) {
+    VesselType["Catamaran"] = "catamaran";
+    VesselType["Sailboat"] = "sailboat";
+})(VesselType = exports.VesselType || (exports.VesselType = {}));
 exports.SendForgotPasswordEmailDocument = (0, client_1.gql) `
     mutation SendForgotPasswordEmail($email: String!) {
   sendForgotPasswordEmail(email: $email)
@@ -65,7 +75,10 @@ function useLogoutUserMutation(baseOptions) {
 exports.useLogoutUserMutation = useLogoutUserMutation;
 exports.MeDocument = (0, client_1.gql) `
     query Me {
-  me
+  me {
+    firstName
+    avatar
+  }
 }
     `;
 function useMeQuery(baseOptions) {
@@ -104,11 +117,52 @@ function useResetPasswordMutation(baseOptions) {
     return Apollo.useMutation(exports.ResetPasswordDocument, options);
 }
 exports.useResetPasswordMutation = useResetPasswordMutation;
+exports.GetRandomUserCredentailsDocument = (0, client_1.gql) `
+    query GetRandomUserCredentails {
+  getRandomUserCredentails {
+    email
+    password
+  }
+}
+    `;
+function useGetRandomUserCredentailsQuery(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useQuery(exports.GetRandomUserCredentailsDocument, options);
+}
+exports.useGetRandomUserCredentailsQuery = useGetRandomUserCredentailsQuery;
+function useGetRandomUserCredentailsLazyQuery(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useLazyQuery(exports.GetRandomUserCredentailsDocument, options);
+}
+exports.useGetRandomUserCredentailsLazyQuery = useGetRandomUserCredentailsLazyQuery;
+exports.CreateBookingDocument = (0, client_1.gql) `
+    mutation CreateBooking($listingId: ID!, $input: BookingInput!) {
+  createBooking(listingId: $listingId, input: $input)
+}
+    `;
+function useCreateBookingMutation(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useMutation(exports.CreateBookingDocument, options);
+}
+exports.useCreateBookingMutation = useCreateBookingMutation;
+exports.GetListingUnavailabilityDocument = (0, client_1.gql) `
+    query GetListingUnavailability($listingId: ID!) {
+  getListingUnavailability(listingId: $listingId)
+}
+    `;
+function useGetListingUnavailabilityQuery(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useQuery(exports.GetListingUnavailabilityDocument, options);
+}
+exports.useGetListingUnavailabilityQuery = useGetListingUnavailabilityQuery;
+function useGetListingUnavailabilityLazyQuery(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useLazyQuery(exports.GetListingUnavailabilityDocument, options);
+}
+exports.useGetListingUnavailabilityLazyQuery = useGetListingUnavailabilityLazyQuery;
 exports.CreateListingDocument = (0, client_1.gql) `
-    mutation CreateListing($name: String!, $category: String!, $description: String!, $price: Int!, $beds: Int!, $guests: Int!, $latitude: Float!, $longitude: Float!, $amenities: [String!]!, $img: File) {
-  createListing(
-    input: {name: $name, category: $category, description: $description, price: $price, beds: $beds, guests: $guests, latitude: $latitude, longitude: $longitude, amenities: $amenities, img: $img}
-  )
+    mutation CreateListing($vesselType: VesselType!) {
+  createListing(input: {vesselType: $vesselType})
 }
     `;
 function useCreateListingMutation(baseOptions) {
@@ -116,42 +170,75 @@ function useCreateListingMutation(baseOptions) {
     return Apollo.useMutation(exports.CreateListingDocument, options);
 }
 exports.useCreateListingMutation = useCreateListingMutation;
-exports.FindListingsDocument = (0, client_1.gql) `
-    query findListings {
-  findListings {
-    id
-    name
-    imgUrl
-    owner {
-      email
+exports.SearchListingsDocument = (0, client_1.gql) `
+    query SearchListings($input: SearchListingsInput, $offset: Int!, $limit: Int!) {
+  searchListings(input: $input, offset: $offset, limit: $limit) {
+    results {
+      id
+      vesselType
+      photos
+      price
+      beds
+      guests
+      rating
+      city
+      state
+      country
+      longitude
+      latitude
+      distance
+    }
+    searchLocation {
+      lat
+      lng
     }
   }
 }
     `;
-function useFindListingsQuery(baseOptions) {
+function useSearchListingsQuery(baseOptions) {
     const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useQuery(exports.FindListingsDocument, options);
+    return Apollo.useQuery(exports.SearchListingsDocument, options);
 }
-exports.useFindListingsQuery = useFindListingsQuery;
-function useFindListingsLazyQuery(baseOptions) {
+exports.useSearchListingsQuery = useSearchListingsQuery;
+function useSearchListingsLazyQuery(baseOptions) {
     const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useLazyQuery(exports.FindListingsDocument, options);
+    return Apollo.useLazyQuery(exports.SearchListingsDocument, options);
 }
-exports.useFindListingsLazyQuery = useFindListingsLazyQuery;
+exports.useSearchListingsLazyQuery = useSearchListingsLazyQuery;
+exports.UpdateListingDocument = (0, client_1.gql) `
+    mutation UpdateListing($listingId: String!, $fields: UpdateListingFields!) {
+  updateListing(listingId: $listingId, fields: $fields)
+}
+    `;
+function useUpdateListingMutation(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useMutation(exports.UpdateListingDocument, options);
+}
+exports.useUpdateListingMutation = useUpdateListingMutation;
 exports.ViewListingDocument = (0, client_1.gql) `
-    query viewListing($id: String!) {
-  viewListing(id: $id) {
+    query ViewListing($listingId: ID!) {
+  viewListing(listingId: $listingId) {
     id
     name
-    category
+    vesselType
     price
     description
     guests
     beds
-    imgUrl
+    rating
+    amenities
+    street
+    apt
+    city
+    state
+    country
+    longitude
+    latitude
+    photos
     owner {
-      email
-      name
+      firstName
+      lastName
+      avatar
     }
   }
 }
@@ -198,7 +285,6 @@ exports.ViewMessagesDocument = (0, client_1.gql) `
   messages(listingId: $listingId) {
     text
     listingId
-    userId
     user {
       email
       name
