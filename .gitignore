@@ -6,7 +6,8 @@ temp/
 *.log
 dump.rdb
 .env
+.sh
+
 # Local Netlify folder
 .netlify
 images/
-
