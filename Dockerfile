@@ -10,7 +10,7 @@ RUN npm install --omit=dev
 
 COPY ./packages/server/dist ./packages/server/dist
 COPY ./packages/common/dist ./packages/common/dist
-COPY ./packages/server/.env ./packages/server/.env
+# COPY ./packages/server/.env ./packages/server/.env
 
 WORKDIR /airbnb-clone/packages/server
 

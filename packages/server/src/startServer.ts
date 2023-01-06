@@ -168,7 +168,7 @@ export const startServer = async () => {
   app.use("/images", express.static("images"));
 
   app.get("/confirm-email/:id", confirmEmail);
-  app.get("/", (_, res) => res.send("hello there"));
+  app.get("/", (_, res) => res.send("without .env in dockerfile"));
 
   const port = process.env.PORT || 8080;
   console.log(`running app on port ${port}`);
