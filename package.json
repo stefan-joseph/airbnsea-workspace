@@ -9,7 +9,9 @@
   },
   "scripts": {
     "build:server": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/server}",
-    "build:web": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/controller,@airbnb-clone/web}"
+    "build:web": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/controller,@airbnb-clone/web}",
+    "git": "git add . && git commit -m",
+    "deploy": "git push -u origin main"
   },
   "devDependencies": {
     "lerna": "^5.5.4",
