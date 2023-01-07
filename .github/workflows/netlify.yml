@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - run: npm config delete prefix
       - uses: actions/checkout@v1
       - uses: jsmrcaga/action-netlify-deploy@master
         with:
