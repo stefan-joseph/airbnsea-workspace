@@ -8,8 +8,7 @@
     ]
   },
   "scripts": {
-    "build:server": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/server}",
-    "build:web": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/controller,@airbnb-clone/web}",
+    "build:app": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/controller,@airbnb-clone/web,@airbnb-clone/server} && git add . && git commit -m",
     "git": "git add . && git commit -m",
     "deploy": "git push -u origin main"
   },
