@@ -19,4 +19,4 @@ jobs:
           NETLIFY_DEPLOY_MESSAGE: "Prod deploy v${{ github.ref }}"
           NETLIFY_DEPLOY_TO_PROD: true
           build_directory: ./packages/web/build
-          # node_version: 18.0.0
+          node_version: "18.0.0"
