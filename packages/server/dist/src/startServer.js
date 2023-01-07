@@ -13,7 +13,6 @@ exports.startServer = void 0;
 require("dotenv/config");
 const node_1 = require("@graphql-yoga/node");
 const graphql_redis_subscriptions_1 = require("graphql-redis-subscriptions");
-const typeorm_extension_1 = require("typeorm-extension");
 const cloudinary = require("cloudinary");
 const express = require("express");
 const graphql_middleware_1 = require("graphql-middleware");
@@ -47,12 +46,7 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     const pubSub = new graphql_redis_subscriptions_1.RedisPubSub(process.env.NODE_ENV === "development"
         ? {}
         : { connection: process.env.REDIS_URL });
-    yield (0, getTypeormConnection_1.getTypeormConnection)()
-        .initialize()
-        .then(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, getTypeormConnection_1.getTypeormConnection)().synchronize(true);
-        yield (0, typeorm_extension_1.runSeeders)((0, getTypeormConnection_1.getTypeormConnection)());
-    }));
+    yield (0, getTypeormConnection_1.getTypeormConnection)().initialize();
     const yoga = (0, node_1.createServer)({
         schema: schemaWithMiddleware,
         context: ({ request }) => ({
@@ -76,7 +70,7 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     app.set("trust proxy", 1);
     app.use("/images", express.static("images"));
     app.get("/confirm-email/:id", confirmEmail_1.confirmEmail);
-    app.get("/", (_, res) => res.send("hello2"));
+    app.get("/", (_, res) => res.send("without .env in dockerfile"));
     const port = process.env.PORT || 8080;
     console.log(`running app on port ${port}`);
     yield app.listen(port);
