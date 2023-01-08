@@ -23,7 +23,7 @@ export const HomeIcon: React.FC<{ sx: SxProps }> = ({ sx }) => {
               fontSize: "1.4em",
             }}
           />
-          irBnSeaa
+          irBnSea
         </Typography>
       </Link>
     </Box>

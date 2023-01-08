@@ -70,7 +70,7 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     app.set("trust proxy", 1);
     app.use("/images", express.static("images"));
     app.get("/confirm-email/:id", confirmEmail_1.confirmEmail);
-    app.get("/", (_, res) => res.send("without .env in dockerfile2223333"));
+    app.get("/", (_, res) => res.redirect("/graphql"));
     const port = process.env.PORT || 8080;
     console.log(`running app on port ${port}`);
     yield app.listen(port);
