@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: npm config delete prefix
+      # - run: npm config delete prefix
       - uses: actions/checkout@v1
       - uses: jsmrcaga/action-netlify-deploy@master
         with:
@@ -19,7 +19,7 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_DEPLOY_MESSAGE: "Prod deploy v${{ github.ref }}"
           NETLIFY_DEPLOY_TO_PROD: true
-          build_command:
+          build_command: yarn build
           build_directory: ./packages/web/build
           install_command: yarn install --ignore-engines
           # node_version: "18.0.0"
