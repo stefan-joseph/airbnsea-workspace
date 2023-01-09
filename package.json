@@ -8,7 +8,7 @@
     ]
   },
   "scripts": {
-    "build:app": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/controller} && lerna run build --scope={@airbnb-clone/web,@airbnb-clone/server} && git add . && git commit -m",
+    "build:app": "lerna run build --scope={@airbnb-clone/common,@airbnb-clone/controller} && lerna run build --scope={@airbnb-clone/web,@airbnb-clone/server} && yarn --cwd packages/server test && git add . && git commit -m",
     "git": "git add . && git commit -m",
     "deploy": "git push -u origin main && netlify deploy --prod --dir=./packages/web/build"
   },
