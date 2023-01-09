@@ -9,14 +9,14 @@ exports.testUser1 = {
     password: "cjdkvbndsjvk",
     firstName: "Bob",
     lastName: "Bobby",
-    avatar: "http:/ testavatar.com",
+    avatar: "http://testavatar.com",
 };
 exports.testUser2 = {
     email: "sarah@sarah.com",
     password: "kdzjvndsjkvbj",
     firstName: "Sarah",
     lastName: "Smith",
-    avatar: "http:/ testavatar.com",
+    avatar: "http://testavatar.com",
 };
 exports.testListing = {
     vesselType: types_1.VesselType.Sailboat,

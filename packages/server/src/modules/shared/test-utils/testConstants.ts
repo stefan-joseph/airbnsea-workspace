@@ -9,7 +9,7 @@ export const testUser1 = {
   password: "cjdkvbndsjvk",
   firstName: "Bob",
   lastName: "Bobby",
-  avatar: "http:/ testavatar.com",
+  avatar: "http://testavatar.com",
 };
 
 export const testUser2 = {
@@ -17,7 +17,7 @@ export const testUser2 = {
   password: "kdzjvndsjkvbj",
   firstName: "Sarah",
   lastName: "Smith",
-  avatar: "http:/ testavatar.com",
+  avatar: "http://testavatar.com",
 };
 
 export const testListing = {
