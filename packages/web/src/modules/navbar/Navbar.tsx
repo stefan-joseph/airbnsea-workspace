@@ -2,10 +2,11 @@ import { createContext, Dispatch, ReactNode, useReducer } from "react";
 import { useMediaQuery } from "@mui/material";
 
 import { ActionType } from "../../context/types";
-import { BackdropButton } from "./components/BackdropButton";
+import { BackdropButton } from "./components/desktop/components/BackdropButton";
 import { NavbarContainer } from "./components/NavbarContainer";
 import { MobileNavbar } from "./components/mobile/MobileNavbar";
 import { DesktopNavbar } from "./components/desktop/DesktopNavbar";
+import { desktopMinWidth } from "../../constants/constants";
 
 export interface NavbarStateInterface {
   subSearch: number;
@@ -48,7 +49,7 @@ const NavbarProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const Navbar = () => {
-  const matches = useMediaQuery("(min-width:750px)");
+  const matches = useMediaQuery(desktopMinWidth);
   // 0 --> closed
   // 1-3 --> sub search tabs
   // -1 --> no sub search menu selected but expanded view remains open

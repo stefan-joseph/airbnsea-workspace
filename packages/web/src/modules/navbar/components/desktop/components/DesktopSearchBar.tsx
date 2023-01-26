@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import React, { useContext, useRef } from "react";
 
-import { SearchContainer } from "../SearchContainer";
-import { Location } from "./subSearchComponents/Location";
-import { Dates } from "./subSearchComponents/Dates";
-import { Guests } from "./subSearchComponents/Guests";
-import { NavbarContext } from "../../Navbar";
-import { SearchButton } from "../SearchButton";
-import { SearchBarForm } from "../SearchBarForm";
+import { SearchContainer } from "./SearchContainer";
+import { Where } from "../sub-search-components/Where";
+import { When } from "../sub-search-components/When";
+import { Who } from "../sub-search-components/Who";
+import { NavbarContext } from "../../../Navbar";
+import { SearchButton } from "./SearchButton";
+import { SearchBarForm } from "../../SearchBarForm";
 
 export interface SearchValues {
   where: string | null;
@@ -26,13 +26,13 @@ export const DesktopSearchBar = () => {
   } = useContext(NavbarContext);
 
   const subSearchComponents = [
-    <Location dividerRefs={dividerRefs} />,
+    <Where dividerRefs={dividerRefs} />,
 
-    <Dates dividerRefs={dividerRefs} />,
+    <When dividerRefs={dividerRefs} />,
 
-    <Guests dividerRefs={dividerRefs}>
+    <Who dividerRefs={dividerRefs}>
       <SearchButton />
-    </Guests>,
+    </Who>,
   ];
 
   return (

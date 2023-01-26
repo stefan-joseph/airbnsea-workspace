@@ -1,21 +1,27 @@
 import { SearchListingsQuery } from "@airbnb-clone/controller";
 import React, { useState } from "react";
-import { Fab, Grid } from "@mui/material";
+import { Fab, Grid, Skeleton, Typography, useMediaQuery } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 
-import { searchBarHeight } from "../../../constants/constants";
+import {
+  appSidePadding,
+  appSidePaddingWithMap,
+  desktopMinWidth,
+  searchBarHeight,
+} from "../../../constants/constants";
 import { Listing } from "./Listing";
 import { Map } from "./Map";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
-import { ListingSkeleton } from "./ListingSkeleton";
 
 export const Results: React.FC<{
-  loading?: boolean;
+  children: JSX.Element | undefined;
   data?: SearchListingsQuery["searchListings"];
-}> = ({ loading, data }) => {
+}> = ({ children, data }) => {
   const [searchParams] = useSearchParams();
   const where = searchParams.get("where");
+
+  const matches = useMediaQuery(desktopMinWidth);
 
   const [mapOpen, setMapOpen] = useState(false);
 
@@ -26,6 +32,9 @@ export const Results: React.FC<{
         xs={12}
         md={where ? 7 : 12}
         lg={where ? 6 : 12}
+        xl={where ? 7 : 12}
+        paddingLeft={!where ? appSidePadding : appSidePaddingWithMap}
+        paddingRight={!where ? appSidePadding : appSidePaddingWithMap}
         sx={{
           overflow: "hidden",
           height: {
@@ -34,17 +43,26 @@ export const Results: React.FC<{
           },
         }}
       >
-        <Grid container spacing={3} sx={{ padding: 4 }}>
-          {data?.results
-            ? data.results.map((listing, index) => (
-                <Listing key={listing.id} data={listing} mapShowing={!!where} />
-              ))
-            : Array.from(new Array(searchParams.get("limit") || 12)).map(
-                (_, index) => (
-                  <ListingSkeleton key={index} mapShowing={!!where} />
-                )
-              )}
+        <Typography fontWeight={700} paddingTop={3} paddingBottom={3}>
+          {data ? `${data.count} vessels found` : <Skeleton width={150} />}
+        </Typography>
+        <Grid container spacing={3} sx={{ padding: 0 }}>
+          {(data?.results
+            ? data.results
+            : Array.from(new Array(searchParams.get("limit") || 12))
+          ).map((listing, index) => (
+            <Listing
+              key={index}
+              data={
+                typeof listing == "string" || typeof listing == "number"
+                  ? undefined
+                  : listing
+              }
+              mapShowing={!!where}
+            />
+          ))}
         </Grid>
+        {children}
       </Grid>
       {where && (
         <Grid
@@ -52,6 +70,7 @@ export const Results: React.FC<{
           xs={12}
           md={5}
           lg={6}
+          xl={5}
           sx={{
             padding: 0,
             position: { xs: "absolute", md: "initial" },
@@ -74,7 +93,7 @@ export const Results: React.FC<{
             display: { xs: "flex", md: "none" },
             width: 140,
             position: "fixed",
-            bottom: 30,
+            bottom: matches ? 25 : 65,
             left: "50%",
             marginLeft: "calc(-140px / 2)",
             textTransform: "none",

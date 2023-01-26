@@ -4,20 +4,27 @@ import dayjs from "dayjs";
 
 import { PopperMenu } from "../../../../../components/PopperMenu";
 import { NavbarContext } from "../../../Navbar";
-import { CollapsedSubSearch } from "../CollapsedSubSearch";
-import { DummyFabButton } from "../DummyFabButton";
-import { Calendar } from "../../../../../components/calendar/Calendar";
-import { SearchDivider } from "../../SearchDivider";
+import { CollapsedSubSearch } from "../components/CollapsedSubSearch";
+import { DummyFabButton } from "../components/DummyFabButton";
+import { DesktopCalendar } from "../../../../../components/calendar/components/DesktopCalendar";
+import { SearchDivider } from "../components/SearchDivider";
 import { SubSearchProps } from "./types";
-import { ExpandedSubSearch } from "../ExpandedSubSearch";
+import { ExpandedSubSearch } from "../components/ExpandedSubSearch";
 import { ClearButton } from "../ClearButton";
+import { formatDateRange } from "../../../../../utils/formatDateRange";
+import { Calendar } from "../../../../../components/calendar/Calendar";
+import { useSearchParams } from "react-router-dom";
 
-export const Dates = ({
+export const When = ({
   // values,
   index,
   searchBarRef,
   dividerRefs,
 }: SubSearchProps) => {
+  const [searchParams] = useSearchParams();
+  const start = searchParams.get("start");
+  const end = searchParams.get("end");
+
   const {
     navbarState: { subSearch },
   } = useContext(NavbarContext);
@@ -30,20 +37,9 @@ export const Dates = ({
 
   if (!subSearch)
     return (
-      // for both 'start' and 'end'
-      <Field>
-        {({ form: { values } }: FieldProps) => (
-          <CollapsedSubSearch
-            text={
-              values?.start && values?.end
-                ? `${dayjs(values.start).format("MMM. D")} - ${dayjs(
-                    values.end
-                  ).format("MMM. D")}`
-                : "Any week"
-            }
-          />
-        )}
-      </Field>
+      <CollapsedSubSearch
+        text={start && end ? formatDateRange(start, end) : "Any week"}
+      />
     );
 
   return (
@@ -73,7 +69,8 @@ export const Dates = ({
           <Field name="start">
             {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
               <ExpandedSubSearch
-                value={value ? dayjs(value).format("MMM. D") : "Add dates"}
+                value={value ? dayjs(value).format("MMM. D") : null}
+                placeholder="Add dates"
                 isPlaceholder={!!value}
                 label="Check in"
               >
@@ -116,7 +113,8 @@ export const Dates = ({
           <Field name="end">
             {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
               <ExpandedSubSearch
-                value={value ? dayjs(value).format("MMM. D") : "Add dates"}
+                value={value ? dayjs(value).format("MMM. D") : null}
+                placeholder="Add dates"
                 isPlaceholder={!!value}
                 label="Check out"
               >
@@ -151,18 +149,8 @@ export const Dates = ({
               <Calendar
                 start={values.start}
                 end={values.end}
-                isStartSelection={isStartSelection}
-                setIsStartSelection={setIsStartSelection}
-                handleChange={(value) => {
-                  const formattedValue = dayjs(value).format("YYYY-MM-DD");
-                  if (isStartSelection || dayjs(value).isBefore(values.start)) {
-                    setFieldValue("start", formattedValue);
-                    setFieldValue("end", null);
-                    setIsStartSelection(false);
-                  } else if (!isStartSelection) {
-                    setFieldValue("end", formattedValue);
-                  }
-                }}
+                setFieldValue={setFieldValue}
+                bookingCalendar={false}
               />
             )}
           </Field>

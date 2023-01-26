@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useViewListingQuery } from "@airbnb-clone/controller";
-import { Stack, Typography, Divider, Box } from "@mui/material";
+import { Stack, Typography, Divider, Box, IconButton } from "@mui/material";
 import { useParams } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
+import { useNavigate } from "react-router-dom";
 
-import { searchBarHeight } from "../../constants/constants";
+import { desktopMinWidth, searchBarHeight } from "../../constants/constants";
 import { Navbar } from "../navbar/Navbar";
 import { Amenities } from "./components/Amenities";
 import { Header } from "./components/Header";
@@ -15,8 +17,10 @@ import { Sleep } from "./components/Sleep";
 import { SubHeader } from "./components/SubHeader";
 import { PhotosNarrowScreen } from "./components/PhotosNarrowScreen";
 import { PhotosDrawer } from "./components/PhotosDrawer";
+import { ShareSaveButtons } from "./components/ShareSaveButtons";
 
 export const Listing = () => {
+  const navigate = useNavigate();
   const { listingId } = useParams();
 
   const [photosOpen, setPhotosOpen] = useState(false);
@@ -25,7 +29,7 @@ export const Listing = () => {
     variables: { listingId: listingId as string },
   });
 
-  const matches = useMediaQuery("(min-width:750px)");
+  const matches = useMediaQuery(desktopMinWidth);
 
   if (loading) return <div>Loading...</div>;
 
@@ -50,11 +54,22 @@ export const Listing = () => {
     return (
       <Box
         sx={{
-          mt: `${searchBarHeight}px`,
+          mt: matches ? `${searchBarHeight}px` : undefined,
           mb: { xs: 12 },
         }}
       >
-        {matches ? <Navbar /> : <div>mobile</div>}
+        {matches ? (
+          <Navbar />
+        ) : (
+          <Stack direction="row" justifyContent="space-between" padding={2}>
+            <IconButton onClick={() => navigate(-1)} color="info">
+              <ArrowBackIosNewRoundedIcon fontSize="small" />
+            </IconButton>
+            <Box>
+              <ShareSaveButtons onlyIcon spacing={1} />
+            </Box>
+          </Stack>
+        )}
         {!matches && (
           <Box onClick={() => setPhotosOpen(true)} sx={{ cursor: "pointer" }}>
             <PhotosNarrowScreen photos={photos} />

@@ -1,4 +1,4 @@
-import { useCreateMessageMutation } from "@airbnb-clone/controller";
+// import { useCreateMessageMutation } from "@airbnb-clone/controller";
 import { Button } from "@mui/material";
 import { Field, Formik, Form } from "formik";
 
@@ -9,15 +9,15 @@ interface Props {
 }
 
 export const CreateMessage = ({ listingId }: Props) => {
-  const [createMessageMutation] = useCreateMessageMutation();
+  // const [createMessageMutation] = useCreateMessageMutation();
 
   return (
     <Formik
       initialValues={{ text: "" }}
       onSubmit={async ({ text }, { resetForm }) => {
-        await createMessageMutation({
-          variables: { message: { text, listingId } },
-        });
+        // await createMessageMutation({
+        //   variables: { message: { text, listingId } },
+        // });
         // not working ??
         resetForm();
         console.log("reset");

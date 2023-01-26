@@ -17,6 +17,7 @@ type Query {
 type SearchListingsResponse {
   results: [SearchListingResult!]!
   searchLocation: SearchLocation
+  count: Int!
 }
 
 type SearchLocation {
@@ -33,7 +34,7 @@ type SearchListingResult {
   price: Int!
   beds: Int!
   guests: Int!
-  rating: Float
+  rating: Float!
   latitude: Float!
   longitude: Float!
   distance: Float

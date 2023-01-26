@@ -1,39 +1,57 @@
-import { Box, ClickAwayListener, Grow, Paper, Popper } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
-import { boolean } from "yup";
+import {
+  Box,
+  ClickAwayListener,
+  Grow,
+  Paper,
+  Popper,
+  PopperPlacementType,
+} from "@mui/material";
+
+import { borderRadius } from "../constants/constants";
 
 type Props = {
   children: JSX.Element;
   open: boolean;
   anchorEl: React.MutableRefObject<any>;
   handleClose?: (e: any) => void;
+  placement?: PopperPlacementType;
   width?: number | string | null;
   marginTop?: number | string;
+  disableAnimation?: boolean;
 };
 
 export const PopperMenu = ({
   children,
   open,
-  handleClose,
   anchorEl,
+  handleClose,
+  placement,
   width,
   marginTop,
+  disableAnimation,
 }: Props) => {
   return (
     <Popper
       open={open}
       anchorEl={anchorEl.current}
       role={undefined}
-      placement="bottom-end"
+      placement={placement || "bottom-end"}
       transition
       disablePortal
+      // prevent parent component from firing because we have disabled portal
+      onClick={(e) => e.stopPropagation()}
       sx={{
         zIndex: 10,
         position: "absolute",
+        cursor: "default",
       }}
       modifiers={[
         {
           name: "flip",
+          enabled: false,
+        },
+        {
+          name: "preventOverflow",
           enabled: false,
         },
       ]}
@@ -44,11 +62,13 @@ export const PopperMenu = ({
           style={{
             transformOrigin: "right top",
           }}
+          timeout={disableAnimation ? 0 : undefined}
         >
           <Paper
             elevation={4}
             sx={{
-              borderRadius: 3,
+              borderRadius,
+              overflow: "hidden",
               marginTop: marginTop ? marginTop : "unset",
               width: width || "100%",
             }}

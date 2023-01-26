@@ -1,11 +1,11 @@
 import { HomeIcon } from "../../../../components/HomeIcon";
-import { DesktopSearchBar } from "./DesktopSearchBar";
-import { UserMenu } from "../UserMenu";
+import { DesktopSearchBar } from "./components/DesktopSearchBar";
+import { UserMenu } from "./components/UserMenu";
 
 export const DesktopNavbar = () => {
   return (
     <>
-      <HomeIcon sx={{ fontSize: 26, display: "flex", alignItems: "center" }} />
+      <HomeIcon sx={{ fontSize: 26, mt: 1 }} />
       <DesktopSearchBar />
       <UserMenu />
     </>

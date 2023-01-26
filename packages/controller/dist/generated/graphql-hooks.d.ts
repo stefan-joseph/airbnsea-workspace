@@ -40,6 +40,12 @@ export declare type BookingInput = {
     guests: Scalars['Int'];
     start: Scalars['String'];
 };
+export declare type ConversationHeader = {
+    __typename?: 'ConversationHeader';
+    interlocutor?: Maybe<Interlocutor>;
+    lastMessage: Scalars['String'];
+    location: Scalars['String'];
+};
 export declare type Draft = {
     __typename?: 'Draft';
     amenities?: Maybe<Array<Scalars['String']>>;
@@ -65,6 +71,16 @@ export declare type Error = {
     message: Scalars['String'];
     path: Scalars['String'];
 };
+export declare enum InboxType {
+    Guest = "guest",
+    Host = "host"
+}
+export declare type Interlocutor = {
+    __typename?: 'Interlocutor';
+    avatar: Scalars['String'];
+    firstName: Scalars['String'];
+    lastName: Scalars['String'];
+};
 export declare type Listing = {
     __typename?: 'Listing';
     amenities?: Maybe<Array<Scalars['String']>>;
@@ -81,7 +97,7 @@ export declare type Listing = {
     owner?: Maybe<Owner>;
     photos: Array<Scalars['String']>;
     price: Scalars['Int'];
-    rating?: Maybe<Scalars['Float']>;
+    rating: Scalars['Float'];
     state?: Maybe<Scalars['String']>;
     street: Scalars['String'];
     userId?: Maybe<Scalars['String']>;
@@ -105,16 +121,14 @@ export declare type Message = {
     user?: Maybe<User>;
     userId?: Maybe<Scalars['String']>;
 };
-export declare type MessageInput = {
-    listingId: Scalars['String'];
-    text: Scalars['String'];
-};
 export declare type Mutation = {
     __typename?: 'Mutation';
+    addFruit: Scalars['Boolean'];
     confirmEmail: Scalars['Boolean'];
     createBooking: Scalars['ID'];
+    createGuestMessage: Scalars['Boolean'];
+    createHostMessage: Scalars['Boolean'];
     createListing: Scalars['ID'];
-    createMessage: Scalars['Boolean'];
     deleteListing: Scalars['Boolean'];
     login: LoginResponse;
     logout?: Maybe<Scalars['Boolean']>;
@@ -123,6 +137,9 @@ export declare type Mutation = {
     sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
     updateListing?: Maybe<Scalars['ID']>;
 };
+export declare type MutationAddFruitArgs = {
+    fruit: Scalars['String'];
+};
 export declare type MutationConfirmEmailArgs = {
     id: Scalars['String'];
 };
@@ -130,11 +147,17 @@ export declare type MutationCreateBookingArgs = {
     input: BookingInput;
     listingId: Scalars['ID'];
 };
+export declare type MutationCreateGuestMessageArgs = {
+    listingId: Scalars['ID'];
+    text: Scalars['String'];
+};
+export declare type MutationCreateHostMessageArgs = {
+    interlocutorId: Scalars['ID'];
+    listingId: Scalars['ID'];
+    text: Scalars['String'];
+};
 export declare type MutationCreateListingArgs = {
     input: VesselTypeInput;
-};
-export declare type MutationCreateMessageArgs = {
-    message: MessageInput;
 };
 export declare type MutationDeleteListingArgs = {
     id: Scalars['String'];
@@ -171,11 +194,13 @@ export declare type PhotoUpdate = {
 };
 export declare type Query = {
     __typename?: 'Query';
+    getFruit: Scalars['String'];
     getListingUnavailability: Array<Scalars['String']>;
     getRandomUserCredentails?: Maybe<RandomUser>;
     me?: Maybe<Me>;
     messages?: Maybe<Array<Message>>;
     populateForm: Draft;
+    populateInbox: Array<ConversationHeader>;
     searchListings: SearchListingsResponse;
     viewListing: Listing;
     viewUserBookings: Array<Booking>;
@@ -189,6 +214,9 @@ export declare type QueryMessagesArgs = {
 export declare type QueryPopulateFormArgs = {
     fields: Array<Scalars['String']>;
     listingId: Scalars['ID'];
+};
+export declare type QueryPopulateInboxArgs = {
+    type?: InputMaybe<InboxType>;
 };
 export declare type QuerySearchListingsArgs = {
     input?: InputMaybe<SearchListingsInput>;
@@ -215,7 +243,7 @@ export declare type SearchListingResult = {
     longitude: Scalars['Float'];
     photos: Array<Scalars['String']>;
     price: Scalars['Int'];
-    rating?: Maybe<Scalars['Float']>;
+    rating: Scalars['Float'];
     state?: Maybe<Scalars['String']>;
     vesselType: VesselType;
 };
@@ -228,6 +256,7 @@ export declare type SearchListingsInput = {
 };
 export declare type SearchListingsResponse = {
     __typename?: 'SearchListingsResponse';
+    count: Scalars['Int'];
     results: Array<SearchListingResult>;
     searchLocation?: Maybe<SearchLocation>;
 };
@@ -372,6 +401,7 @@ export declare type SearchListingsQuery = {
     __typename?: 'Query';
     searchListings: {
         __typename?: 'SearchListingsResponse';
+        count: number;
         results: Array<{
             __typename?: 'SearchListingResult';
             id: string;
@@ -380,7 +410,7 @@ export declare type SearchListingsQuery = {
             price: number;
             beds: number;
             guests: number;
-            rating?: number | null;
+            rating: number;
             city: string;
             state?: string | null;
             country: string;
@@ -417,13 +447,14 @@ export declare type ViewListingQuery = {
         description: string;
         guests: number;
         beds: number;
-        rating?: number | null;
+        rating: number;
         amenities?: Array<string> | null;
         street: string;
         apt?: string | null;
         city: string;
         state?: string | null;
         country: string;
+        zipcode: string;
         longitude: number;
         latitude: number;
         photos: Array<string>;
@@ -434,13 +465,6 @@ export declare type ViewListingQuery = {
             avatar: string;
         } | null;
     };
-};
-export declare type CreateMessageMutationVariables = Exact<{
-    message: MessageInput;
-}>;
-export declare type CreateMessageMutation = {
-    __typename?: 'Mutation';
-    createMessage: boolean;
 };
 export declare type NewMessageSubscriptionSubscriptionVariables = Exact<{
     listingId: Scalars['String'];
@@ -597,14 +621,6 @@ export declare function useViewListingLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export declare type ViewListingQueryHookResult = ReturnType<typeof useViewListingQuery>;
 export declare type ViewListingLazyQueryHookResult = ReturnType<typeof useViewListingLazyQuery>;
 export declare type ViewListingQueryResult = Apollo.QueryResult<ViewListingQuery, ViewListingQueryVariables>;
-export declare const CreateMessageDocument: Apollo.DocumentNode;
-export declare type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
-export declare function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>): Apollo.MutationTuple<CreateMessageMutation, Exact<{
-    message: MessageInput;
-}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
-export declare type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
-export declare type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
-export declare type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
 export declare const NewMessageSubscriptionDocument: Apollo.DocumentNode;
 export declare function useNewMessageSubscriptionSubscription(baseOptions: Apollo.SubscriptionHookOptions<NewMessageSubscriptionSubscription, NewMessageSubscriptionSubscriptionVariables>): Apollo.SubscriptionResult<NewMessageSubscriptionSubscription, any>;
 export declare type NewMessageSubscriptionSubscriptionHookResult = ReturnType<typeof useNewMessageSubscriptionSubscription>;

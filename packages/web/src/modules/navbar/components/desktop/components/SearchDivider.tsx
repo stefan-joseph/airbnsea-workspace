@@ -2,7 +2,7 @@ import { Divider } from "@mui/material";
 import {
   searchBarBackgroundColor,
   searchBarBorderColor,
-} from "../../../constants/constants";
+} from "../../../../../constants/constants";
 
 type Props = {
   isHidden: boolean;

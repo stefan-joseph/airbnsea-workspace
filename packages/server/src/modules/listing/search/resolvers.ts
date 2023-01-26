@@ -75,16 +75,20 @@ export const resolvers: Resolvers = {
           .orderBy("distance", "ASC");
 
         const results = await queryBuilder.getRawMany();
+        const count = await queryBuilder.getCount();
+        // const [results, count] = Promise.all
 
         return {
           results,
           searchLocation: { lat, lng },
+          count,
         };
       }
 
-      const listings = await queryBuilder.getMany();
+      const results = await queryBuilder.getMany();
+      const count = await queryBuilder.getCount();
 
-      return { results: listings };
+      return { results, count };
     },
   },
 };

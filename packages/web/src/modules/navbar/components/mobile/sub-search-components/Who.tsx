@@ -1,9 +1,12 @@
-import { Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { Field, FieldProps } from "formik";
 import { useContext } from "react";
 import { NumberSelect } from "../../../../../components/fields/NumberSelect";
+import { GuestsSelect } from "../../../../../components/GuestsSelect";
 import { NavbarContext } from "../../../Navbar";
-import { CollapsedSubSearch } from "../CollapsedSubSearch";
+
+import { CollapsedSubSearch } from "../components/CollapsedSubSearch";
+import { ExpandedSubSearch } from "../components/ExpandedSubSearch";
 
 export const Who = () => {
   const {
@@ -11,52 +14,30 @@ export const Who = () => {
     dispatch,
   } = useContext(NavbarContext);
 
-  if (subSearch !== 3) {
-    return (
-      <Field name="guests">
-        {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
-          <CollapsedSubSearch
-            value={
-              value ? `${value} guest${value !== 1 ? "s" : ""}` : "Add guests"
-            }
-            text="Who"
-            handleClick={() =>
-              dispatch({
-                type: "SET_SUB_SEARCH",
-                payload: 3,
-              })
-            }
-          />
-        )}
-      </Field>
-    );
-  }
+  if (subSearch === 1 || subSearch === 2) return null;
 
   return (
-    <Paper sx={{ p: 3, pt: 2, pb: 2, borderRadius: 4 }}>
-      <Typography fontSize={20} fontWeight={700}>
-        Who's coming?
-      </Typography>
-      <Field name="guests">
-        {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
-          <NumberSelect
-            name="Guests"
-            value={value}
-            handleRemove={() => {
-              if (value > 0) {
-                setFieldValue("guests", +value - 1);
-              }
-            }}
-            handleAdd={() => {
-              if (value < 16) {
-                setFieldValue("guests", +value + 1);
-              }
-            }}
-            disableRemove={value <= 0}
-            disableAdd={value >= 16}
-          />
-        )}
-      </Field>
-    </Paper>
+    <Field name="guests">
+      {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
+        <CollapsedSubSearch
+          value={
+            value ? `${value} guest${value !== 1 ? "s" : ""}` : "Add guests"
+          }
+          text="Who"
+          subtitle="Who's coming?"
+          handleClick={() =>
+            dispatch({
+              type: "SET_SUB_SEARCH",
+              payload: 3,
+            })
+          }
+          selected={subSearch === 3}
+        >
+          <Box padding={2}>
+            <GuestsSelect value={value} setFieldValue={setFieldValue} />
+          </Box>
+        </CollapsedSubSearch>
+      )}
+    </Field>
   );
 };

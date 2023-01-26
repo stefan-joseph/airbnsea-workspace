@@ -4,28 +4,52 @@ import SailingSharpIcon from "@mui/icons-material/SailingSharp";
 
 export const HomeIcon: React.FC<{ sx: SxProps }> = ({ sx }) => {
   return (
-    <Box sx={sx}>
-      <Link to="/" style={{ fontSize: "1em" }}>
+    <Link to="/" style={{ fontSize: "1em" }}>
+      <Box
+        display="flex"
+        alignItems="baseline"
+        gap="0.2em"
+        sx={{ ...sx }}
+        color="primary.main"
+      >
+        <Box
+          component="div"
+          display="flex"
+          fontSize="1.2em"
+          fontWeight={400}
+          sx={{
+            flexDirection: "column",
+            transform: "translateY(-0.09em)",
+            fontStyle: "Mori",
+          }}
+        >
+          <Box height=".24em">〜</Box>
+          <Box height=".24em">〜</Box>
+          <Box height=".24em">〜</Box>
+        </Box>
         <Typography
           variant="h1"
           color="primary"
+          fontStyle="Mori"
           sx={{
             display: "flex",
-            alignItems: "center",
-            fontWeight: 400,
+            alignItems: "baseline",
+            fontWeight: 700,
             fontSize: "1em",
+            fontFamily: "Pangram",
           }}
         >
-          <SailingSharpIcon
-            color="primary"
-            sx={{
-              marginRight: -0.2,
-              fontSize: "1.4em",
-            }}
-          />
-          irBnSea
+          <Box
+            component="span"
+            fontSize="0.9em"
+            color="grey.800"
+            fontFamily="Pangram"
+          >
+            airbn
+          </Box>
+          sea
         </Typography>
-      </Link>
-    </Box>
+      </Box>
+    </Link>
   );
 };

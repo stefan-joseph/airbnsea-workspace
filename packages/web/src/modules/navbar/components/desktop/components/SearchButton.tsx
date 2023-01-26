@@ -1,12 +1,13 @@
-import { Button } from "@mui/material";
+import { Button, useMediaQuery } from "@mui/material";
 import { useContext } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { NavbarContext } from "../Navbar";
+import { NavbarContext } from "../../../Navbar";
 import {
+  desktopMinWidth,
   searchBarTimingFunction,
   searchBarTransitionTime,
-} from "../../../constants/constants";
+} from "../../../../../constants/constants";
 
 export const SearchButton = ({
   searchButtonRef,
@@ -16,18 +17,24 @@ export const SearchButton = ({
   const {
     navbarState: { subSearch },
   } = useContext(NavbarContext);
+
+  const iconOnly = useMediaQuery("(max-width:855px)");
   return (
     <Button
       ref={searchButtonRef}
       variant="contained"
+      color="primary"
       type="submit"
       disableElevation
       className="search-button"
       sx={{
         height: subSearch ? 50 : 32,
-        width: subSearch ? 120 : 32,
-        minWidth: "unset",
+        width: subSearch && !iconOnly ? 120 : subSearch ? 50 : 32,
+        minWidth: subSearch ? "unset" : 32,
+        p: subSearch ? 2 : 0,
         borderRadius: 6,
+        fontSize: 16,
+        letterSpacing: ".02em",
         display: "flex",
         justifyContent: "center",
         m: 0.6,
@@ -55,8 +62,11 @@ export const SearchButton = ({
         },
       }}
     >
-      <SearchIcon sx={{ mr: subSearch ? 1 : 0 }} fontSize="small" />
-      {!subSearch ? "" : "Search"}
+      <SearchIcon
+        fontSize={subSearch ? "medium" : "small"}
+        sx={{ mr: subSearch && !iconOnly ? 1 : 0 }}
+      />
+      {!subSearch || iconOnly ? "" : "Search"}
     </Button>
   );
 };

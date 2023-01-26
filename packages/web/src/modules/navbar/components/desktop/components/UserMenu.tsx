@@ -1,11 +1,11 @@
 import { useState, useRef, useContext } from "react";
 import { Avatar, Button, MenuItem, MenuList } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import { PopperMenu } from "../../../components/PopperMenu";
+import { PopperMenu } from "../../../../../components/PopperMenu";
 import { Link } from "react-router-dom";
 
-import { AppContext } from "../../../context/context";
-import { raiseOnHoverBoxShadow } from "../../../constants/constants";
+import { AppContext } from "../../../../../context/context";
+import { raiseOnHoverBoxShadow } from "../../../../../constants/constants";
 
 export const UserMenu = () => {
   const buttonRef = useRef(null);

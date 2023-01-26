@@ -1,5 +1,7 @@
 import { Form, Formik } from "formik";
+import { useContext } from "react";
 import { useSearchParams } from "react-router-dom";
+import { NavbarContext } from "../Navbar";
 
 export interface SearchValues {
   where: string | null;
@@ -18,6 +20,8 @@ export const SearchBarForm = ({
   const start = searchParams.get("start");
   const end = searchParams.get("end");
   const guests = searchParams.get("guests");
+
+  const { dispatch } = useContext(NavbarContext);
   return (
     <Formik
       initialValues={{
@@ -42,6 +46,10 @@ export const SearchBarForm = ({
         console.log("values", values);
 
         setSearchParams({ ...(values as { [key: string]: any }) });
+        dispatch({
+          type: "SET_SUB_SEARCH",
+          payload: 0,
+        });
       }}
     >
       {() => <Form style={{ flex: 1 }}>{children}</Form>}

@@ -14,9 +14,9 @@ import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRound
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import { Field, FieldProps } from "formik";
-import { PopperMenu } from "../../components/PopperMenu";
-import { formBorderColor } from "../../constants/constants";
-import { NumberSelect } from "../../components/fields/NumberSelect";
+import { PopperMenu } from "../../../components/PopperMenu";
+import { formBorderColor } from "../../../constants/constants";
+import { NumberSelect } from "../../../components/fields/NumberSelect";
 
 export const SelectGuests = () => {
   const popperAnchorEl = useRef<HTMLButtonElement>(null);

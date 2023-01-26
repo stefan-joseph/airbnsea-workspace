@@ -1,11 +1,11 @@
-import { Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 
 import {
   raiseOnHoverBoxShadow,
   searchBarBorderColor,
   searchBarTimingFunction,
   searchBarTransitionTime,
-} from "../../../constants/constants";
+} from "../../../../../constants/constants";
 import { SearchDivider } from "./SearchDivider";
 
 type Props = {
@@ -36,7 +36,11 @@ export const SearchContainer = ({
         border: "1px solid",
         borderColor: searchBarBorderColor,
         position: "absolute",
+        top: 14.5,
         left: "50%",
+        boxShadow: !subSearch
+          ? "0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)"
+          : undefined,
         transform: "translateX(-50%)",
         transition: `all ${searchBarTransitionTime} ${searchBarTimingFunction} 0s`,
         "&:hover": {

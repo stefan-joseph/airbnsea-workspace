@@ -1,6 +1,6 @@
 import { Fab, IconButton } from "@mui/material";
 import { useContext, useState } from "react";
-import { NavbarContext } from "../../Navbar";
+import { NavbarContext } from "../../../Navbar";
 
 type Props = {
   children: JSX.Element;

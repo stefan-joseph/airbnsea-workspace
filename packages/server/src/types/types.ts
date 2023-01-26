@@ -100,7 +100,7 @@ export type Listing = {
   owner?: Maybe<Owner>;
   photos: Array<Scalars['String']>;
   price: Scalars['Int'];
-  rating?: Maybe<Scalars['Float']>;
+  rating: Scalars['Float'];
   state?: Maybe<Scalars['String']>;
   street: Scalars['String'];
   userId?: Maybe<Scalars['String']>;
@@ -291,7 +291,7 @@ export type SearchListingResult = {
   longitude: Scalars['Float'];
   photos: Array<Scalars['String']>;
   price: Scalars['Int'];
-  rating?: Maybe<Scalars['Float']>;
+  rating: Scalars['Float'];
   state?: Maybe<Scalars['String']>;
   vesselType: VesselType;
 };
@@ -306,6 +306,7 @@ export type SearchListingsInput = {
 
 export type SearchListingsResponse = {
   __typename?: 'SearchListingsResponse';
+  count: Scalars['Int'];
   results: Array<SearchListingResult>;
   searchLocation?: Maybe<SearchLocation>;
 };
@@ -564,7 +565,7 @@ export type ListingResolvers<ContextType = any, ParentType extends ResolversPare
   owner?: Resolver<Maybe<ResolversTypes['Owner']>, ParentType, ContextType>;
   photos?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  rating?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   street?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -646,13 +647,14 @@ export type SearchListingResultResolvers<ContextType = any, ParentType extends R
   longitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   photos?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  rating?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   vesselType?: Resolver<ResolversTypes['VesselType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SearchListingsResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchListingsResponse'] = ResolversParentTypes['SearchListingsResponse']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   results?: Resolver<Array<ResolversTypes['SearchListingResult']>, ParentType, ContextType>;
   searchLocation?: Resolver<Maybe<ResolversTypes['SearchLocation']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

@@ -23,10 +23,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useViewMessagesLazyQuery = exports.useViewMessagesQuery = exports.ViewMessagesDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useGetRandomUserCredentailsLazyQuery = exports.useGetRandomUserCredentailsQuery = exports.GetRandomUserCredentailsDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.VesselType = exports.Status = void 0;
+exports.useViewMessagesLazyQuery = exports.useViewMessagesQuery = exports.ViewMessagesDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useGetRandomUserCredentailsLazyQuery = exports.useGetRandomUserCredentailsQuery = exports.GetRandomUserCredentailsDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.VesselType = exports.Status = exports.InboxType = void 0;
 const client_1 = require("@apollo/client");
 const Apollo = __importStar(require("@apollo/client"));
 const defaultOptions = {};
+var InboxType;
+(function (InboxType) {
+    InboxType["Guest"] = "guest";
+    InboxType["Host"] = "host";
+})(InboxType = exports.InboxType || (exports.InboxType = {}));
 var Status;
 (function (Status) {
     Status["Active"] = "active";
@@ -192,6 +197,7 @@ exports.SearchListingsDocument = (0, client_1.gql) `
       lat
       lng
     }
+    count
   }
 }
     `;
@@ -232,6 +238,7 @@ exports.ViewListingDocument = (0, client_1.gql) `
     city
     state
     country
+    zipcode
     longitude
     latitude
     photos
@@ -253,16 +260,6 @@ function useViewListingLazyQuery(baseOptions) {
     return Apollo.useLazyQuery(exports.ViewListingDocument, options);
 }
 exports.useViewListingLazyQuery = useViewListingLazyQuery;
-exports.CreateMessageDocument = (0, client_1.gql) `
-    mutation CreateMessage($message: MessageInput!) {
-  createMessage(message: $message)
-}
-    `;
-function useCreateMessageMutation(baseOptions) {
-    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useMutation(exports.CreateMessageDocument, options);
-}
-exports.useCreateMessageMutation = useCreateMessageMutation;
 exports.NewMessageSubscriptionDocument = (0, client_1.gql) `
     subscription NewMessageSubscription($listingId: String!) {
   newMessage(listingId: $listingId) {

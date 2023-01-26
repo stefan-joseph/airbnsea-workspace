@@ -14,7 +14,8 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { buttonBorderRadius } from "../../../constants/constants";
+
+import { OutlinedButton } from "../../../components/OutlinedButton";
 
 type Props = {
   data: {
@@ -55,29 +56,10 @@ export const SubHeader = ({
               <Typography fontSize={15}>1 bath</Typography>
             </Stack>
           </Stack>
-          <Button
-            onClick={() => setMessageOpen(true)}
-            variant="outlined"
-            sx={{
-              // width: 100,
-              textTransform: "unset",
-              fontSize: 15,
-              fontWeight: 700,
-              whiteSpace: "nowrap",
-              p: 1,
-              borderRadius: buttonBorderRadius,
-              color: "info.main",
-              borderColor: "info.main",
-              borderWidth: 1.5,
-              "&:hover": {
-                backgroundColor: "rgb(0, 0, 0, 0.03)",
-                borderColor: "unset",
-                borderWidth: 1.5,
-              },
-            }}
-          >
-            Contact host
-          </Button>
+          <OutlinedButton
+            text={"Contact host"}
+            handleClick={() => setMessageOpen(true)}
+          />
         </Stack>
         <Avatar src={owner?.avatar} sx={{ width: 56, height: 56, ml: 2 }} />
       </Stack>

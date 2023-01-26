@@ -1,7 +1,7 @@
 @font-face {
   font-family: "Mori";
   src: url("assets/fonts/PPMori-Regular.otf");
-  font-weight: 400 600;
+  font-weight: 400 500;
 }
 
 @font-face {
@@ -12,7 +12,7 @@
 @font-face {
   font-family: "Mori";
   src: url("assets/fonts/PPMori-SemiBold.otf");
-  font-weight: 700 900;
+  font-weight: 600 900;
 }
 @font-face {
   font-family: "Mori";
@@ -33,8 +33,22 @@
   font-style: italic;
 }
 
+/* Pangram Sans */
+
+@font-face {
+  font-family: "Pangram";
+  src: url("assets/fonts/PPPangramSans-CompactRegular.otf");
+  font-weight: 500 600;
+}
+
+@font-face {
+  font-family: "Pangram";
+  src: url("assets/fonts/PPPangramSans-NarrowSemibold.otf");
+  font-weight: 700;
+}
+
 body {
-  font-family: Mori;
+  font-family: "Mori", sans-serif;
 }
 
 *,
@@ -65,8 +79,6 @@ button {
   }
 }
 
-/* .ellipsis {
-  overflow: "hidden";
-  text-overflow: "ellipsis";
-  white-space: "nowrap";
+/* .carousel-nav-buttons {
+  border: "1px solid red";
 } */

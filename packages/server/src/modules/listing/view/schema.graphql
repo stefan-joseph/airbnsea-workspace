@@ -16,7 +16,7 @@ type Listing {
   price: Int!
   beds: Int!
   guests: Int!
-  rating: Float
+  rating: Float!
   latitude: Float!
   longitude: Float!
   amenities: [String!]

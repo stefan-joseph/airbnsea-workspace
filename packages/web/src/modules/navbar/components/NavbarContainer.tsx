@@ -1,7 +1,11 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import {
+  appSidePadding,
+  appSidePaddingWithMap,
+  desktopMinWidth,
   searchBarHeight,
   searchBarTimingFunction,
   searchBarTransitionTime,
@@ -13,19 +17,33 @@ export const NavbarContainer = ({
 }: {
   children: JSX.Element | JSX.Element[];
 }) => {
+  const [searchParams] = useSearchParams();
+  const where = searchParams.get("where");
+
   const {
     navbarState: { subSearch },
+    dispatch,
   } = useContext(NavbarContext);
 
-  const matches = useMediaQuery("(min-width:750px)");
+  const matches = useMediaQuery(desktopMinWidth);
+
+  useEffect(() => {
+    // closes navbar on screen size change if passes mobile/desktop threshold
+    dispatch({
+      type: "SET_SUB_SEARCH",
+      payload: 0,
+    });
+  }, [matches]);
+
   return (
     <Box
       sx={{
         display: "flex",
         justifyContent: matches ? "space-between" : "center",
         alignItems: matches ? "flex-start" : "center",
-        p: { xs: 2, lg: 4 },
-        pt: { xs: 2, lg: 2 },
+        p: 1.68,
+        pl: !where ? appSidePadding : appSidePaddingWithMap,
+        pr: !where ? appSidePadding : appSidePaddingWithMap,
         position: "fixed",
         top: 0,
         left: 0,

@@ -1,6 +1,7 @@
-import { ButtonBase, Stack, Typography } from "@mui/material";
-import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
+import { ButtonBase, Stack, Typography, useMediaQuery } from "@mui/material";
 import { ShareSaveButtons } from "./ShareSaveButtons";
+import { desktopMinWidth } from "../../../constants/constants";
+import { Rating } from "../../../components/Rating";
 
 type Props = {
   data: {
@@ -8,13 +9,15 @@ type Props = {
     city: string;
     state?: string | null | undefined;
     country: string;
-    rating: number | null | undefined;
+    rating: number;
   };
 };
 
 export const Header = ({
   data: { name, city, state, country, rating },
 }: Props) => {
+  const matches = useMediaQuery(desktopMinWidth);
+
   return (
     <Stack spacing={0.5}>
       <Typography
@@ -33,16 +36,15 @@ export const Header = ({
           alignItems="center"
           divider={<Typography>·</Typography>}
         >
-          <Typography sx={{ display: "flex" }}>
-            <StarRateRoundedIcon fontSize="small" /> {rating}
-          </Typography>
-
-          <ButtonBase>7 reviews</ButtonBase>
-          <ButtonBase>
+          <Rating rating={rating} />
+          <ButtonBase sx={{ textDecoration: "underline" }}>
+            7 reviews
+          </ButtonBase>
+          <ButtonBase sx={{ textDecoration: "underline" }}>
             {city}, {state ? `${state},` : null} {country}
           </ButtonBase>
         </Stack>
-        <ShareSaveButtons />
+        {matches && <ShareSaveButtons />}
       </Stack>
     </Stack>
   );

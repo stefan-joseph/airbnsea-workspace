@@ -92,8 +92,8 @@ __decorate([
     __metadata("design:type", Number)
 ], Listing.prototype, "guests", void 0);
 __decorate([
-    (0, typeorm_1.Column)("real", { nullable: true }),
-    __metadata("design:type", Object)
+    (0, typeorm_1.Column)("real"),
+    __metadata("design:type", Number)
 ], Listing.prototype, "rating", void 0);
 __decorate([
     (0, typeorm_1.Column)("text", { array: true, nullable: true }),

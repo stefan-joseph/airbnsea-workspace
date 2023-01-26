@@ -1,17 +1,18 @@
 import { Box } from "@mui/material";
 import { Field, FieldProps } from "formik";
 import { cloneElement, useContext, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { NumberSelect } from "../../../../../components/fields/NumberSelect";
+import { GuestsSelect } from "../../../../../components/GuestsSelect";
 import { PopperMenu } from "../../../../../components/PopperMenu";
 import { NavbarContext } from "../../../Navbar";
 import { ClearButton } from "../ClearButton";
-import { CollapsedSubSearch } from "../CollapsedSubSearch";
-import { DummyFabButton } from "../DummyFabButton";
-import { ExpandedSubSearch } from "../ExpandedSubSearch";
+import { CollapsedSubSearch } from "../components/CollapsedSubSearch";
+import { DummyFabButton } from "../components/DummyFabButton";
+import { ExpandedSubSearch } from "../components/ExpandedSubSearch";
 import { SubSearchProps } from "./types";
 
-export const Guests = ({
+export const Who = ({
   children,
   index,
   searchBarRef,
@@ -19,23 +20,22 @@ export const Guests = ({
 }: SubSearchProps) => {
   const searchButtonRef = useRef<HTMLButtonElement>(null);
 
+  const [searchParams] = useSearchParams();
+  const guests = searchParams.get("guests");
+
   const {
     navbarState: { subSearch },
   } = useContext(NavbarContext);
 
   if (!subSearch)
     return (
-      <Field name="guests">
-        {({ field: { value } }: FieldProps) => (
-          <CollapsedSubSearch
-            text={
-              value ? `${value} guest${+value === 1 ? "" : "s"}` : "Add guests"
-            }
-            children={children}
-            justifyContent="space-between"
-          />
-        )}
-      </Field>
+      <CollapsedSubSearch
+        text={
+          guests ? `${guests} guest${+guests === 1 ? "" : "s"}` : "Add guests"
+        }
+        children={children}
+        justifyContent="space-between"
+      />
     );
 
   return (
@@ -61,9 +61,8 @@ export const Guests = ({
           {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
             <>
               <ExpandedSubSearch
-                value={
-                  value ? `${value} guest${value > 1 ? "s" : ""}` : "Add Guests"
-                }
+                value={value ? `${value} guest${value > 1 ? "s" : ""}` : null}
+                placeholder="Add Guests"
                 isPlaceholder={!!value}
                 label="Who"
               >
@@ -80,22 +79,7 @@ export const Guests = ({
                   marginTop={1}
                 >
                   <Box p={2}>
-                    <NumberSelect
-                      name="Guests"
-                      value={value}
-                      handleRemove={() => {
-                        if (value > 0) {
-                          setFieldValue("guests", +value - 1);
-                        }
-                      }}
-                      handleAdd={() => {
-                        if (value < 16) {
-                          setFieldValue("guests", +value + 1);
-                        }
-                      }}
-                      disableRemove={value <= 0}
-                      disableAdd={value >= 16}
-                    />
+                    <GuestsSelect value={value} setFieldValue={setFieldValue} />
                   </Box>
                 </PopperMenu>
               )}

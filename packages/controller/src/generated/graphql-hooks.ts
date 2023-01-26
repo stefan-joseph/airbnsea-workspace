@@ -39,6 +39,13 @@ export type BookingInput = {
   start: Scalars['String'];
 };
 
+export type ConversationHeader = {
+  __typename?: 'ConversationHeader';
+  interlocutor?: Maybe<Interlocutor>;
+  lastMessage: Scalars['String'];
+  location: Scalars['String'];
+};
+
 export type Draft = {
   __typename?: 'Draft';
   amenities?: Maybe<Array<Scalars['String']>>;
@@ -66,6 +73,18 @@ export type Error = {
   path: Scalars['String'];
 };
 
+export enum InboxType {
+  Guest = 'guest',
+  Host = 'host'
+}
+
+export type Interlocutor = {
+  __typename?: 'Interlocutor';
+  avatar: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
 export type Listing = {
   __typename?: 'Listing';
   amenities?: Maybe<Array<Scalars['String']>>;
@@ -82,7 +101,7 @@ export type Listing = {
   owner?: Maybe<Owner>;
   photos: Array<Scalars['String']>;
   price: Scalars['Int'];
-  rating?: Maybe<Scalars['Float']>;
+  rating: Scalars['Float'];
   state?: Maybe<Scalars['String']>;
   street: Scalars['String'];
   userId?: Maybe<Scalars['String']>;
@@ -110,17 +129,14 @@ export type Message = {
   userId?: Maybe<Scalars['String']>;
 };
 
-export type MessageInput = {
-  listingId: Scalars['String'];
-  text: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
+  addFruit: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
   createBooking: Scalars['ID'];
+  createGuestMessage: Scalars['Boolean'];
+  createHostMessage: Scalars['Boolean'];
   createListing: Scalars['ID'];
-  createMessage: Scalars['Boolean'];
   deleteListing: Scalars['Boolean'];
   login: LoginResponse;
   logout?: Maybe<Scalars['Boolean']>;
@@ -128,6 +144,11 @@ export type Mutation = {
   resetPassword?: Maybe<Array<Error>>;
   sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
   updateListing?: Maybe<Scalars['ID']>;
+};
+
+
+export type MutationAddFruitArgs = {
+  fruit: Scalars['String'];
 };
 
 
@@ -142,13 +163,21 @@ export type MutationCreateBookingArgs = {
 };
 
 
-export type MutationCreateListingArgs = {
-  input: VesselTypeInput;
+export type MutationCreateGuestMessageArgs = {
+  listingId: Scalars['ID'];
+  text: Scalars['String'];
 };
 
 
-export type MutationCreateMessageArgs = {
-  message: MessageInput;
+export type MutationCreateHostMessageArgs = {
+  interlocutorId: Scalars['ID'];
+  listingId: Scalars['ID'];
+  text: Scalars['String'];
+};
+
+
+export type MutationCreateListingArgs = {
+  input: VesselTypeInput;
 };
 
 
@@ -200,11 +229,13 @@ export type PhotoUpdate = {
 
 export type Query = {
   __typename?: 'Query';
+  getFruit: Scalars['String'];
   getListingUnavailability: Array<Scalars['String']>;
   getRandomUserCredentails?: Maybe<RandomUser>;
   me?: Maybe<Me>;
   messages?: Maybe<Array<Message>>;
   populateForm: Draft;
+  populateInbox: Array<ConversationHeader>;
   searchListings: SearchListingsResponse;
   viewListing: Listing;
   viewUserBookings: Array<Booking>;
@@ -224,6 +255,11 @@ export type QueryMessagesArgs = {
 export type QueryPopulateFormArgs = {
   fields: Array<Scalars['String']>;
   listingId: Scalars['ID'];
+};
+
+
+export type QueryPopulateInboxArgs = {
+  type?: InputMaybe<InboxType>;
 };
 
 
@@ -256,7 +292,7 @@ export type SearchListingResult = {
   longitude: Scalars['Float'];
   photos: Array<Scalars['String']>;
   price: Scalars['Int'];
-  rating?: Maybe<Scalars['Float']>;
+  rating: Scalars['Float'];
   state?: Maybe<Scalars['String']>;
   vesselType: VesselType;
 };
@@ -271,6 +307,7 @@ export type SearchListingsInput = {
 
 export type SearchListingsResponse = {
   __typename?: 'SearchListingsResponse';
+  count: Scalars['Int'];
   results: Array<SearchListingResult>;
   searchLocation?: Maybe<SearchLocation>;
 };
@@ -393,7 +430,7 @@ export type SearchListingsQueryVariables = Exact<{
 }>;
 
 
-export type SearchListingsQuery = { __typename?: 'Query', searchListings: { __typename?: 'SearchListingsResponse', results: Array<{ __typename?: 'SearchListingResult', id: string, vesselType: VesselType, photos: Array<string>, price: number, beds: number, guests: number, rating?: number | null, city: string, state?: string | null, country: string, longitude: number, latitude: number, distance?: number | null }>, searchLocation?: { __typename?: 'SearchLocation', lat: number, lng: number } | null } };
+export type SearchListingsQuery = { __typename?: 'Query', searchListings: { __typename?: 'SearchListingsResponse', count: number, results: Array<{ __typename?: 'SearchListingResult', id: string, vesselType: VesselType, photos: Array<string>, price: number, beds: number, guests: number, rating: number, city: string, state?: string | null, country: string, longitude: number, latitude: number, distance?: number | null }>, searchLocation?: { __typename?: 'SearchLocation', lat: number, lng: number } | null } };
 
 export type UpdateListingMutationVariables = Exact<{
   listingId: Scalars['String'];
@@ -408,14 +445,7 @@ export type ViewListingQueryVariables = Exact<{
 }>;
 
 
-export type ViewListingQuery = { __typename?: 'Query', viewListing: { __typename?: 'Listing', id?: string | null, name: string, vesselType: VesselType, price: number, description: string, guests: number, beds: number, rating?: number | null, amenities?: Array<string> | null, street: string, apt?: string | null, city: string, state?: string | null, country: string, longitude: number, latitude: number, photos: Array<string>, owner?: { __typename?: 'Owner', firstName: string, lastName: string, avatar: string } | null } };
-
-export type CreateMessageMutationVariables = Exact<{
-  message: MessageInput;
-}>;
-
-
-export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: boolean };
+export type ViewListingQuery = { __typename?: 'Query', viewListing: { __typename?: 'Listing', id?: string | null, name: string, vesselType: VesselType, price: number, description: string, guests: number, beds: number, rating: number, amenities?: Array<string> | null, street: string, apt?: string | null, city: string, state?: string | null, country: string, zipcode: string, longitude: number, latitude: number, photos: Array<string>, owner?: { __typename?: 'Owner', firstName: string, lastName: string, avatar: string } | null } };
 
 export type NewMessageSubscriptionSubscriptionVariables = Exact<{
   listingId: Scalars['String'];
@@ -789,6 +819,7 @@ export const SearchListingsDocument = gql`
       lat
       lng
     }
+    count
   }
 }
     `;
@@ -871,6 +902,7 @@ export const ViewListingDocument = gql`
     city
     state
     country
+    zipcode
     longitude
     latitude
     photos
@@ -910,37 +942,6 @@ export function useViewListingLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type ViewListingQueryHookResult = ReturnType<typeof useViewListingQuery>;
 export type ViewListingLazyQueryHookResult = ReturnType<typeof useViewListingLazyQuery>;
 export type ViewListingQueryResult = Apollo.QueryResult<ViewListingQuery, ViewListingQueryVariables>;
-export const CreateMessageDocument = gql`
-    mutation CreateMessage($message: MessageInput!) {
-  createMessage(message: $message)
-}
-    `;
-export type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
-
-/**
- * __useCreateMessageMutation__
- *
- * To run a mutation, you first call `useCreateMessageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateMessageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createMessageMutation, { data, loading, error }] = useCreateMessageMutation({
- *   variables: {
- *      message: // value for 'message'
- *   },
- * });
- */
-export function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateMessageMutation, CreateMessageMutationVariables>(CreateMessageDocument, options);
-      }
-export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
-export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
-export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
 export const NewMessageSubscriptionDocument = gql`
     subscription NewMessageSubscription($listingId: String!) {
   newMessage(listingId: $listingId) {

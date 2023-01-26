@@ -64,13 +64,16 @@ exports.resolvers = {
                     .groupBy("id")
                     .orderBy("distance", "ASC");
                 const results = yield queryBuilder.getRawMany();
+                const count = yield queryBuilder.getCount();
                 return {
                     results,
                     searchLocation: { lat, lng },
+                    count,
                 };
             }
-            const listings = yield queryBuilder.getMany();
-            return { results: listings };
+            const results = yield queryBuilder.getMany();
+            const count = yield queryBuilder.getCount();
+            return { results, count };
         }),
     },
 };

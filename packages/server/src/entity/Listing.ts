@@ -70,8 +70,8 @@ export class Listing extends BaseEntity {
   @Column("int")
   guests: number;
 
-  @Column("real", { nullable: true })
-  rating: number | null;
+  @Column("real")
+  rating: number;
 
   @Column("text", { array: true, nullable: true })
   amenities: string[] | null;

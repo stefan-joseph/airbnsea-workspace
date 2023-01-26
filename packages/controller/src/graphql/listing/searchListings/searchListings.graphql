@@ -19,5 +19,6 @@ query SearchListings($input: SearchListingsInput, $offset: Int!, $limit: Int!) {
       lat
       lng
     }
+    count
   }
 }

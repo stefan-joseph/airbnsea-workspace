@@ -9,7 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 
-import { searchBarHeight } from "../../../constants/constants";
+import { borderRadius, searchBarHeight } from "../../../constants/constants";
 import { Booking } from "../../booking/Booking";
 
 type Props = {
@@ -34,6 +34,7 @@ export const ReserveCard = ({ data: { price, rating } }: Props) => {
             height: "100%",
             width: 340,
             overflow: "unset",
+            borderRadius,
           }}
         >
           <CardContent>
@@ -66,7 +67,7 @@ export const ReserveCard = ({ data: { price, rating } }: Props) => {
               </Stack>
             </Stack>
             <Stack spacing={2} sx={{ mt: 3 }}>
-              <Booking price={price} />
+              <Booking price={price} rating={rating} />
             </Stack>
           </CardContent>
         </Card>

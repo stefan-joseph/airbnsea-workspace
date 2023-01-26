@@ -22,6 +22,7 @@ export const CollapsedSubSearch = ({
     >
       <Typography
         fontSize={14}
+        fontWeight={600}
         paddingLeft={1}
         paddingRight={1}
         noWrap
