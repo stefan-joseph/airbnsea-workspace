@@ -8,10 +8,9 @@ import { TextPage } from "../modules/textPage/TextPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { Logout } from "../modules/auth/logout/logout";
 import { Listing } from "../modules/listing/Listing";
-import { MessageConnector } from "../modules/inbox/MessageConnector";
 import { CreateListing } from "../modules/user/create-listing/CreateListing";
 import { Search } from "../modules/search/Search";
-import { Inbox } from "../modules/inbox/Inbox";
+import { Message } from "../modules/message/Message";
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +39,7 @@ export const router = createBrowserRouter([
     element: <ResetPasswordConnector />,
   },
   {
-    path: "/listings/:listingId/view",
+    path: "/listing/:listingId/view",
     element: <Listing />,
   },
   {
@@ -64,12 +63,19 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/inbox",
-    element: <Inbox />,
+    path: "/inbox/",
+    element: (
+      <ProtectedRoute redirect="/login">
+        <Message />
+      </ProtectedRoute>
+    ),
   },
-
-  // {
-  //   path: "/listing/:listingId/chat",
-  //   element: <MessageConnector />,
-  // },
+  {
+    path: "/inbox/:conversationId",
+    element: (
+      <ProtectedRoute redirect="/login">
+        <Message />
+      </ProtectedRoute>
+    ),
+  },
 ]);

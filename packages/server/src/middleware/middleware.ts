@@ -1,8 +1,10 @@
 import { formatGraphQLYogaError } from "../modules/shared/utils/formatGraphQLYogaError";
+import validate = require("uuid-validate");
+import { formatBadUuidErrorMessage } from "../modules/shared/utils/errorMessages";
 
-export const isAuthenticated = async (
+const isAuthenticated = async (
   resolve: any,
-  parent: any,
+  root: any,
   args: any,
   context: any,
   info: any
@@ -10,20 +12,53 @@ export const isAuthenticated = async (
   if (!context.req.session.userId) {
     return formatGraphQLYogaError(`Please log in to use this service`);
   }
-  return resolve(parent, args, context, info);
+  return resolve(root, args, context, info);
 };
 
-export const middleware = {
+export const authMiddleware = {
   Mutation: {
     createListing: isAuthenticated,
     deleteListing: isAuthenticated,
 
     createBooking: isAuthenticated,
 
-    createGuestMessage: isAuthenticated,
-    createHostMessage: isAuthenticated,
+    createMessage: isAuthenticated,
   },
   Query: {
     me: isAuthenticated,
+
+    populateGuestInbox: isAuthenticated,
+    populateHostInbox: isAuthenticated,
+    populateConversationWithHost: isAuthenticated,
+    populateConversationWithGuest: isAuthenticated,
+  },
+};
+
+export const isValidUuid = async (
+  resolve: any,
+  root: any,
+  args: any,
+  context: any,
+  info: any
+) => {
+  const id = Object.keys(args).find((key) => key.includes("Id"));
+
+  // typecast ok: id will have to be present otherwise graphql will throw error
+  if (!validate(args[id as string])) {
+    return formatGraphQLYogaError(formatBadUuidErrorMessage(id as string));
+  }
+
+  return resolve(root, args, context, info);
+};
+
+export const listingIdMiddleware = {
+  Mutation: {
+    createMessage: isValidUuid,
+
+    createBooking: isValidUuid,
+  },
+  Query: {
+    populateConversationWithHost: isValidUuid,
+    populateConversationWithGuest: isValidUuid,
   },
 };

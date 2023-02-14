@@ -1,5 +1,6 @@
 import { Grid, Stack, Typography } from "@mui/material";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
+import { IoBedOutline } from "react-icons/io5";
 
 type Props = {
   beds: number;
@@ -23,7 +24,7 @@ export const Sleep = ({ beds }: Props) => {
                 p: 2,
               }}
             >
-              <BedOutlinedIcon />
+              <IoBedOutline size={24} />
               <Typography>Bedroom</Typography>
               <Typography sx={{ fontWeight: 100 }}>1 double bed</Typography>
             </Stack>

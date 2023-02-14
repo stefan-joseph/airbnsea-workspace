@@ -7,7 +7,12 @@ export const MessageFactory = setSeederFactory(Message, (faker: Faker) => {
 
   const message = new Message();
 
-  message.text = "Hello";
+  // message.text = "Hello";
+  // message.fromHost;
+
+  message.userIdOfGuest;
+  message.userIdOfHost;
+  message.listingId;
 
   return message;
 });

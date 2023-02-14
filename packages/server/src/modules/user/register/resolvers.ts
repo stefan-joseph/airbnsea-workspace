@@ -38,8 +38,6 @@ export const resolvers: Resolvers = {
       const user = User.create({
         email,
         password,
-        //remove in production and testing
-        // confirmed: true,
       });
 
       await user.save();

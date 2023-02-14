@@ -24,13 +24,25 @@ __decorate([
     __metadata("design:type", String)
 ], Message.prototype, "text", void 0);
 __decorate([
+    (0, typeorm_1.Column)("boolean"),
+    __metadata("design:type", Boolean)
+], Message.prototype, "fromHost", void 0);
+__decorate([
     (0, typeorm_1.Column)("uuid"),
     __metadata("design:type", String)
-], Message.prototype, "userId", void 0);
+], Message.prototype, "userIdOfGuest", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => User_1.User),
     __metadata("design:type", User_1.User)
-], Message.prototype, "user", void 0);
+], Message.prototype, "guestUser", void 0);
+__decorate([
+    (0, typeorm_1.Column)("uuid"),
+    __metadata("design:type", String)
+], Message.prototype, "userIdOfHost", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => User_1.User),
+    __metadata("design:type", User_1.User)
+], Message.prototype, "hostUser", void 0);
 __decorate([
     (0, typeorm_1.Column)("uuid"),
     __metadata("design:type", String)
@@ -39,6 +51,14 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Listing_1.Listing),
     __metadata("design:type", Listing_1.Listing)
 ], Message.prototype, "listing", void 0);
+__decorate([
+    (0, typeorm_1.Column)("uuid"),
+    __metadata("design:type", String)
+], Message.prototype, "conversationId", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Message.prototype, "createdDate", void 0);
 Message = __decorate([
     (0, typeorm_1.Entity)("messages")
 ], Message);

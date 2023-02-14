@@ -24,7 +24,6 @@ test("makes sure to confirm user and clears key in redis", async () => {
   const urlChunks1 = response.url.split("/");
   expect(urlChunks1[urlChunks1.length - 1]).toEqual("login");
   expect(await response.redirected).toEqual(true);
-
   const user = await User.findOne({ where: { id: userId } });
   expect((user as User).confirmed).toBeTruthy();
   const urlChunks2 = url.split("/");

@@ -10,34 +10,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
-const Listing_1 = require("../../../entity/Listing");
 const Message_1 = require("../../../entity/Message");
+const getTypeormConnection_1 = require("../../../utils/getTypeormConnection");
+const populateInboxQueryBuilder = () => __awaiter(void 0, void 0, void 0, function* () {
+    return (0, getTypeormConnection_1.getTypeormConnection)()
+        .getRepository(Message_1.Message)
+        .createQueryBuilder("m")
+        .distinctOn(["m.conversationId"])
+        .orderBy("m.conversationId")
+        .addOrderBy("m.createdDate", "DESC");
+});
 exports.resolvers = {
-    Message: {
-        user: ({ userId }, _, { userLoader }) => userLoader.load(userId),
-        userId: () => null,
+    MessageWithHost: {
+        interlocutor: ({ userIdOfHost }, _, { userLoader }) => userLoader.load(userIdOfHost),
+        userIdOfHost: () => null,
+    },
+    MessageWithGuest: {
+        interlocutor: ({ userIdOfGuest }, _, { userLoader }) => userLoader.load(userIdOfGuest),
+        userIdOfGuest: () => null,
     },
     Query: {
-        populateInbox: (_, { type }, { req: { session: { userId }, }, }) => __awaiter(void 0, void 0, void 0, function* () {
-            if (type === "guest") {
-                const messages = Message_1.Message.find({
-                    where: { userId },
-                });
-                console.log(messages);
-            }
-            else {
-                const listings = Listing_1.Listing.find({
-                    where: {
-                        userId,
-                    },
-                });
-                console.log(listings);
-                const messages = Message_1.Message.find({
-                    where: { userId },
-                });
-                console.log(messages);
-            }
-            return [];
+        populateGuestInbox: (_, __, { req: { session: { userId }, }, }) => __awaiter(void 0, void 0, void 0, function* () {
+            const results = yield (yield populateInboxQueryBuilder())
+                .where("m.userIdOfGuest = :userId", { userId })
+                .getMany();
+            results.sort((a, b) => Number(b.createdDate) - Number(a.createdDate));
+            return results;
+        }),
+        populateHostInbox: (_, __, { req: { session: { userId }, }, }) => __awaiter(void 0, void 0, void 0, function* () {
+            const results = yield (yield populateInboxQueryBuilder())
+                .where("m.userIdOfHost = :userId", { userId })
+                .getMany();
+            results.sort((a, b) => Number(b.createdDate) - Number(a.createdDate));
+            return results;
         }),
     },
 };

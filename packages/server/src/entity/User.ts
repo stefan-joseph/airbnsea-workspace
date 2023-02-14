@@ -10,6 +10,7 @@ import {
 import { Booking } from "./Booking";
 import { Listing } from "./Listing";
 import { Draft } from "./Draft";
+import { Message } from "./Message";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -52,6 +53,12 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];
+
+  @OneToMany(() => Message, (message) => message.guestUser)
+  guestMessages: Message[];
+
+  @OneToMany(() => Message, (message) => message.hostUser)
+  hostMessages: Message[];
 
   @BeforeInsert()
   async hashPasswordBeforeInsert() {

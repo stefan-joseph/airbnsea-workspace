@@ -1,21 +1,28 @@
-import WifiRoundedIcon from "@mui/icons-material/WifiRounded";
-import AcUnitRoundedIcon from "@mui/icons-material/AcUnitRounded";
-import CountertopsOutlinedIcon from "@mui/icons-material/CountertopsOutlined";
-import TvRoundedIcon from "@mui/icons-material/TvRounded";
-import OutdoorGrillOutlinedIcon from "@mui/icons-material/OutdoorGrillOutlined";
+// import WifiRoundedIcon from "@mui/icons-material/WifiRounded";
+// import AcUnitRoundedIcon from "@mui/icons-material/AcUnitRounded";
+// import CountertopsOutlinedIcon from "@mui/icons-material/CountertopsOutlined";
+// import TvRoundedIcon from "@mui/icons-material/TvRounded";
+// import OutdoorGrillOutlinedIcon from "@mui/icons-material/OutdoorGrillOutlined";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import {
+  GiBarbecue,
+  GiKitchenTap,
+  GiThermometerCold,
+  GiTv,
+} from "react-icons/gi";
+import { IoWifiOutline } from "react-icons/io5";
 export const getAmenitiesIcon = (amenity: string) => {
   switch (amenity.toLowerCase()) {
     case "wifi":
-      return <WifiRoundedIcon fontSize="inherit" />;
+      return <IoWifiOutline fontSize="inherit" />;
     case "air conditioning":
-      return <AcUnitRoundedIcon fontSize="inherit" />;
+      return <GiThermometerCold fontSize="inherit" />;
     case "kitchen":
-      return <CountertopsOutlinedIcon fontSize="inherit" />;
+      return <GiKitchenTap fontSize="inherit" />;
     case "tv":
-      return <TvRoundedIcon fontSize="inherit" />;
+      return <GiTv fontSize="inherit" />;
     case "bbq grill":
-      return <OutdoorGrillOutlinedIcon fontSize="inherit" />;
+      return <GiBarbecue fontSize="inherit" />;
     default:
       return <AddRoundedIcon fontSize="inherit" />;
   }

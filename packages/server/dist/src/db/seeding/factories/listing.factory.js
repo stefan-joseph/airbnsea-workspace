@@ -5,19 +5,24 @@ const typeorm_extension_1 = require("typeorm-extension");
 const Listing_1 = require("../../../entity/Listing");
 const types_1 = require("../../../types/types");
 const vesselEnumTypes = [types_1.VesselType.Sailboat, types_1.VesselType.Catamaran];
-const mainPhotos = [
+let mainPhotos = [
     "v1669565214/airbnsea/mzi43hvd6dm40zqbfvrq.jpg",
     "v1669565203/airbnsea/pl9bsdrmtlxcm9zbcz6q.jpg",
     "v1669565174/airbnsea/wuucz05tnvu67kujd5a5.jpg",
     "v1669565166/airbnsea/nbtuabffoymb9bup52st.jpg",
     "v1669565148/airbnsea/zdvqcuwnedtoqil07slt.jpg",
     "v1669565141/airbnsea/r9hoetu9jrwzdjjg6fo2.jpg",
-    "v1669565085/airbnsea/lasyqn0qi8bp64zklm2u.jpg",
     "v1669565079/airbnsea/g5aepvapbck8ukrzdrjp.jpg",
-    "v1669565073/airbnsea/i5yn1l9y9autovkpqbem.jpg",
     "v1669565067/airbnsea/wc85yuoegjznyabymon0.jpg",
     "v1669565028/airbnsea/monmfrsxkrdakt3jonrr.jpg",
+    "v1676151454/airbnsea/qpabqf72ezzwabxmoo5u.jpg",
+    "v1676151444/airbnsea/qygydkcstbmthtsuwjkx.jpg",
+    "v1676151438/airbnsea/r6hxqdpyfdkxmnndojq0.jpg",
+    "v1676151793/airbnsea/zoxqdwbgsjtnxc2x7ndw.jpg",
+    "v1676151778/airbnsea/f0rzeg0nnkv7dkoxrxog.jpg",
+    "v1676151770/airbnsea/tpwnxmuvgpulzjibidrk.jpg",
 ];
+const refreshMainPhotos = mainPhotos;
 const secondaryPhotos = [
     "v1669565060/airbnsea/r6nyijnhbrrflyopwa5t.jpg",
     "v1669565153/airbnsea/vyo2lfnkqrjudbseayde.jpg",
@@ -29,6 +34,12 @@ const secondaryPhotos = [
     "v1669565135/airbnsea/byneygyzsfgzkgiuh4x2.jpg",
     "v1669565123/airbnsea/ylazxmbjbcdlnhba9upw.jpg",
 ];
+const getPhoto = () => {
+    if (mainPhotos.length < 1) {
+        mainPhotos = refreshMainPhotos;
+    }
+    return mainPhotos.pop();
+};
 exports.ListingFactory = (0, typeorm_extension_1.setSeederFactory)(Listing_1.Listing, (faker) => {
     const listing = new Listing_1.Listing();
     listing.vesselType = vesselEnumTypes[Math.round(Math.random())];
@@ -56,7 +67,7 @@ exports.ListingFactory = (0, typeorm_extension_1.setSeederFactory)(Listing_1.Lis
     ];
     listing.status = types_1.Status.Active;
     listing.photos = [
-        mainPhotos[Math.floor(Math.random() * mainPhotos.length)],
+        getPhoto(),
         ...secondaryPhotos,
     ];
     listing.userId;

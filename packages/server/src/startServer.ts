@@ -1,6 +1,7 @@
 import "dotenv/config";
-import { createServer } from "@graphql-yoga/node";
-import { RedisPubSub } from "graphql-redis-subscriptions";
+import { createServer, createPubSub } from "@graphql-yoga/node";
+import { createRedisEventTarget } from "@graphql-yoga/redis-event-target";
+import Redis from "ioredis";
 // import { runSeeders } from "typeorm-extension";
 // import rateLimit from "express-rate-limit";
 // import RateLimitRedisStore from "rate-limit-redis";
@@ -17,9 +18,11 @@ import { confirmEmail } from "./routes/confirmEmail";
 import { redisSessionPrefix } from "./utils/constants";
 import { redis } from "./redis";
 import { generateModularSchema } from "./utils/generateModularSchema";
-import { middleware } from "./middleware/middleware";
+import { authMiddleware, listingIdMiddleware } from "./middleware/middleware";
 import { userLoader } from "./loaders/userLoader";
 import { getTypeormConnection } from "./utils/getTypeormConnection";
+
+export type MessagePayload = { from: string; body: string };
 
 export const startServer = async () => {
   const app = express();
@@ -41,13 +44,39 @@ export const startServer = async () => {
   );
 
   const schema = generateModularSchema();
-  const schemaWithMiddleware = applyMiddleware(schema, middleware);
-
-  const pubSub = new RedisPubSub(
-    process.env.NODE_ENV === "development"
-      ? {}
-      : { connection: process.env.REDIS_URL as string }
+  const schemaWithMiddleware = applyMiddleware(
+    schema,
+    authMiddleware,
+    listingIdMiddleware
   );
+
+  const publishClient =
+    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test"
+      ? new Redis()
+      : new Redis(
+          "redis://default:af5ac0df2e664a568c4052560f4f68e5@fly-airbnsea-redis.upstash.io",
+          {
+            family: 6,
+          }
+        );
+  const subscribeClient =
+    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test"
+      ? new Redis()
+      : new Redis(
+          "redis://default:af5ac0df2e664a568c4052560f4f68e5@fly-airbnsea-redis.upstash.io",
+          {
+            family: 6,
+          }
+        );
+
+  const eventTarget = createRedisEventTarget({
+    publishClient,
+    subscribeClient,
+  });
+
+  const pubSub = createPubSub<{
+    newMessage: [payload: MessagePayload];
+  }>({ eventTarget });
 
   await getTypeormConnection().initialize();
   // .then(async () => {
@@ -170,7 +199,7 @@ export const startServer = async () => {
   app.get("/confirm-email/:id", confirmEmail);
   app.get("/", (_, res) => res.redirect("/graphql"));
 
-  const port = process.env.PORT || 8080;
+  const port = 8080;
   console.log(`running app on port ${port}`);
 
   await app.listen(port);

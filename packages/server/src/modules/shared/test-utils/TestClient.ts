@@ -149,4 +149,130 @@ export class TestClient {
       },
     });
   }
+
+  async createMessage(listingId: string, text: string) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+          mutation {
+            createMessage(listingId: "${listingId}",
+            text: "${text}")
+          }
+        `,
+      },
+    });
+  }
+
+  async populateGuestInbox() {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+          query {
+            populateGuestInbox {
+              id
+              text
+              fromHost
+              createdDate
+              userIdOfHost
+              conversationId
+              interlocutor {
+                avatar
+                firstName
+                lastName
+              }
+            }
+          }
+        `,
+      },
+    });
+  }
+
+  async populateHostInbox() {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+          query {
+            populateHostInbox {
+              id
+              text
+              fromHost
+              createdDate
+              userIdOfGuest
+              conversationId
+              interlocutor {
+                avatar
+                firstName
+                lastName
+              }
+            }
+          }
+        `,
+      },
+    });
+  }
+
+  async populateConversationWithHost(conversationId: string) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+          query {
+            populateConversationWithHost(conversationId: "${conversationId}") {
+              interlocutorId
+              interlocutor {
+                avatar
+                firstName
+                lastName
+              }
+              listingId
+              listing {
+                name
+                img
+              }
+              messages {
+                id
+                text
+                fromHost
+                createdDate
+              }
+            }
+          }
+        `,
+      },
+    });
+  }
+
+  async populateConversationWithGuest(conversationId: string) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+          query {
+            populateConversationWithGuest(conversationId: "${conversationId}") {
+              interlocutorId
+              interlocutor {
+                avatar
+                firstName
+                lastName
+              }
+              listingId
+              listing {
+                name
+                img
+              }
+              messages {
+                id
+                text
+                fromHost
+                createdDate
+              }
+            }
+          }
+        `,
+      },
+    });
+  }
 }

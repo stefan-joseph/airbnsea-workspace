@@ -9,25 +9,47 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.middleware = exports.isAuthenticated = void 0;
+exports.listingIdMiddleware = exports.isValidUuid = exports.authMiddleware = void 0;
 const formatGraphQLYogaError_1 = require("../modules/shared/utils/formatGraphQLYogaError");
-const isAuthenticated = (resolve, parent, args, context, info) => __awaiter(void 0, void 0, void 0, function* () {
+const validate = require("uuid-validate");
+const errorMessages_1 = require("../modules/shared/utils/errorMessages");
+const isAuthenticated = (resolve, root, args, context, info) => __awaiter(void 0, void 0, void 0, function* () {
     if (!context.req.session.userId) {
         return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(`Please log in to use this service`);
     }
-    return resolve(parent, args, context, info);
+    return resolve(root, args, context, info);
 });
-exports.isAuthenticated = isAuthenticated;
-exports.middleware = {
+exports.authMiddleware = {
     Mutation: {
-        createListing: exports.isAuthenticated,
-        deleteListing: exports.isAuthenticated,
-        createBooking: exports.isAuthenticated,
-        createGuestMessage: exports.isAuthenticated,
-        createHostMessage: exports.isAuthenticated,
+        createListing: isAuthenticated,
+        deleteListing: isAuthenticated,
+        createBooking: isAuthenticated,
+        createMessage: isAuthenticated,
     },
     Query: {
-        me: exports.isAuthenticated,
+        me: isAuthenticated,
+        populateGuestInbox: isAuthenticated,
+        populateHostInbox: isAuthenticated,
+        populateConversationWithHost: isAuthenticated,
+        populateConversationWithGuest: isAuthenticated,
+    },
+};
+const isValidUuid = (resolve, root, args, context, info) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = Object.keys(args).find((key) => key.includes("Id"));
+    if (!validate(args[id])) {
+        return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)((0, errorMessages_1.formatBadUuidErrorMessage)(id));
+    }
+    return resolve(root, args, context, info);
+});
+exports.isValidUuid = isValidUuid;
+exports.listingIdMiddleware = {
+    Mutation: {
+        createMessage: exports.isValidUuid,
+        createBooking: exports.isValidUuid,
+    },
+    Query: {
+        populateConversationWithHost: exports.isValidUuid,
+        populateConversationWithGuest: exports.isValidUuid,
     },
 };
 //# sourceMappingURL=middleware.js.map

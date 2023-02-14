@@ -21,7 +21,12 @@ export const PriceAndRatingStack = ({
 }: Props) => {
   return (
     <Stack rowGap={0.2}>
-      <Stack direction="row" alignItems="baseline" columnGap={0.6}>
+      <Stack
+        direction="row"
+        alignItems="baseline"
+        columnGap={0.6}
+        flexWrap="wrap"
+      >
         <Typography fontWeight={600} fontSize={16}>
           ${price} USD
         </Typography>

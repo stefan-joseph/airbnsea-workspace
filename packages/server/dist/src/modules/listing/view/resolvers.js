@@ -13,7 +13,7 @@ exports.resolvers = void 0;
 const Listing_1 = require("../../../entity/Listing");
 const errorMessages_1 = require("../../shared/utils/errorMessages");
 const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaError");
-const constants_1 = require("./utils/constants");
+const constants_1 = require("../../shared/utils/constants");
 exports.resolvers = {
     Listing: {
         photos: ({ photos }) => photos.map((url) => constants_1.imageUrl + url),

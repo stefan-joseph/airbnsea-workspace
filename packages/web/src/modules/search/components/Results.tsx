@@ -4,8 +4,8 @@ import { Fab, Grid, Skeleton, Typography, useMediaQuery } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 
 import {
+  appSidePaddingAlt,
   appSidePadding,
-  appSidePaddingWithMap,
   desktopMinWidth,
   searchBarHeight,
 } from "../../../constants/constants";
@@ -26,15 +26,15 @@ export const Results: React.FC<{
   const [mapOpen, setMapOpen] = useState(false);
 
   return (
-    <Grid container sx={{ mt: `${searchBarHeight}px` }}>
+    <Grid container>
       <Grid
         item
         xs={12}
         md={where ? 7 : 12}
         lg={where ? 6 : 12}
         xl={where ? 7 : 12}
-        paddingLeft={!where ? appSidePadding : appSidePaddingWithMap}
-        paddingRight={!where ? appSidePadding : appSidePaddingWithMap}
+        paddingLeft={where ? appSidePaddingAlt : appSidePadding}
+        paddingRight={where ? appSidePaddingAlt : appSidePadding}
         sx={{
           overflow: "hidden",
           height: {

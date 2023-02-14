@@ -3,9 +3,10 @@ import { Button } from "@mui/material";
 type Props = {
   text: string;
   handleClick: () => void;
+  maxWidth?: number | string;
 };
 
-export const OutlinedButton = ({ text, handleClick }: Props) => {
+export const OutlinedButton = ({ text, handleClick, maxWidth }: Props) => {
   return (
     <Button
       onClick={handleClick}
@@ -21,6 +22,7 @@ export const OutlinedButton = ({ text, handleClick }: Props) => {
         color: "info.main",
         borderColor: "info.main",
         borderWidth: 1.5,
+        maxWidth: maxWidth,
         "&:hover": {
           backgroundColor: "rgb(0, 0, 0, 0.03)",
           borderColor: "unset",

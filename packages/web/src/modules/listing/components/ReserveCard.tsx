@@ -2,76 +2,60 @@ import {
   ButtonBase,
   Card,
   CardContent,
+  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 
 import { borderRadius, searchBarHeight } from "../../../constants/constants";
 import { Booking } from "../../booking/Booking";
+import { ViewListingQuery } from "@airbnb-clone/controller";
+import { useState } from "react";
 
 type Props = {
-  data: {
-    price: number;
-    rating: number | null | undefined;
-  };
+  data?: ViewListingQuery["viewListing"];
 };
 
-export const ReserveCard = ({ data: { price, rating } }: Props) => {
+export const ReserveCard = ({ data }: Props) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
 
+  const [yes, setYes] = useState(false);
+
+  setTimeout(() => {
+    setYes(true);
+  }, 2000);
+
   return (
     <>
-      {matches && (
-        <Card
-          raised
-          sx={{
-            position: "sticky",
-            top: searchBarHeight + 30,
-            height: "100%",
-            width: 340,
-            overflow: "unset",
-            borderRadius,
-          }}
-        >
-          <CardContent>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              sx={{ flexWrap: "wrap" }}
-            >
-              <Stack
-                direction="row"
-                spacing={1}
-                alignItems="baseline"
-                sx={{ mr: 2 }}
-              >
-                <Typography variant="h3" fontSize={26} noWrap>
-                  ${price} USD
-                </Typography>
-                <Typography>day</Typography>
-              </Stack>
-              <Stack
-                direction="row"
-                spacing={1}
-                divider={<Typography>·</Typography>}
-              >
-                <Typography sx={{ display: "flex" }}>
-                  <StarRateRoundedIcon fontSize="small" /> {rating}
-                </Typography>
-                <ButtonBase sx={{ whiteSpace: "nowrap" }}>7 reviews</ButtonBase>
-              </Stack>
-            </Stack>
-            <Stack spacing={2} sx={{ mt: 3 }}>
-              <Booking price={price} rating={rating} />
-            </Stack>
-          </CardContent>
-        </Card>
-      )}
+      {matches &&
+        (data && yes ? (
+          <Card
+            raised
+            sx={{
+              position: "sticky",
+              top: searchBarHeight + 30,
+              height: "100%",
+              width: 360,
+              overflow: "unset",
+              borderRadius,
+              padding: 1,
+            }}
+          >
+            <CardContent>
+              {data && <Booking price={data.price} rating={data.rating} />}
+            </CardContent>
+          </Card>
+        ) : (
+          <Skeleton
+            variant="rounded"
+            width={340}
+            height={160}
+            sx={{ borderRadius }}
+          />
+        ))}
     </>
   );
 };

@@ -1,10 +1,10 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useContext, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 import {
+  appSidePaddingAlt,
   appSidePadding,
-  appSidePaddingWithMap,
   desktopMinWidth,
   searchBarHeight,
   searchBarTimingFunction,
@@ -15,10 +15,12 @@ import { NavbarContext } from "../Navbar";
 export const NavbarContainer = ({
   children,
 }: {
-  children: JSX.Element | JSX.Element[];
+  children: JSX.Element | JSX.Element[] | false;
 }) => {
   const [searchParams] = useSearchParams();
   const where = searchParams.get("where");
+
+  const { conversationId } = useParams();
 
   const {
     navbarState: { subSearch },
@@ -42,8 +44,8 @@ export const NavbarContainer = ({
         justifyContent: matches ? "space-between" : "center",
         alignItems: matches ? "flex-start" : "center",
         p: 1.68,
-        pl: !where ? appSidePadding : appSidePaddingWithMap,
-        pr: !where ? appSidePadding : appSidePaddingWithMap,
+        pl: conversationId || where ? appSidePaddingAlt : appSidePadding,
+        pr: conversationId || where ? appSidePaddingAlt : appSidePadding,
         position: "fixed",
         top: 0,
         left: 0,

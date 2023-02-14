@@ -3,9 +3,11 @@ import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 
 export const ShareSaveButtons = ({
+  notVisible,
   onlyIcon,
   spacing,
 }: {
+  notVisible?: boolean;
   onlyIcon?: boolean;
   spacing?: number;
 }) => {
@@ -32,7 +34,7 @@ export const ShareSaveButtons = ({
             key={text}
             color="info"
             startIcon={icon}
-            sx={{ fontSize: 14 }}
+            sx={{ fontSize: 14, opacity: notVisible ? 0 : 1 }}
           >
             {text}
           </Button>

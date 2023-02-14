@@ -1,26 +1,12 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  FormHelperText,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { bookingSchema } from "@airbnb-clone/common";
-import { useCreateBookingMutation } from "@airbnb-clone/controller";
-import { useParams, useSearchParams } from "react-router-dom";
-import dayjs from "dayjs";
-import React, { useState } from "react";
-import { Form, Formik } from "formik";
+import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 
 import { SelectDates } from "./components/SelectDates";
 import { SelectGuests } from "./components/SelectGuests";
 import { formBorderColor } from "../../constants/constants";
 import { BookingButton } from "./BookingButton";
 import { BookingProps } from "./Booking";
-import { getDayDifference } from "../../utils/getDayDifference";
 import { Receipt } from "./Receipt";
+import { Rating } from "../../components/Rating";
 
 export const DesktopBooking = ({
   price,
@@ -30,6 +16,39 @@ export const DesktopBooking = ({
 }: BookingProps) => {
   return (
     <>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+        gap={0}
+        mb={3}
+      >
+        <Typography
+          variant="h3"
+          fontSize={22}
+          fontWeight={600}
+          marginRight={2}
+          noWrap
+        >
+          ${(price + 1000).toLocaleString()} USD{" "}
+          <Box component="span" fontSize={16} fontWeight="initial">
+            day
+          </Box>
+        </Typography>
+        <Stack direction="row" spacing={1} divider={<Typography>·</Typography>}>
+          <Rating rating={rating} />
+          <ButtonBase
+            sx={{
+              whiteSpace: "nowrap",
+              textDecoration: "underline",
+              fontSize: 14,
+            }}
+          >
+            7 reviews
+          </ButtonBase>
+        </Stack>
+      </Stack>
       <Box
         width="100%"
         marginBottom={2}

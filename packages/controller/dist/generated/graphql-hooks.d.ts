@@ -18,6 +18,7 @@ export declare type Scalars = {
     Boolean: boolean;
     Int: number;
     Float: number;
+    Date: any;
     File: any;
     Image: any;
 };
@@ -40,11 +41,22 @@ export declare type BookingInput = {
     guests: Scalars['Int'];
     start: Scalars['String'];
 };
-export declare type ConversationHeader = {
-    __typename?: 'ConversationHeader';
-    interlocutor?: Maybe<Interlocutor>;
-    lastMessage: Scalars['String'];
-    location: Scalars['String'];
+export declare type Conversation = {
+    __typename?: 'Conversation';
+    conversationId: Scalars['ID'];
+    dates?: Maybe<Scalars['String']>;
+    interlocutor?: Maybe<User>;
+    interlocutorId?: Maybe<Scalars['ID']>;
+    listing?: Maybe<ListingInfo>;
+    listingId: Scalars['ID'];
+    messages: Array<ConversationMessage>;
+};
+export declare type ConversationMessage = {
+    __typename?: 'ConversationMessage';
+    createdDate: Scalars['Date'];
+    fromHost: Scalars['Boolean'];
+    id: Scalars['ID'];
+    text: Scalars['String'];
 };
 export declare type Draft = {
     __typename?: 'Draft';
@@ -71,16 +83,6 @@ export declare type Error = {
     message: Scalars['String'];
     path: Scalars['String'];
 };
-export declare enum InboxType {
-    Guest = "guest",
-    Host = "host"
-}
-export declare type Interlocutor = {
-    __typename?: 'Interlocutor';
-    avatar: Scalars['String'];
-    firstName: Scalars['String'];
-    lastName: Scalars['String'];
-};
 export declare type Listing = {
     __typename?: 'Listing';
     amenities?: Maybe<Array<Scalars['String']>>;
@@ -104,6 +106,11 @@ export declare type Listing = {
     vesselType: VesselType;
     zipcode: Scalars['String'];
 };
+export declare type ListingInfo = {
+    __typename?: 'ListingInfo';
+    img?: Maybe<Scalars['String']>;
+    name?: Maybe<Scalars['String']>;
+};
 export declare type LoginResponse = {
     __typename?: 'LoginResponse';
     errors?: Maybe<Array<Error>>;
@@ -116,24 +123,51 @@ export declare type Me = {
 };
 export declare type Message = {
     __typename?: 'Message';
-    listingId: Scalars['String'];
+    listingId: Scalars['ID'];
     text: Scalars['String'];
     user?: Maybe<User>;
-    userId?: Maybe<Scalars['String']>;
+    userId?: Maybe<Scalars['ID']>;
+};
+export declare type MessageTut = {
+    __typename?: 'MessageTut';
+    body?: Maybe<Scalars['String']>;
+    from?: Maybe<Scalars['String']>;
+};
+export declare type MessageWithGuest = {
+    __typename?: 'MessageWithGuest';
+    conversationId: Scalars['ID'];
+    createdDate: Scalars['Date'];
+    fromHost: Scalars['Boolean'];
+    id: Scalars['ID'];
+    interlocutor?: Maybe<User>;
+    listingId: Scalars['ID'];
+    text: Scalars['String'];
+    userIdOfGuest?: Maybe<Scalars['ID']>;
+};
+export declare type MessageWithHost = {
+    __typename?: 'MessageWithHost';
+    conversationId: Scalars['ID'];
+    createdDate: Scalars['Date'];
+    fromHost: Scalars['Boolean'];
+    id: Scalars['ID'];
+    interlocutor?: Maybe<User>;
+    listingId: Scalars['ID'];
+    text: Scalars['String'];
+    userIdOfHost?: Maybe<Scalars['ID']>;
 };
 export declare type Mutation = {
     __typename?: 'Mutation';
     addFruit: Scalars['Boolean'];
     confirmEmail: Scalars['Boolean'];
     createBooking: Scalars['ID'];
-    createGuestMessage: Scalars['Boolean'];
-    createHostMessage: Scalars['Boolean'];
     createListing: Scalars['ID'];
+    createMessage: Scalars['Boolean'];
     deleteListing: Scalars['Boolean'];
     login: LoginResponse;
     logout?: Maybe<Scalars['Boolean']>;
     register?: Maybe<Array<Error>>;
     resetPassword?: Maybe<Array<Error>>;
+    send: MessageTut;
     sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
     updateListing?: Maybe<Scalars['ID']>;
 };
@@ -147,17 +181,12 @@ export declare type MutationCreateBookingArgs = {
     input: BookingInput;
     listingId: Scalars['ID'];
 };
-export declare type MutationCreateGuestMessageArgs = {
-    listingId: Scalars['ID'];
-    text: Scalars['String'];
-};
-export declare type MutationCreateHostMessageArgs = {
-    interlocutorId: Scalars['ID'];
-    listingId: Scalars['ID'];
-    text: Scalars['String'];
-};
 export declare type MutationCreateListingArgs = {
     input: VesselTypeInput;
+};
+export declare type MutationCreateMessageArgs = {
+    listingId: Scalars['String'];
+    text: Scalars['String'];
 };
 export declare type MutationDeleteListingArgs = {
     id: Scalars['String'];
@@ -173,6 +202,9 @@ export declare type MutationRegisterArgs = {
 export declare type MutationResetPasswordArgs = {
     key: Scalars['String'];
     newPassword: Scalars['String'];
+};
+export declare type MutationSendArgs = {
+    input: SendMessageInput;
 };
 export declare type MutationSendForgotPasswordEmailArgs = {
     email: Scalars['String'];
@@ -199,8 +231,12 @@ export declare type Query = {
     getRandomUserCredentails?: Maybe<RandomUser>;
     me?: Maybe<Me>;
     messages?: Maybe<Array<Message>>;
+    populateConversationWithGuest: Conversation;
+    populateConversationWithHost: Conversation;
     populateForm: Draft;
-    populateInbox: Array<ConversationHeader>;
+    populateGuestInbox: Array<MessageWithHost>;
+    populateHostInbox: Array<MessageWithGuest>;
+    room: Array<MessageTut>;
     searchListings: SearchListingsResponse;
     viewListing: Listing;
     viewUserBookings: Array<Booking>;
@@ -211,12 +247,18 @@ export declare type QueryGetListingUnavailabilityArgs = {
 export declare type QueryMessagesArgs = {
     listingId: Scalars['String'];
 };
+export declare type QueryPopulateConversationWithGuestArgs = {
+    conversationId: Scalars['String'];
+};
+export declare type QueryPopulateConversationWithHostArgs = {
+    conversationId: Scalars['String'];
+};
 export declare type QueryPopulateFormArgs = {
     fields: Array<Scalars['String']>;
     listingId: Scalars['ID'];
 };
-export declare type QueryPopulateInboxArgs = {
-    type?: InputMaybe<InboxType>;
+export declare type QueryRoomArgs = {
+    id: Scalars['ID'];
 };
 export declare type QuerySearchListingsArgs = {
     input?: InputMaybe<SearchListingsInput>;
@@ -265,6 +307,11 @@ export declare type SearchLocation = {
     lat: Scalars['Float'];
     lng: Scalars['Float'];
 };
+export declare type SendMessageInput = {
+    body: Scalars['String'];
+    from: Scalars['String'];
+    roomId: Scalars['ID'];
+};
 export declare enum Status {
     Active = "active",
     Inactive = "inactive"
@@ -272,9 +319,13 @@ export declare enum Status {
 export declare type Subscription = {
     __typename?: 'Subscription';
     newMessage: Message;
+    newMessageTut: MessageTut;
 };
 export declare type SubscriptionNewMessageArgs = {
     listingId: Scalars['String'];
+};
+export declare type SubscriptionNewMessageTutArgs = {
+    roomId: Scalars['ID'];
 };
 export declare type UpdateListingFields = {
     address?: InputMaybe<Address>;
@@ -284,8 +335,9 @@ export declare type UpdateListingFields = {
 };
 export declare type User = {
     __typename?: 'User';
-    email?: Maybe<Scalars['String']>;
-    name?: Maybe<Scalars['String']>;
+    avatar?: Maybe<Scalars['String']>;
+    firstName?: Maybe<Scalars['String']>;
+    lastName?: Maybe<Scalars['String']>;
 };
 export declare enum VesselType {
     Catamaran = "catamaran",
@@ -466,6 +518,116 @@ export declare type ViewListingQuery = {
         } | null;
     };
 };
+export declare type CreateMessageMutationVariables = Exact<{
+    listingId: Scalars['String'];
+    text: Scalars['String'];
+}>;
+export declare type CreateMessageMutation = {
+    __typename?: 'Mutation';
+    createMessage: boolean;
+};
+export declare type PopulateGuestInboxQueryVariables = Exact<{
+    [key: string]: never;
+}>;
+export declare type PopulateGuestInboxQuery = {
+    __typename?: 'Query';
+    populateGuestInbox: Array<{
+        __typename?: 'MessageWithHost';
+        id: string;
+        text: string;
+        fromHost: boolean;
+        createdDate: any;
+        listingId: string;
+        conversationId: string;
+        interlocutor?: {
+            __typename?: 'User';
+            avatar?: string | null;
+            firstName?: string | null;
+            lastName?: string | null;
+        } | null;
+    }>;
+};
+export declare type PopulateHostInboxQueryVariables = Exact<{
+    [key: string]: never;
+}>;
+export declare type PopulateHostInboxQuery = {
+    __typename?: 'Query';
+    populateHostInbox: Array<{
+        __typename?: 'MessageWithGuest';
+        id: string;
+        text: string;
+        fromHost: boolean;
+        createdDate: any;
+        listingId: string;
+        conversationId: string;
+        interlocutor?: {
+            __typename?: 'User';
+            avatar?: string | null;
+            firstName?: string | null;
+            lastName?: string | null;
+        } | null;
+    }>;
+};
+export declare type PopulateConversationWithHostQueryVariables = Exact<{
+    conversationId: Scalars['String'];
+}>;
+export declare type PopulateConversationWithHostQuery = {
+    __typename?: 'Query';
+    populateConversationWithHost: {
+        __typename?: 'Conversation';
+        interlocutorId?: string | null;
+        listingId: string;
+        conversationId: string;
+        interlocutor?: {
+            __typename?: 'User';
+            avatar?: string | null;
+            firstName?: string | null;
+            lastName?: string | null;
+        } | null;
+        listing?: {
+            __typename?: 'ListingInfo';
+            name?: string | null;
+            img?: string | null;
+        } | null;
+        messages: Array<{
+            __typename?: 'ConversationMessage';
+            id: string;
+            text: string;
+            fromHost: boolean;
+            createdDate: any;
+        }>;
+    };
+};
+export declare type PopulateConversationWithGuestQueryVariables = Exact<{
+    conversationId: Scalars['String'];
+}>;
+export declare type PopulateConversationWithGuestQuery = {
+    __typename?: 'Query';
+    populateConversationWithGuest: {
+        __typename?: 'Conversation';
+        interlocutorId?: string | null;
+        listingId: string;
+        conversationId: string;
+        interlocutor?: {
+            __typename?: 'User';
+            avatar?: string | null;
+            firstName?: string | null;
+            lastName?: string | null;
+        } | null;
+        listing?: {
+            __typename?: 'ListingInfo';
+            name?: string | null;
+            img?: string | null;
+        } | null;
+        messages: Array<{
+            __typename?: 'ConversationMessage';
+            id: string;
+            text: string;
+            fromHost: boolean;
+            createdDate: any;
+        }>;
+    };
+};
 export declare type NewMessageSubscriptionSubscriptionVariables = Exact<{
     listingId: Scalars['String'];
 }>;
@@ -477,8 +639,9 @@ export declare type NewMessageSubscriptionSubscription = {
         listingId: string;
         user?: {
             __typename?: 'User';
-            email?: string | null;
-            name?: string | null;
+            avatar?: string | null;
+            firstName?: string | null;
+            lastName?: string | null;
         } | null;
     };
 };
@@ -493,8 +656,9 @@ export declare type ViewMessagesQuery = {
         listingId: string;
         user?: {
             __typename?: 'User';
-            email?: string | null;
-            name?: string | null;
+            avatar?: string | null;
+            firstName?: string | null;
+            lastName?: string | null;
         } | null;
     }> | null;
 };
@@ -621,6 +785,55 @@ export declare function useViewListingLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export declare type ViewListingQueryHookResult = ReturnType<typeof useViewListingQuery>;
 export declare type ViewListingLazyQueryHookResult = ReturnType<typeof useViewListingLazyQuery>;
 export declare type ViewListingQueryResult = Apollo.QueryResult<ViewListingQuery, ViewListingQueryVariables>;
+export declare const CreateMessageDocument: Apollo.DocumentNode;
+export declare type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
+export declare function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>): Apollo.MutationTuple<CreateMessageMutation, Exact<{
+    listingId: string;
+    text: string;
+}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+export declare type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
+export declare type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
+export declare type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
+export declare const PopulateGuestInboxDocument: Apollo.DocumentNode;
+export declare function usePopulateGuestInboxQuery(baseOptions?: Apollo.QueryHookOptions<PopulateGuestInboxQuery, PopulateGuestInboxQueryVariables>): Apollo.QueryResult<PopulateGuestInboxQuery, Exact<{
+    [key: string]: never;
+}>>;
+export declare function usePopulateGuestInboxLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateGuestInboxQuery, PopulateGuestInboxQueryVariables>): Apollo.LazyQueryResultTuple<PopulateGuestInboxQuery, Exact<{
+    [key: string]: never;
+}>>;
+export declare type PopulateGuestInboxQueryHookResult = ReturnType<typeof usePopulateGuestInboxQuery>;
+export declare type PopulateGuestInboxLazyQueryHookResult = ReturnType<typeof usePopulateGuestInboxLazyQuery>;
+export declare type PopulateGuestInboxQueryResult = Apollo.QueryResult<PopulateGuestInboxQuery, PopulateGuestInboxQueryVariables>;
+export declare const PopulateHostInboxDocument: Apollo.DocumentNode;
+export declare function usePopulateHostInboxQuery(baseOptions?: Apollo.QueryHookOptions<PopulateHostInboxQuery, PopulateHostInboxQueryVariables>): Apollo.QueryResult<PopulateHostInboxQuery, Exact<{
+    [key: string]: never;
+}>>;
+export declare function usePopulateHostInboxLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateHostInboxQuery, PopulateHostInboxQueryVariables>): Apollo.LazyQueryResultTuple<PopulateHostInboxQuery, Exact<{
+    [key: string]: never;
+}>>;
+export declare type PopulateHostInboxQueryHookResult = ReturnType<typeof usePopulateHostInboxQuery>;
+export declare type PopulateHostInboxLazyQueryHookResult = ReturnType<typeof usePopulateHostInboxLazyQuery>;
+export declare type PopulateHostInboxQueryResult = Apollo.QueryResult<PopulateHostInboxQuery, PopulateHostInboxQueryVariables>;
+export declare const PopulateConversationWithHostDocument: Apollo.DocumentNode;
+export declare function usePopulateConversationWithHostQuery(baseOptions: Apollo.QueryHookOptions<PopulateConversationWithHostQuery, PopulateConversationWithHostQueryVariables>): Apollo.QueryResult<PopulateConversationWithHostQuery, Exact<{
+    conversationId: string;
+}>>;
+export declare function usePopulateConversationWithHostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateConversationWithHostQuery, PopulateConversationWithHostQueryVariables>): Apollo.LazyQueryResultTuple<PopulateConversationWithHostQuery, Exact<{
+    conversationId: string;
+}>>;
+export declare type PopulateConversationWithHostQueryHookResult = ReturnType<typeof usePopulateConversationWithHostQuery>;
+export declare type PopulateConversationWithHostLazyQueryHookResult = ReturnType<typeof usePopulateConversationWithHostLazyQuery>;
+export declare type PopulateConversationWithHostQueryResult = Apollo.QueryResult<PopulateConversationWithHostQuery, PopulateConversationWithHostQueryVariables>;
+export declare const PopulateConversationWithGuestDocument: Apollo.DocumentNode;
+export declare function usePopulateConversationWithGuestQuery(baseOptions: Apollo.QueryHookOptions<PopulateConversationWithGuestQuery, PopulateConversationWithGuestQueryVariables>): Apollo.QueryResult<PopulateConversationWithGuestQuery, Exact<{
+    conversationId: string;
+}>>;
+export declare function usePopulateConversationWithGuestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateConversationWithGuestQuery, PopulateConversationWithGuestQueryVariables>): Apollo.LazyQueryResultTuple<PopulateConversationWithGuestQuery, Exact<{
+    conversationId: string;
+}>>;
+export declare type PopulateConversationWithGuestQueryHookResult = ReturnType<typeof usePopulateConversationWithGuestQuery>;
+export declare type PopulateConversationWithGuestLazyQueryHookResult = ReturnType<typeof usePopulateConversationWithGuestLazyQuery>;
+export declare type PopulateConversationWithGuestQueryResult = Apollo.QueryResult<PopulateConversationWithGuestQuery, PopulateConversationWithGuestQueryVariables>;
 export declare const NewMessageSubscriptionDocument: Apollo.DocumentNode;
 export declare function useNewMessageSubscriptionSubscription(baseOptions: Apollo.SubscriptionHookOptions<NewMessageSubscriptionSubscription, NewMessageSubscriptionSubscriptionVariables>): Apollo.SubscriptionResult<NewMessageSubscriptionSubscription, any>;
 export declare type NewMessageSubscriptionSubscriptionHookResult = ReturnType<typeof useNewMessageSubscriptionSubscription>;

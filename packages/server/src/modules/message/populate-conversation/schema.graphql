@@ -1,0 +1,26 @@
+type Query {
+  populateConversationWithHost(conversationId: String!): Conversation!
+  populateConversationWithGuest(conversationId: String!): Conversation!
+}
+
+type Conversation {
+  interlocutorId: ID
+  interlocutor: User
+  listingId: ID!
+  listing: ListingInfo
+  conversationId: ID!
+  dates: String
+  messages: [ConversationMessage!]!
+}
+
+type ConversationMessage {
+  id: ID!
+  text: String!
+  fromHost: Boolean!
+  createdDate: Date!
+}
+
+type ListingInfo {
+  name: String
+  img: String
+}

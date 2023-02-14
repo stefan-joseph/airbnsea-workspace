@@ -1,7 +1,6 @@
 import { User } from "../../../entity/User";
 import { Resolvers } from "../../../types/types";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
-// import { GraphQLError } from "graphql";
 
 export const resolvers: Resolvers = {
   Query: {

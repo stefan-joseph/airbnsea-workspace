@@ -1,7 +1,0 @@
-type Mutation {
-  createHostMessage(
-    interlocutorId: ID!
-    listingId: ID!
-    text: String!
-  ): Boolean!
-}

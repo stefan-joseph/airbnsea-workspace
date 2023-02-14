@@ -28,15 +28,7 @@ export const MobileBooking = ({
     <Field>
       {({ form: { values, setFieldValue } }: FieldProps) => (
         <>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{
-              p: 2,
-              pl: 3,
-              pr: 3,
-            }}
-          >
+          <Stack direction="row" justifyContent="space-between" gap={2}>
             <PriceAndRatingStack
               price={price}
               rating={rating}

@@ -31,26 +31,13 @@ export const Listing = () => {
 
   const matches = useMediaQuery(desktopMinWidth);
 
-  if (loading) return <div>Loading...</div>;
+  const [yes, setYes] = useState(false);
 
-  if (data?.viewListing) {
-    const {
-      id,
-      name,
-      city,
-      state,
-      country,
-      photos,
-      vesselType,
-      guests,
-      beds,
-      price,
-      amenities,
-      description,
-      rating,
-      owner,
-    } = data.viewListing;
+  setTimeout(() => {
+    setYes(true);
+  }, 2000);
 
+  if (data?.viewListing || loading) {
     return (
       <Box
         sx={{
@@ -72,10 +59,9 @@ export const Listing = () => {
         )}
         {!matches && (
           <Box onClick={() => setPhotosOpen(true)} sx={{ cursor: "pointer" }}>
-            <PhotosNarrowScreen photos={photos} />
+            <PhotosNarrowScreen photos={data?.viewListing.photos} />
           </Box>
         )}
-
         <Stack
           alignItems="center"
           sx={{
@@ -85,34 +71,45 @@ export const Listing = () => {
           }}
         >
           <Stack spacing={2} sx={{ maxWidth: 1100, width: "100%" }}>
-            <Header data={{ name, city, state, country, rating }} />
+            <Header data={data?.viewListing} />
             {matches ? (
               <Box
                 onClick={() => setPhotosOpen(true)}
                 sx={{ cursor: "pointer" }}
               >
-                <PhotosWideScreen photos={photos} />
+                <PhotosWideScreen photos={data?.viewListing.photos} />
               </Box>
             ) : (
               <Divider />
             )}
             <Stack direction="row" spacing={4} sx={{ pt: 3 }}>
               <Stack spacing={4} divider={<Divider />} sx={{ flex: 2 }}>
-                <SubHeader data={{ vesselType, guests, beds, owner }} />
-                <Amenities amenities={amenities} />
-                <Typography>{description}</Typography>
-                <Sleep beds={beds} />
+                <SubHeader data={data?.viewListing} />
+                {data?.viewListing && yes && (
+                  <>
+                    <Amenities amenities={data?.viewListing.amenities} />
+                    <Typography>{data?.viewListing.description}</Typography>
+                    <Sleep beds={data?.viewListing.beds} />
+                  </>
+                )}
               </Stack>
-              <ReserveCard data={{ price, rating }} />
+              <ReserveCard data={data?.viewListing} />
             </Stack>
           </Stack>
         </Stack>
-        <ReserveBar price={price} rating={rating} />
-        <PhotosDrawer
-          photos={photos}
-          setPhotosOpen={setPhotosOpen}
-          photosOpen={photosOpen}
+
+        <ReserveBar
+          price={data?.viewListing.price}
+          rating={data?.viewListing.rating}
         />
+
+        {data?.viewListing && (
+          <PhotosDrawer
+            photos={data?.viewListing.photos}
+            setPhotosOpen={setPhotosOpen}
+            photosOpen={photosOpen}
+          />
+        )}
       </Box>
     );
   }

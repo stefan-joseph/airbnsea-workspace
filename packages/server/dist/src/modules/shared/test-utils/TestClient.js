@@ -138,6 +138,122 @@ class TestClient {
                 } }));
         });
     }
+    createMessage(listingId, text) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
+                    query: `
+          mutation {
+            createMessage(listingId: "${listingId}",
+            text: "${text}")
+          }
+        `,
+                } }));
+        });
+    }
+    populateGuestInbox() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
+                    query: `
+          query {
+            populateGuestInbox {
+              id
+              text
+              fromHost
+              createdDate
+              userIdOfHost
+              conversationId
+              interlocutor {
+                avatar
+                firstName
+                lastName
+              }
+            }
+          }
+        `,
+                } }));
+        });
+    }
+    populateHostInbox() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
+                    query: `
+          query {
+            populateHostInbox {
+              id
+              text
+              fromHost
+              createdDate
+              userIdOfGuest
+              conversationId
+              interlocutor {
+                avatar
+                firstName
+                lastName
+              }
+            }
+          }
+        `,
+                } }));
+        });
+    }
+    populateConversationWithHost(conversationId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
+                    query: `
+          query {
+            populateConversationWithHost(conversationId: "${conversationId}") {
+              interlocutorId
+              interlocutor {
+                avatar
+                firstName
+                lastName
+              }
+              listingId
+              listing {
+                name
+                img
+              }
+              messages {
+                id
+                text
+                fromHost
+                createdDate
+              }
+            }
+          }
+        `,
+                } }));
+        });
+    }
+    populateConversationWithGuest(conversationId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
+                    query: `
+          query {
+            populateConversationWithGuest(conversationId: "${conversationId}") {
+              interlocutorId
+              interlocutor {
+                avatar
+                firstName
+                lastName
+              }
+              listingId
+              listing {
+                name
+                img
+              }
+              messages {
+                id
+                text
+                fromHost
+                createdDate
+              }
+            }
+          }
+        `,
+                } }));
+        });
+    }
 }
 exports.TestClient = TestClient;
 //# sourceMappingURL=TestClient.js.map

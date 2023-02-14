@@ -10,18 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
-const redis_1 = require("../../redis");
 exports.resolvers = {
     Mutation: {
         addFruit: (_, { fruit }, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
             console.log(fruit);
-            yield redis.set("fruit", fruit);
+            yield redis.set("fruit", fruit + "!");
             return true;
         }),
     },
     Query: {
-        getFruit: () => __awaiter(void 0, void 0, void 0, function* () {
-            const fruit = yield redis_1.redis.get("fruit");
+        getFruit: (_, __, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
+            const fruit = yield redis.get("fruit");
             if (fruit)
                 return fruit;
             return "";

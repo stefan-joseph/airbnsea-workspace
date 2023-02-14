@@ -6,7 +6,7 @@ import { testUser1, testListing } from "../../shared/test-utils/testConstants";
 
 import { v4 as uuidv4 } from "uuid";
 import { formatNoListingErrorMessage } from "../../shared/utils/errorMessages";
-import { imageUrl } from "./utils/constants";
+import { imageUrl } from "../../shared/utils/constants";
 
 let userId1: string;
 let listingId: string;

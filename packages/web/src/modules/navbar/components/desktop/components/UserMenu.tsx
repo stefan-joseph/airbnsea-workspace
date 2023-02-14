@@ -1,9 +1,10 @@
 import { useState, useRef, useContext } from "react";
 import { Avatar, Button, MenuItem, MenuList } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import { PopperMenu } from "../../../../../components/PopperMenu";
+import { IoMenuOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
+import { PopperMenu } from "../../../../../components/PopperMenu";
 import { AppContext } from "../../../../../context/context";
 import { raiseOnHoverBoxShadow } from "../../../../../constants/constants";
 
@@ -36,7 +37,12 @@ export const UserMenu = () => {
             backgroundColor: "unset",
           },
         }}
-        startIcon={<MenuRoundedIcon sx={{ color: "grey.600" }} />}
+        startIcon={
+          <IoMenuOutline
+            size={24}
+            //  sx={{ color: "grey.600" }}
+          />
+        }
         endIcon={
           <Avatar
             src={avatar ? avatar : undefined}

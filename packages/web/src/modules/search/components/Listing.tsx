@@ -22,7 +22,7 @@ export const Listing: React.FC<{
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: string
   ) => {
-    let url = `/listings/${id}/view?`;
+    let url = `/listing/${id}/view?`;
     const start = searchParams.get("start");
     if (start) url = url + `start=${start}&`;
     const end = searchParams.get("end");

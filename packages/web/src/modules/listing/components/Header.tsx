@@ -1,22 +1,28 @@
-import { ButtonBase, Stack, Typography, useMediaQuery } from "@mui/material";
+import {
+  ButtonBase,
+  Skeleton,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { ShareSaveButtons } from "./ShareSaveButtons";
 import { desktopMinWidth } from "../../../constants/constants";
 import { Rating } from "../../../components/Rating";
+import { ViewListingQuery } from "@airbnb-clone/controller";
+import { useEffect, useState } from "react";
 
 type Props = {
-  data: {
-    name: string;
-    city: string;
-    state?: string | null | undefined;
-    country: string;
-    rating: number;
-  };
+  data?: ViewListingQuery["viewListing"];
 };
 
-export const Header = ({
-  data: { name, city, state, country, rating },
-}: Props) => {
+export const Header = ({ data }: Props) => {
   const matches = useMediaQuery(desktopMinWidth);
+
+  const [yes, setYes] = useState(false);
+
+  setTimeout(() => {
+    setYes(true);
+  }, 2000);
 
   return (
     <Stack spacing={0.5}>
@@ -27,24 +33,36 @@ export const Header = ({
         letterSpacing={0.2}
         sx={{ textTransform: "capitalize" }}
       >
-        {name}
+        {data && yes ? (
+          data.name
+        ) : (
+          <Skeleton width="100%" height="100%" sx={{ maxWidth: 500 }} />
+        )}
       </Typography>
+
       <Stack direction="row" justifyContent="space-between">
-        <Stack
-          direction="row"
-          spacing={1}
-          alignItems="center"
-          divider={<Typography>·</Typography>}
-        >
-          <Rating rating={rating} />
-          <ButtonBase sx={{ textDecoration: "underline" }}>
-            7 reviews
-          </ButtonBase>
-          <ButtonBase sx={{ textDecoration: "underline" }}>
-            {city}, {state ? `${state},` : null} {country}
-          </ButtonBase>
-        </Stack>
-        {matches && <ShareSaveButtons />}
+        {data && yes ? (
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            flexWrap="wrap"
+            divider={<Typography>·</Typography>}
+          >
+            <Rating rating={data.rating} />
+
+            <ButtonBase sx={{ textDecoration: "underline" }}>
+              7 reviews
+            </ButtonBase>
+            <ButtonBase sx={{ textDecoration: "underline" }}>
+              {data.city}, {data.state ? `${data.state}, ` : null}
+              {data.country}
+            </ButtonBase>
+          </Stack>
+        ) : (
+          <Skeleton width="100%" height={28} sx={{ maxWidth: 300 }} />
+        )}
+        {/* {matches && <ShareSaveButtons notVisible={!data?.city || !yes} />} */}
       </Stack>
     </Stack>
   );

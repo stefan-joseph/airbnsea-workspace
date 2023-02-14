@@ -33,6 +33,7 @@ export const resolvers: Resolvers = {
       if (start || end) {
         // should this logic be on front end so input in search bar gets
         // filled in with the automatically generated value?
+        // use subquery ??
         if (!start) {
           start = dayjs(end).subtract(1, "day").format(dateFormat);
         } else if (!end) {

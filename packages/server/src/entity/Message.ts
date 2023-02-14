@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
   ManyToOne,
+  CreateDateColumn,
 } from "typeorm";
 import { Listing } from "./Listing";
 import { User } from "./User";
@@ -16,15 +17,31 @@ export class Message extends BaseEntity {
   @Column("text")
   text: string;
 
+  @Column("boolean")
+  fromHost: boolean;
+
   @Column("uuid")
-  userId: string;
+  userIdOfGuest: string;
 
   @ManyToOne(() => User)
-  user: User;
+  guestUser: User;
+
+  @Column("uuid")
+  userIdOfHost: string;
+
+  @ManyToOne(() => User)
+  hostUser: User;
 
   @Column("uuid")
   listingId: string;
 
   @ManyToOne(() => Listing)
   listing: Listing;
+
+  // implemented in order to hide userId (interlocutorId) from other party
+  @Column("uuid")
+  conversationId: string;
+
+  @CreateDateColumn()
+  createdDate: Date;
 }

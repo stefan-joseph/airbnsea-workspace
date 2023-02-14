@@ -1,7 +1,6 @@
 import { ButtonBase, Paper, Stack, Typography } from "@mui/material";
 import { useContext } from "react";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
+import { IoSearchOutline, IoOptionsOutline } from "react-icons/io5";
 
 import { searchBarBorderColor } from "../../../../../constants/constants";
 import { NavbarContext } from "../../../Navbar";
@@ -40,7 +39,7 @@ export const DisplayBar = () => {
         marginLeft={2}
         marginRight={1.4}
       >
-        <SearchRoundedIcon />
+        <IoSearchOutline size={22} />
         <Stack flex={1}>
           <Typography fontSize={15} fontWeight={700}>
             Where to?
@@ -72,7 +71,7 @@ export const DisplayBar = () => {
             p: 1,
           }}
         >
-          <TuneRoundedIcon fontSize="small" />
+          <IoOptionsOutline size={22} />
         </ButtonBase>
       </Stack>
     </Paper>

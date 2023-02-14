@@ -3,8 +3,9 @@ subscription NewMessageSubscription($listingId: String!) {
     text
     listingId
     user {
-      email
-      name
+      avatar
+      firstName
+      lastName
     }
   }
 }

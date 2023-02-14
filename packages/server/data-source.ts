@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { DataSource, DataSourceOptions } from "typeorm";
 import { SeederOptions } from "typeorm-extension";
 import { ListingFactory } from "./src/db/seeding/factories/listing.factory";
+import { MessageFactory } from "./src/db/seeding/factories/message.factory";
 import { UserFactory } from "./src/db/seeding/factories/user.factory";
 import InitialSeeder from "./src/db/seeding/seeds/initialSeed";
 import { Booking } from "./src/entity/Booking";
@@ -20,7 +21,7 @@ const optionsPROD: DataSourceOptions & SeederOptions = {
   entities: [User, Listing, Draft, Message, Booking],
   migrations: [],
   subscribers: [],
-  factories: [UserFactory, ListingFactory],
+  factories: [UserFactory, ListingFactory, MessageFactory],
   seeds: [InitialSeeder],
 };
 
@@ -41,7 +42,7 @@ const optionsDEV: DataSourceOptions & SeederOptions = {
   migrations: [],
   subscribers: [],
   // additional config options brought by typeorm-extension
-  factories: [UserFactory, ListingFactory],
+  factories: [UserFactory, ListingFactory, MessageFactory],
   seeds: [InitialSeeder],
 };
 

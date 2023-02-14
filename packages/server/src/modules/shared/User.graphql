@@ -1,4 +1,5 @@
 type User {
-  email: String
-  name: String
+  avatar: String
+  firstName: String
+  lastName: String
 }

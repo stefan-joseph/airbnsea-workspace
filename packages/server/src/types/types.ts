@@ -12,6 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: any;
   File: any;
   Image: any;
 };
@@ -38,11 +39,23 @@ export type BookingInput = {
   start: Scalars['String'];
 };
 
-export type ConversationHeader = {
-  __typename?: 'ConversationHeader';
-  interlocutor?: Maybe<Interlocutor>;
-  lastMessage: Scalars['String'];
-  location: Scalars['String'];
+export type Conversation = {
+  __typename?: 'Conversation';
+  conversationId: Scalars['ID'];
+  dates?: Maybe<Scalars['String']>;
+  interlocutor?: Maybe<User>;
+  interlocutorId?: Maybe<Scalars['ID']>;
+  listing?: Maybe<ListingInfo>;
+  listingId: Scalars['ID'];
+  messages: Array<ConversationMessage>;
+};
+
+export type ConversationMessage = {
+  __typename?: 'ConversationMessage';
+  createdDate: Scalars['Date'];
+  fromHost: Scalars['Boolean'];
+  id: Scalars['ID'];
+  text: Scalars['String'];
 };
 
 export type Draft = {
@@ -72,18 +85,6 @@ export type Error = {
   path: Scalars['String'];
 };
 
-export enum InboxType {
-  Guest = 'guest',
-  Host = 'host'
-}
-
-export type Interlocutor = {
-  __typename?: 'Interlocutor';
-  avatar: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-};
-
 export type Listing = {
   __typename?: 'Listing';
   amenities?: Maybe<Array<Scalars['String']>>;
@@ -108,6 +109,12 @@ export type Listing = {
   zipcode: Scalars['String'];
 };
 
+export type ListingInfo = {
+  __typename?: 'ListingInfo';
+  img?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   errors?: Maybe<Array<Error>>;
@@ -120,12 +127,34 @@ export type Me = {
   firstName?: Maybe<Scalars['String']>;
 };
 
-export type Message = {
-  __typename?: 'Message';
-  listingId: Scalars['String'];
+export type MessageTut = {
+  __typename?: 'MessageTut';
+  body?: Maybe<Scalars['String']>;
+  from?: Maybe<Scalars['String']>;
+};
+
+export type MessageWithGuest = {
+  __typename?: 'MessageWithGuest';
+  conversationId: Scalars['ID'];
+  createdDate: Scalars['Date'];
+  fromHost: Scalars['Boolean'];
+  id: Scalars['ID'];
+  interlocutor?: Maybe<User>;
+  listingId: Scalars['ID'];
   text: Scalars['String'];
-  user?: Maybe<User>;
-  userId?: Maybe<Scalars['String']>;
+  userIdOfGuest?: Maybe<Scalars['ID']>;
+};
+
+export type MessageWithHost = {
+  __typename?: 'MessageWithHost';
+  conversationId: Scalars['ID'];
+  createdDate: Scalars['Date'];
+  fromHost: Scalars['Boolean'];
+  id: Scalars['ID'];
+  interlocutor?: Maybe<User>;
+  listingId: Scalars['ID'];
+  text: Scalars['String'];
+  userIdOfHost?: Maybe<Scalars['ID']>;
 };
 
 export type Mutation = {
@@ -133,14 +162,14 @@ export type Mutation = {
   addFruit: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
   createBooking: Scalars['ID'];
-  createGuestMessage: Scalars['Boolean'];
-  createHostMessage: Scalars['Boolean'];
   createListing: Scalars['ID'];
+  createMessage: Scalars['ID'];
   deleteListing: Scalars['Boolean'];
   login: LoginResponse;
   logout?: Maybe<Scalars['Boolean']>;
   register?: Maybe<Array<Error>>;
   resetPassword?: Maybe<Array<Error>>;
+  send: MessageTut;
   sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
   updateListing?: Maybe<Scalars['ID']>;
 };
@@ -158,25 +187,18 @@ export type MutationConfirmEmailArgs = {
 
 export type MutationCreateBookingArgs = {
   input: BookingInput;
-  listingId: Scalars['ID'];
-};
-
-
-export type MutationCreateGuestMessageArgs = {
-  listingId: Scalars['ID'];
-  text: Scalars['String'];
-};
-
-
-export type MutationCreateHostMessageArgs = {
-  interlocutorId: Scalars['ID'];
-  listingId: Scalars['ID'];
-  text: Scalars['String'];
+  listingId: Scalars['String'];
 };
 
 
 export type MutationCreateListingArgs = {
   input: VesselTypeInput;
+};
+
+
+export type MutationCreateMessageArgs = {
+  listingId: Scalars['String'];
+  text: Scalars['String'];
 };
 
 
@@ -200,6 +222,11 @@ export type MutationRegisterArgs = {
 export type MutationResetPasswordArgs = {
   key: Scalars['String'];
   newPassword: Scalars['String'];
+};
+
+
+export type MutationSendArgs = {
+  input: SendMessageInput;
 };
 
 
@@ -232,9 +259,12 @@ export type Query = {
   getListingUnavailability: Array<Scalars['String']>;
   getRandomUserCredentails?: Maybe<RandomUser>;
   me?: Maybe<Me>;
-  messages?: Maybe<Array<Message>>;
+  populateConversationWithGuest: Conversation;
+  populateConversationWithHost: Conversation;
   populateForm: Draft;
-  populateInbox: Array<ConversationHeader>;
+  populateGuestInbox: Array<MessageWithHost>;
+  populateHostInbox: Array<MessageWithGuest>;
+  room: Array<MessageTut>;
   searchListings: SearchListingsResponse;
   viewListing: Listing;
   viewUserBookings: Array<Booking>;
@@ -246,8 +276,13 @@ export type QueryGetListingUnavailabilityArgs = {
 };
 
 
-export type QueryMessagesArgs = {
-  listingId: Scalars['String'];
+export type QueryPopulateConversationWithGuestArgs = {
+  conversationId: Scalars['String'];
+};
+
+
+export type QueryPopulateConversationWithHostArgs = {
+  conversationId: Scalars['String'];
 };
 
 
@@ -257,8 +292,8 @@ export type QueryPopulateFormArgs = {
 };
 
 
-export type QueryPopulateInboxArgs = {
-  type?: InputMaybe<InboxType>;
+export type QueryRoomArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -317,6 +352,12 @@ export type SearchLocation = {
   lng: Scalars['Float'];
 };
 
+export type SendMessageInput = {
+  body: Scalars['String'];
+  from: Scalars['String'];
+  roomId: Scalars['ID'];
+};
+
 export enum Status {
   Active = 'active',
   Inactive = 'inactive'
@@ -324,12 +365,18 @@ export enum Status {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  newMessage: Message;
+  newMessage: ConversationMessage;
+  newMessageTut: MessageTut;
 };
 
 
 export type SubscriptionNewMessageArgs = {
-  listingId: Scalars['String'];
+  conversationId: Scalars['String'];
+};
+
+
+export type SubscriptionNewMessageTutArgs = {
+  roomId: Scalars['ID'];
 };
 
 export type UpdateListingFields = {
@@ -341,8 +388,9 @@ export type UpdateListingFields = {
 
 export type User = {
   __typename?: 'User';
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
 };
 
 export enum VesselType {
@@ -427,20 +475,23 @@ export type ResolversTypes = {
   Booking: ResolverTypeWrapper<Booking>;
   BookingInput: BookingInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  ConversationHeader: ResolverTypeWrapper<ConversationHeader>;
+  Conversation: ResolverTypeWrapper<Conversation>;
+  ConversationMessage: ResolverTypeWrapper<ConversationMessage>;
+  Date: ResolverTypeWrapper<Scalars['Date']>;
   Draft: ResolverTypeWrapper<Draft>;
   Error: ResolverTypeWrapper<Error>;
   File: ResolverTypeWrapper<Scalars['File']>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Image: ResolverTypeWrapper<Scalars['Image']>;
-  InboxType: InboxType;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  Interlocutor: ResolverTypeWrapper<Interlocutor>;
   Listing: ResolverTypeWrapper<Listing>;
+  ListingInfo: ResolverTypeWrapper<ListingInfo>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Me: ResolverTypeWrapper<Me>;
-  Message: ResolverTypeWrapper<Message>;
+  MessageTut: ResolverTypeWrapper<MessageTut>;
+  MessageWithGuest: ResolverTypeWrapper<MessageWithGuest>;
+  MessageWithHost: ResolverTypeWrapper<MessageWithHost>;
   Mutation: ResolverTypeWrapper<{}>;
   Owner: ResolverTypeWrapper<Owner>;
   PhotoUpdate: PhotoUpdate;
@@ -450,6 +501,7 @@ export type ResolversTypes = {
   SearchListingsInput: SearchListingsInput;
   SearchListingsResponse: ResolverTypeWrapper<SearchListingsResponse>;
   SearchLocation: ResolverTypeWrapper<SearchLocation>;
+  SendMessageInput: SendMessageInput;
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']>;
   Subscription: ResolverTypeWrapper<{}>;
@@ -465,7 +517,9 @@ export type ResolversParentTypes = {
   Booking: Booking;
   BookingInput: BookingInput;
   Boolean: Scalars['Boolean'];
-  ConversationHeader: ConversationHeader;
+  Conversation: Conversation;
+  ConversationMessage: ConversationMessage;
+  Date: Scalars['Date'];
   Draft: Draft;
   Error: Error;
   File: Scalars['File'];
@@ -473,11 +527,13 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   Image: Scalars['Image'];
   Int: Scalars['Int'];
-  Interlocutor: Interlocutor;
   Listing: Listing;
+  ListingInfo: ListingInfo;
   LoginResponse: LoginResponse;
   Me: Me;
-  Message: Message;
+  MessageTut: MessageTut;
+  MessageWithGuest: MessageWithGuest;
+  MessageWithHost: MessageWithHost;
   Mutation: {};
   Owner: Owner;
   PhotoUpdate: PhotoUpdate;
@@ -487,6 +543,7 @@ export type ResolversParentTypes = {
   SearchListingsInput: SearchListingsInput;
   SearchListingsResponse: SearchListingsResponse;
   SearchLocation: SearchLocation;
+  SendMessageInput: SendMessageInput;
   String: Scalars['String'];
   Subscription: {};
   UpdateListingFields: UpdateListingFields;
@@ -501,12 +558,28 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ConversationHeaderResolvers<ContextType = any, ParentType extends ResolversParentTypes['ConversationHeader'] = ResolversParentTypes['ConversationHeader']> = {
-  interlocutor?: Resolver<Maybe<ResolversTypes['Interlocutor']>, ParentType, ContextType>;
-  lastMessage?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  location?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type ConversationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Conversation'] = ResolversParentTypes['Conversation']> = {
+  conversationId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  dates?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  interlocutor?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  interlocutorId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  listing?: Resolver<Maybe<ResolversTypes['ListingInfo']>, ParentType, ContextType>;
+  listingId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  messages?: Resolver<Array<ResolversTypes['ConversationMessage']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export type ConversationMessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['ConversationMessage'] = ResolversParentTypes['ConversationMessage']> = {
+  createdDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  fromHost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
+}
 
 export type DraftResolvers<ContextType = any, ParentType extends ResolversParentTypes['Draft'] = ResolversParentTypes['Draft']> = {
   amenities?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
@@ -543,13 +616,6 @@ export interface ImageScalarConfig extends GraphQLScalarTypeConfig<ResolversType
   name: 'Image';
 }
 
-export type InterlocutorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Interlocutor'] = ResolversParentTypes['Interlocutor']> = {
-  avatar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type ListingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Listing'] = ResolversParentTypes['Listing']> = {
   amenities?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
   apt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -574,6 +640,12 @@ export type ListingResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ListingInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListingInfo'] = ResolversParentTypes['ListingInfo']> = {
+  img?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
   errors?: Resolver<Maybe<Array<ResolversTypes['Error']>>, ParentType, ContextType>;
   sessionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -586,11 +658,33 @@ export type MeResolvers<ContextType = any, ParentType extends ResolversParentTyp
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
-  listingId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type MessageTutResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageTut'] = ResolversParentTypes['MessageTut']> = {
+  body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  from?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MessageWithGuestResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageWithGuest'] = ResolversParentTypes['MessageWithGuest']> = {
+  conversationId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  fromHost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  interlocutor?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  listingId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userIdOfGuest?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MessageWithHostResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageWithHost'] = ResolversParentTypes['MessageWithHost']> = {
+  conversationId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  fromHost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  interlocutor?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  listingId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userIdOfHost?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -598,14 +692,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addFruit?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddFruitArgs, 'fruit'>>;
   confirmEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationConfirmEmailArgs, 'id'>>;
   createBooking?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input' | 'listingId'>>;
-  createGuestMessage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationCreateGuestMessageArgs, 'listingId' | 'text'>>;
-  createHostMessage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationCreateHostMessageArgs, 'interlocutorId' | 'listingId' | 'text'>>;
   createListing?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateListingArgs, 'input'>>;
+  createMessage?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'listingId' | 'text'>>;
   deleteListing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteListingArgs, 'id'>>;
   login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   register?: Resolver<Maybe<Array<ResolversTypes['Error']>>, ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'password'>>;
   resetPassword?: Resolver<Maybe<Array<ResolversTypes['Error']>>, ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'key' | 'newPassword'>>;
+  send?: Resolver<ResolversTypes['MessageTut'], ParentType, ContextType, RequireFields<MutationSendArgs, 'input'>>;
   sendForgotPasswordEmail?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendForgotPasswordEmailArgs, 'email'>>;
   updateListing?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationUpdateListingArgs, 'fields' | 'listingId'>>;
 };
@@ -622,9 +716,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getListingUnavailability?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetListingUnavailabilityArgs, 'listingId'>>;
   getRandomUserCredentails?: Resolver<Maybe<ResolversTypes['RandomUser']>, ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes['Me']>, ParentType, ContextType>;
-  messages?: Resolver<Maybe<Array<ResolversTypes['Message']>>, ParentType, ContextType, RequireFields<QueryMessagesArgs, 'listingId'>>;
+  populateConversationWithGuest?: Resolver<ResolversTypes['Conversation'], ParentType, ContextType, RequireFields<QueryPopulateConversationWithGuestArgs, 'conversationId'>>;
+  populateConversationWithHost?: Resolver<ResolversTypes['Conversation'], ParentType, ContextType, RequireFields<QueryPopulateConversationWithHostArgs, 'conversationId'>>;
   populateForm?: Resolver<ResolversTypes['Draft'], ParentType, ContextType, RequireFields<QueryPopulateFormArgs, 'fields' | 'listingId'>>;
-  populateInbox?: Resolver<Array<ResolversTypes['ConversationHeader']>, ParentType, ContextType, Partial<QueryPopulateInboxArgs>>;
+  populateGuestInbox?: Resolver<Array<ResolversTypes['MessageWithHost']>, ParentType, ContextType>;
+  populateHostInbox?: Resolver<Array<ResolversTypes['MessageWithGuest']>, ParentType, ContextType>;
+  room?: Resolver<Array<ResolversTypes['MessageTut']>, ParentType, ContextType, RequireFields<QueryRoomArgs, 'id'>>;
   searchListings?: Resolver<ResolversTypes['SearchListingsResponse'], ParentType, ContextType, RequireFields<QuerySearchListingsArgs, 'limit' | 'offset'>>;
   viewListing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<QueryViewListingArgs, 'listingId'>>;
   viewUserBookings?: Resolver<Array<ResolversTypes['Booking']>, ParentType, ContextType>;
@@ -667,27 +764,33 @@ export type SearchLocationResolvers<ContextType = any, ParentType extends Resolv
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  newMessage?: SubscriptionResolver<ResolversTypes['Message'], "newMessage", ParentType, ContextType, RequireFields<SubscriptionNewMessageArgs, 'listingId'>>;
+  newMessage?: SubscriptionResolver<ResolversTypes['ConversationMessage'], "newMessage", ParentType, ContextType, RequireFields<SubscriptionNewMessageArgs, 'conversationId'>>;
+  newMessageTut?: SubscriptionResolver<ResolversTypes['MessageTut'], "newMessageTut", ParentType, ContextType, RequireFields<SubscriptionNewMessageTutArgs, 'roomId'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
   Booking?: BookingResolvers<ContextType>;
-  ConversationHeader?: ConversationHeaderResolvers<ContextType>;
+  Conversation?: ConversationResolvers<ContextType>;
+  ConversationMessage?: ConversationMessageResolvers<ContextType>;
+  Date?: GraphQLScalarType;
   Draft?: DraftResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   File?: GraphQLScalarType;
   Image?: GraphQLScalarType;
-  Interlocutor?: InterlocutorResolvers<ContextType>;
   Listing?: ListingResolvers<ContextType>;
+  ListingInfo?: ListingInfoResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Me?: MeResolvers<ContextType>;
-  Message?: MessageResolvers<ContextType>;
+  MessageTut?: MessageTutResolvers<ContextType>;
+  MessageWithGuest?: MessageWithGuestResolvers<ContextType>;
+  MessageWithHost?: MessageWithHostResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Owner?: OwnerResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

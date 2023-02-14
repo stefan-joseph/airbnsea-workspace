@@ -18,12 +18,6 @@ export const confirmEmail = async (req: Request, res: Response) => {
     );
 
     // redirect after send does not work
-    //@TO DO need another solution
-
-    // res.redirect(
-    //   ((process.env.NODE_ENV === "development"
-    //     ? process.env.FRONTEND_HOST_DEV
-    //     : process.env.FRONTEND_HOST_PROD) as string) + "/login"
-    // );
+    //@TODO need another solution
   }
 };

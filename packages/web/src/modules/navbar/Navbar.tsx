@@ -48,7 +48,7 @@ const NavbarProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const Navbar = () => {
+export const Navbar = ({ withoutSearch }: { withoutSearch?: boolean }) => {
   const matches = useMediaQuery(desktopMinWidth);
   // 0 --> closed
   // 1-3 --> sub search tabs
@@ -57,10 +57,18 @@ export const Navbar = () => {
   return (
     <>
       <NavbarProvider>
-        <NavbarContainer>
-          {matches ? <DesktopNavbar /> : <MobileNavbar />}
-        </NavbarContainer>
-        <BackdropButton />
+        {!matches && withoutSearch ? undefined : (
+          <>
+            <NavbarContainer>
+              {matches ? (
+                <DesktopNavbar withoutSearch={!!withoutSearch} />
+              ) : (
+                <MobileNavbar />
+              )}
+            </NavbarContainer>
+            <BackdropButton />
+          </>
+        )}
       </NavbarProvider>
     </>
   );

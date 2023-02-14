@@ -1,5 +1,4 @@
 import { User } from "../../../entity/User";
-// import { ResolverMap } from "../../types/graphql-utils";
 import { Resolvers } from "../../../types/types";
 
 export const resolvers: Resolvers = {

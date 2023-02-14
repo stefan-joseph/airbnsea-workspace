@@ -32,9 +32,9 @@ describe("create booking", () => {
     const client = new TestClient_1.TestClient("graphql");
     test("user attempts to create booking with incorrect listing id format", () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.login(testConstants_1.testUser1.email, testConstants_1.testUser1.password);
-        const testListingId = "testListingId";
+        const testListingId = "badListingId";
         const { errors } = yield client.createBooking(testListingId, testConstants_1.testBooking);
-        expect(errors[0].message).toEqual("Unexpected error.");
+        expect(errors[0].message).toEqual("No such listing exists");
     }));
     test("user attempts to create booking with non-existent id", () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.login(testConstants_1.testUser1.email, testConstants_1.testUser1.password);

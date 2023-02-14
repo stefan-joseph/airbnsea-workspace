@@ -1,0 +1,22 @@
+type Query {
+  room(id: ID!): [MessageTut!]!
+}
+
+type Mutation {
+  send(input: SendMessageInput!): MessageTut!
+}
+
+type Subscription {
+  newMessageTut(roomId: ID!): MessageTut!
+}
+
+type MessageTut {
+  from: String
+  body: String
+}
+
+input SendMessageInput {
+  roomId: ID!
+  from: String!
+  body: String!
+}

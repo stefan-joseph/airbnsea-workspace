@@ -23,22 +23,19 @@ export const SearchSuggestions = ({ slider }: { slider?: boolean }) => {
     { name: "Vietnam", svg: <Vietnam /> },
   ];
   return (
-    // <Box padding={3}>
     <>
       {!slider && (
-        <Typography fontWeight={600} mb={3} padding={3}>
+        <Typography fontWeight={600} padding={3}>
           Search by region
         </Typography>
       )}
-      <Box overflow="hidden" height={162}>
+      <Box overflow="hidden" height={slider ? 162 : "unset"}>
         <Box
           width="100%"
-          // overflow={"scroll"}
-
-          paddingLeft={2}
-          paddingBottom={2}
-          sx={{ overflowX: "scroll", overflowY: "hidden" }}
-          height={174}
+          paddingLeft={slider ? 2 : 3}
+          paddingBottom={slider ? 2 : 3}
+          sx={{ overflowX: "scroll" }}
+          height={slider ? 174 : "unset"}
         >
           <Field name="where">
             {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
@@ -103,6 +100,5 @@ export const SearchSuggestions = ({ slider }: { slider?: boolean }) => {
         </Box>
       </Box>
     </>
-    // </Box>
   );
 };

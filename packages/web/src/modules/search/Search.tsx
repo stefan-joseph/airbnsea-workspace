@@ -6,8 +6,9 @@ import { useSearchListingsLazyQuery } from "@airbnb-clone/controller";
 import { useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 
-import { BottomNavbar } from "./components/BottomNavbar";
+import { BottomNavbar } from "../../components/BottomNavbar";
 import { bottomNavbarHeight } from "../../constants/constants";
+import { AppContainer } from "../../components/AppContainer";
 
 interface Search {
   input: { beds: number | undefined; guests: number | undefined };
@@ -57,15 +58,7 @@ export const Search = () => {
     : undefined;
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        mb: !matches ? `${bottomNavbarHeight}px` : undefined,
-      }}
-    >
-      <Navbar />
+    <AppContainer>
       {!error ? (
         <Results data={data?.searchListings}>
           {pageCount && pageCount > 1 ? (
@@ -95,7 +88,6 @@ export const Search = () => {
       ) : (
         <div>There was an error. Please try your search request again.</div>
       )}
-      {!matches && <BottomNavbar />}
-    </Box>
+    </AppContainer>
   );
 };

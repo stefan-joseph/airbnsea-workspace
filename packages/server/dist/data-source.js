@@ -7,6 +7,7 @@ exports.AppDataSourceTEST = exports.AppDataSourceDEV = exports.AppDataSourcePROD
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
 const listing_factory_1 = require("./src/db/seeding/factories/listing.factory");
+const message_factory_1 = require("./src/db/seeding/factories/message.factory");
 const user_factory_1 = require("./src/db/seeding/factories/user.factory");
 const initialSeed_1 = __importDefault(require("./src/db/seeding/seeds/initialSeed"));
 const Booking_1 = require("./src/entity/Booking");
@@ -22,7 +23,7 @@ const optionsPROD = {
     entities: [User_1.User, Listing_1.Listing, Draft_1.Draft, Message_1.Message, Booking_1.Booking],
     migrations: [],
     subscribers: [],
-    factories: [user_factory_1.UserFactory, listing_factory_1.ListingFactory],
+    factories: [user_factory_1.UserFactory, listing_factory_1.ListingFactory, message_factory_1.MessageFactory],
     seeds: [initialSeed_1.default],
 };
 exports.AppDataSourcePROD = new typeorm_1.DataSource(optionsPROD);
@@ -39,7 +40,7 @@ const optionsDEV = {
     entities: [User_1.User, Listing_1.Listing, Draft_1.Draft, Message_1.Message, Booking_1.Booking],
     migrations: [],
     subscribers: [],
-    factories: [user_factory_1.UserFactory, listing_factory_1.ListingFactory],
+    factories: [user_factory_1.UserFactory, listing_factory_1.ListingFactory, message_factory_1.MessageFactory],
     seeds: [initialSeed_1.default],
 };
 exports.AppDataSourceDEV = new typeorm_1.DataSource(optionsDEV);

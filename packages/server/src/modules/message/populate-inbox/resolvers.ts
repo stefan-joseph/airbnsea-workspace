@@ -1,47 +1,62 @@
-import { Listing } from "../../../entity/Listing";
 import { Message } from "../../../entity/Message";
 import { Resolvers } from "../../../types/types";
+import { getTypeormConnection } from "../../../utils/getTypeormConnection";
+
+const populateInboxQueryBuilder = async () =>
+  getTypeormConnection()
+    .getRepository(Message)
+    .createQueryBuilder("m")
+    .distinctOn(["m.conversationId"])
+    .orderBy("m.conversationId")
+    .addOrderBy("m.createdDate", "DESC");
 
 export const resolvers: Resolvers = {
-  Message: {
-    user: ({ userId }, _, { userLoader }) => userLoader.load(userId),
-    userId: () => null, // don't return userId to client
+  MessageWithHost: {
+    interlocutor: ({ userIdOfHost }, _, { userLoader }) =>
+      userLoader.load(userIdOfHost),
+    userIdOfHost: () => null, // don't return any userId's to client
   },
+  MessageWithGuest: {
+    interlocutor: ({ userIdOfGuest }, _, { userLoader }) =>
+      userLoader.load(userIdOfGuest),
+    userIdOfGuest: () => null, // don't return any userId's to client
+  },
+
   Query: {
-    populateInbox: async (
+    populateGuestInbox: async (
       _,
-      { type },
+      __,
       {
         req: {
           session: { userId },
         },
       }
     ) => {
-      if (type === "guest") {
-        const messages = Message.find({
-          where: { userId },
-        });
-        console.log(messages);
-        // get only most recent message and interlocutor details
-      } else {
-        // find listings that are owned by userId
-        const listings = Listing.find({
-          where: {
-            userId,
-          },
-          // select only listingId
-        });
-        console.log(listings);
+      const results = await (await populateInboxQueryBuilder())
+        .where("m.userIdOfGuest = :userId", { userId })
+        .getMany();
 
-        // find messages associated with any of the above listingId
-        const messages = Message.find({
-          where: { userId },
-        });
-        console.log(messages);
+      results.sort((a, b) => Number(b.createdDate) - Number(a.createdDate));
+      // @TODO add pagination
+      // const splitResults = results.slice(0, 11);
+      return results;
+    },
 
-        // get only most recent message and interlocutor details
+    populateHostInbox: async (
+      _,
+      __,
+      {
+        req: {
+          session: { userId },
+        },
       }
-      return [];
+    ) => {
+      const results = await (await populateInboxQueryBuilder())
+        .where("m.userIdOfHost = :userId", { userId })
+        .getMany();
+      results.sort((a, b) => Number(b.createdDate) - Number(a.createdDate));
+      // @TODO add pagination
+      return results;
     },
   },
 };

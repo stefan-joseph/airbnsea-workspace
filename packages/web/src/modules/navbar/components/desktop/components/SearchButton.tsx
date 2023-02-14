@@ -1,10 +1,9 @@
 import { Button, useMediaQuery } from "@mui/material";
 import { useContext } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+import { IoSearch } from "react-icons/io5";
 
 import { NavbarContext } from "../../../Navbar";
 import {
-  desktopMinWidth,
   searchBarTimingFunction,
   searchBarTransitionTime,
 } from "../../../../../constants/constants";
@@ -29,9 +28,9 @@ export const SearchButton = ({
       className="search-button"
       sx={{
         height: subSearch ? 50 : 32,
-        width: subSearch && !iconOnly ? 120 : subSearch ? 50 : 32,
+        width: subSearch && !iconOnly ? 120 : subSearch ? 74 : 32,
         minWidth: subSearch ? "unset" : 32,
-        p: subSearch ? 2 : 0,
+        p: subSearch && !iconOnly ? 2 : 0,
         borderRadius: 6,
         fontSize: 16,
         letterSpacing: ".02em",
@@ -62,9 +61,9 @@ export const SearchButton = ({
         },
       }}
     >
-      <SearchIcon
-        fontSize={subSearch ? "medium" : "small"}
-        sx={{ mr: subSearch && !iconOnly ? 1 : 0 }}
+      <IoSearch
+        size={!!subSearch ? 22 : 16}
+        style={{ marginRight: iconOnly || !subSearch ? 0 : 6 }}
       />
       {!subSearch || iconOnly ? "" : "Search"}
     </Button>

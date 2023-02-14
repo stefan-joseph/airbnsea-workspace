@@ -17,6 +17,6 @@ export const raiseOnHoverBoxShadow =
 export const bottomNavbarHeight = 56;
 
 export const appSidePadding = { xs: 3, md: 5, lg: 7, xl: 10 };
-export const appSidePaddingWithMap = { xs: 3, md: 3, xl: 4 };
+export const appSidePaddingAlt = { xs: 3 };
 
 export const desktopMinWidth = "(min-width:750px)";

@@ -11,8 +11,6 @@ import { Listing } from "../../../entity/Listing";
 import { cannotBookOwnListing, datesUnavailable } from "./utils/errorMessages";
 import { formatNoListingErrorMessage } from "../../shared/utils/errorMessages";
 
-// import { listingCacheKey } from "../../../utils/constants";
-
 export const resolvers: Resolvers = {
   Mutation: {
     createBooking: async (_, { listingId, input }, { req: { session } }) => {

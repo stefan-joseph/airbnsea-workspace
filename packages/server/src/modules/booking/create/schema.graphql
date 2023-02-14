@@ -1,5 +1,5 @@
 type Mutation {
-  createBooking(listingId: ID!, input: BookingInput!): ID!
+  createBooking(listingId: String!, input: BookingInput!): ID!
 }
 
 input BookingInput {

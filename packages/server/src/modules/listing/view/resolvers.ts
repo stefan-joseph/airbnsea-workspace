@@ -2,7 +2,7 @@ import { Listing } from "../../../entity/Listing";
 import { Resolvers } from "../../../types/types";
 import { formatNoListingErrorMessage } from "../../shared/utils/errorMessages";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
-import { imageUrl } from "./utils/constants";
+import { imageUrl } from "../../shared/utils/constants";
 
 export const resolvers: Resolvers = {
   Listing: {

@@ -24,6 +24,7 @@ const typeorm_1 = require("typeorm");
 const Booking_1 = require("./Booking");
 const Listing_1 = require("./Listing");
 const Draft_1 = require("./Draft");
+const Message_1 = require("./Message");
 let User = class User extends typeorm_1.BaseEntity {
     hashPasswordBeforeInsert() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -83,6 +84,14 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Booking_1.Booking, (booking) => booking.user),
     __metadata("design:type", Array)
 ], User.prototype, "bookings", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Message_1.Message, (message) => message.guestUser),
+    __metadata("design:type", Array)
+], User.prototype, "guestMessages", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Message_1.Message, (message) => message.hostUser),
+    __metadata("design:type", Array)
+], User.prototype, "hostMessages", void 0);
 __decorate([
     (0, typeorm_1.BeforeInsert)(),
     __metadata("design:type", Function),

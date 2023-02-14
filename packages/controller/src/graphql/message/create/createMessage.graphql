@@ -1,3 +1,3 @@
-# mutation CreateMessage($message: Message!) {
-#   createMessage(message: $message)
-# }
+mutation CreateMessage($listingId: String!, $text: String!) {
+  createMessage(listingId: $listingId, text: $text)
+}

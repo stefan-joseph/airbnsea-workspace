@@ -45,9 +45,9 @@ describe("create booking", () => {
   // can a custom error replace this to do the same as next test?
   test("user attempts to create booking with incorrect listing id format", async () => {
     await client.login(testUser1.email, testUser1.password);
-    const testListingId = "testListingId";
+    const testListingId = "badListingId";
     const { errors } = await client.createBooking(testListingId, testBooking);
-    expect(errors[0].message).toEqual("Unexpected error.");
+    expect(errors[0].message).toEqual("No such listing exists");
   });
 
   test("user attempts to create booking with non-existent id", async () => {

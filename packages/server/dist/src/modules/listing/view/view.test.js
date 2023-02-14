@@ -16,7 +16,7 @@ const TestClient_1 = require("../../shared/test-utils/TestClient");
 const testConstants_1 = require("../../shared/test-utils/testConstants");
 const uuid_1 = require("uuid");
 const errorMessages_1 = require("../../shared/utils/errorMessages");
-const constants_1 = require("./utils/constants");
+const constants_1 = require("../../shared/utils/constants");
 let userId1;
 let listingId;
 let photos;

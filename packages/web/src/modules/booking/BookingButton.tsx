@@ -21,7 +21,6 @@ export const BookingButton = ({
             setCalendarOpen(true);
           }}
           fullWidth={fullWidth}
-          sx={{ fontSize: 16 }}
         >
           {isSubmitting ? (
             <CircularProgress size={30} sx={{ color: "#FFF" }} />

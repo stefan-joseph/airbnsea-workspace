@@ -16,7 +16,7 @@ interface BookingInputValues {
 
 export type BookingProps = {
   price: number;
-  rating: number | null | undefined;
+  rating: number;
   calendarOpen: boolean;
   setCalendarOpen: (value: boolean) => void;
 };
@@ -28,7 +28,7 @@ export const Booking = ({
 }: {
   mobile?: boolean;
   price: number;
-  rating: number | null | undefined;
+  rating: number;
 }) => {
   const [searchParams] = useSearchParams();
   const start = searchParams.get("start");
@@ -43,53 +43,56 @@ export const Booking = ({
     useCreateBookingMutation();
 
   return (
-    <>
-      <Formik
-        initialValues={
-          {
-            start,
-            end,
-            guests: guests && +guests >= 1 && +guests <= 16 ? +guests : 1,
-          } as BookingInputValues
-        }
-        validationSchema={bookingSchema}
-        onSubmit={async (values) => {
-          console.log(values);
-          const { start, end, guests } = values;
-          if (!start || !end || !guests || !listingId) return;
+    <Formik
+      initialValues={
+        {
+          start,
+          end,
+          guests: guests && +guests >= 1 && +guests <= 16 ? +guests : 1,
+        } as BookingInputValues
+      }
+      validationSchema={bookingSchema}
+      onSubmit={async (values) => {
+        console.log(values);
+        const { start, end, guests } = values;
+        if (!start || !end || !guests || !listingId) return;
 
-          await createBookingMutation({
-            variables: {
-              listingId,
-              input: {
-                start: start,
-                end: end,
-                guests: +guests,
-              },
+        await createBookingMutation({
+          variables: {
+            listingId,
+            input: {
+              start: start,
+              end: end,
+              guests: +guests,
             },
-          }).catch((error) => console.log(error));
-        }}
-      >
-        {() => (
-          <Form>
-            {!mobile ? (
-              <DesktopBooking
-                price={price}
-                rating={rating}
-                calendarOpen={calendarOpen}
-                setCalendarOpen={setCalendarOpen}
-              />
-            ) : (
-              <MobileBooking
-                price={price}
-                rating={rating}
-                calendarOpen={calendarOpen}
-                setCalendarOpen={setCalendarOpen}
-              />
-            )}
-          </Form>
-        )}
-      </Formik>
-    </>
+          },
+        }).catch((error) => console.log(error));
+      }}
+    >
+      {() => (
+        <Form
+          style={{
+            width: "100%",
+            height: "fit-content",
+          }}
+        >
+          {!mobile ? (
+            <DesktopBooking
+              price={price}
+              rating={rating}
+              calendarOpen={calendarOpen}
+              setCalendarOpen={setCalendarOpen}
+            />
+          ) : (
+            <MobileBooking
+              price={price}
+              rating={rating}
+              calendarOpen={calendarOpen}
+              setCalendarOpen={setCalendarOpen}
+            />
+          )}
+        </Form>
+      )}
+    </Formik>
   );
 };
