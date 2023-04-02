@@ -51,6 +51,11 @@ export type Conversation = {
   messages: Array<ConversationMessage>;
 };
 
+export type ConversationId = {
+  __typename?: 'ConversationId';
+  conversationId: Scalars['ID'];
+};
+
 export type ConversationMessage = {
   __typename?: 'ConversationMessage';
   createdDate: Scalars['Date'];
@@ -58,6 +63,8 @@ export type ConversationMessage = {
   id: Scalars['ID'];
   text: Scalars['String'];
 };
+
+export type CreateConversationResponse = ConversationId | Redirect;
 
 export type Draft = {
   __typename?: 'Draft';
@@ -85,6 +92,23 @@ export type Error = {
   message: Scalars['String'];
   path: Scalars['String'];
 };
+
+export type InboxMessage = {
+  __typename?: 'InboxMessage';
+  conversationId: Scalars['ID'];
+  createdDate: Scalars['Date'];
+  fromHost: Scalars['Boolean'];
+  id: Scalars['ID'];
+  interlocutor?: Maybe<User>;
+  interlocutorId?: Maybe<Scalars['ID']>;
+  listingId: Scalars['ID'];
+  text: Scalars['String'];
+};
+
+export enum InboxType {
+  Guest = 'GUEST',
+  Host = 'HOST'
+}
 
 export type Listing = {
   __typename?: 'Listing';
@@ -128,42 +152,10 @@ export type Me = {
   firstName?: Maybe<Scalars['String']>;
 };
 
-export type Message = {
-  __typename?: 'Message';
-  listingId: Scalars['ID'];
-  text: Scalars['String'];
-  user?: Maybe<User>;
-  userId?: Maybe<Scalars['ID']>;
-};
-
 export type MessageTut = {
   __typename?: 'MessageTut';
   body?: Maybe<Scalars['String']>;
   from?: Maybe<Scalars['String']>;
-};
-
-export type MessageWithGuest = {
-  __typename?: 'MessageWithGuest';
-  conversationId: Scalars['ID'];
-  createdDate: Scalars['Date'];
-  fromHost: Scalars['Boolean'];
-  id: Scalars['ID'];
-  interlocutor?: Maybe<User>;
-  listingId: Scalars['ID'];
-  text: Scalars['String'];
-  userIdOfGuest?: Maybe<Scalars['ID']>;
-};
-
-export type MessageWithHost = {
-  __typename?: 'MessageWithHost';
-  conversationId: Scalars['ID'];
-  createdDate: Scalars['Date'];
-  fromHost: Scalars['Boolean'];
-  id: Scalars['ID'];
-  interlocutor?: Maybe<User>;
-  listingId: Scalars['ID'];
-  text: Scalars['String'];
-  userIdOfHost?: Maybe<Scalars['ID']>;
 };
 
 export type Mutation = {
@@ -171,8 +163,9 @@ export type Mutation = {
   addFruit: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
   createBooking: Scalars['ID'];
+  createConversation: CreateConversationResponse;
   createListing: Scalars['ID'];
-  createMessage: Scalars['Boolean'];
+  createMessage: Scalars['ID'];
   deleteListing: Scalars['Boolean'];
   login: LoginResponse;
   logout?: Maybe<Scalars['Boolean']>;
@@ -196,7 +189,13 @@ export type MutationConfirmEmailArgs = {
 
 export type MutationCreateBookingArgs = {
   input: BookingInput;
-  listingId: Scalars['ID'];
+  listingId: Scalars['String'];
+};
+
+
+export type MutationCreateConversationArgs = {
+  listingId: Scalars['String'];
+  text: Scalars['String'];
 };
 
 
@@ -206,7 +205,7 @@ export type MutationCreateListingArgs = {
 
 
 export type MutationCreateMessageArgs = {
-  listingId: Scalars['String'];
+  conversationId: Scalars['String'];
   text: Scalars['String'];
 };
 
@@ -268,12 +267,9 @@ export type Query = {
   getListingUnavailability: Array<Scalars['String']>;
   getRandomUserCredentails?: Maybe<RandomUser>;
   me?: Maybe<Me>;
-  messages?: Maybe<Array<Message>>;
-  populateConversationWithGuest: Conversation;
-  populateConversationWithHost: Conversation;
+  populateConversation: Conversation;
   populateForm: Draft;
-  populateGuestInbox: Array<MessageWithHost>;
-  populateHostInbox: Array<MessageWithGuest>;
+  populateInbox: Array<InboxMessage>;
   room: Array<MessageTut>;
   searchListings: SearchListingsResponse;
   viewListing: Listing;
@@ -286,17 +282,7 @@ export type QueryGetListingUnavailabilityArgs = {
 };
 
 
-export type QueryMessagesArgs = {
-  listingId: Scalars['String'];
-};
-
-
-export type QueryPopulateConversationWithGuestArgs = {
-  conversationId: Scalars['String'];
-};
-
-
-export type QueryPopulateConversationWithHostArgs = {
+export type QueryPopulateConversationArgs = {
   conversationId: Scalars['String'];
 };
 
@@ -304,6 +290,11 @@ export type QueryPopulateConversationWithHostArgs = {
 export type QueryPopulateFormArgs = {
   fields: Array<Scalars['String']>;
   listingId: Scalars['ID'];
+};
+
+
+export type QueryPopulateInboxArgs = {
+  inboxType: InboxType;
 };
 
 
@@ -327,6 +318,11 @@ export type RandomUser = {
   __typename?: 'RandomUser';
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Redirect = {
+  __typename?: 'Redirect';
+  redirect: Scalars['String'];
 };
 
 export type SearchListingResult = {
@@ -380,13 +376,14 @@ export enum Status {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  newMessage: Message;
+  newMessage: ConversationMessage;
   newMessageTut: MessageTut;
+  updateInbox: InboxMessage;
 };
 
 
 export type SubscriptionNewMessageArgs = {
-  listingId: Scalars['String'];
+  conversationId: Scalars['String'];
 };
 
 
@@ -464,7 +461,7 @@ export type GetRandomUserCredentailsQueryVariables = Exact<{ [key: string]: neve
 export type GetRandomUserCredentailsQuery = { __typename?: 'Query', getRandomUserCredentails?: { __typename?: 'RandomUser', email: string, password: string } | null };
 
 export type CreateBookingMutationVariables = Exact<{
-  listingId: Scalars['ID'];
+  listingId: Scalars['String'];
   input: BookingInput;
 }>;
 
@@ -510,50 +507,46 @@ export type ViewListingQueryVariables = Exact<{
 export type ViewListingQuery = { __typename?: 'Query', viewListing: { __typename?: 'Listing', id?: string | null, name: string, vesselType: VesselType, price: number, description: string, guests: number, beds: number, rating: number, amenities?: Array<string> | null, street: string, apt?: string | null, city: string, state?: string | null, country: string, zipcode: string, longitude: number, latitude: number, photos: Array<string>, owner?: { __typename?: 'Owner', firstName: string, lastName: string, avatar: string } | null } };
 
 export type CreateMessageMutationVariables = Exact<{
+  conversationId: Scalars['String'];
+  text: Scalars['String'];
+}>;
+
+
+export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: string };
+
+export type CreateConversationMutationVariables = Exact<{
   listingId: Scalars['String'];
   text: Scalars['String'];
 }>;
 
 
-export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: boolean };
+export type CreateConversationMutation = { __typename?: 'Mutation', createConversation: { __typename?: 'ConversationId', conversationId: string } | { __typename?: 'Redirect', redirect: string } };
 
-export type PopulateGuestInboxQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PopulateGuestInboxQuery = { __typename?: 'Query', populateGuestInbox: Array<{ __typename?: 'MessageWithHost', id: string, text: string, fromHost: boolean, createdDate: any, listingId: string, conversationId: string, interlocutor?: { __typename?: 'User', avatar?: string | null, firstName?: string | null, lastName?: string | null } | null }> };
-
-export type PopulateHostInboxQueryVariables = Exact<{ [key: string]: never; }>;
+export type PopulateInboxQueryVariables = Exact<{
+  inboxType: InboxType;
+}>;
 
 
-export type PopulateHostInboxQuery = { __typename?: 'Query', populateHostInbox: Array<{ __typename?: 'MessageWithGuest', id: string, text: string, fromHost: boolean, createdDate: any, listingId: string, conversationId: string, interlocutor?: { __typename?: 'User', avatar?: string | null, firstName?: string | null, lastName?: string | null } | null }> };
+export type PopulateInboxQuery = { __typename?: 'Query', populateInbox: Array<{ __typename?: 'InboxMessage', id: string, text: string, fromHost: boolean, createdDate: any, listingId: string, conversationId: string, interlocutor?: { __typename?: 'User', avatar?: string | null, firstName?: string | null, lastName?: string | null } | null }> };
 
-export type PopulateConversationWithHostQueryVariables = Exact<{
+export type PopulateConversationQueryVariables = Exact<{
   conversationId: Scalars['String'];
 }>;
 
 
-export type PopulateConversationWithHostQuery = { __typename?: 'Query', populateConversationWithHost: { __typename?: 'Conversation', interlocutorId?: string | null, listingId: string, conversationId: string, interlocutor?: { __typename?: 'User', avatar?: string | null, firstName?: string | null, lastName?: string | null } | null, listing?: { __typename?: 'ListingInfo', name?: string | null, img?: string | null } | null, messages: Array<{ __typename?: 'ConversationMessage', id: string, text: string, fromHost: boolean, createdDate: any }> } };
-
-export type PopulateConversationWithGuestQueryVariables = Exact<{
-  conversationId: Scalars['String'];
-}>;
-
-
-export type PopulateConversationWithGuestQuery = { __typename?: 'Query', populateConversationWithGuest: { __typename?: 'Conversation', interlocutorId?: string | null, listingId: string, conversationId: string, interlocutor?: { __typename?: 'User', avatar?: string | null, firstName?: string | null, lastName?: string | null } | null, listing?: { __typename?: 'ListingInfo', name?: string | null, img?: string | null } | null, messages: Array<{ __typename?: 'ConversationMessage', id: string, text: string, fromHost: boolean, createdDate: any }> } };
+export type PopulateConversationQuery = { __typename?: 'Query', populateConversation: { __typename?: 'Conversation', interlocutorId?: string | null, listingId: string, conversationId: string, interlocutor?: { __typename?: 'User', avatar?: string | null, firstName?: string | null, lastName?: string | null } | null, listing?: { __typename?: 'ListingInfo', name?: string | null, img?: string | null } | null, messages: Array<{ __typename?: 'ConversationMessage', id: string, text: string, fromHost: boolean, createdDate: any }> } };
 
 export type NewMessageSubscriptionSubscriptionVariables = Exact<{
-  listingId: Scalars['String'];
+  conversationId: Scalars['String'];
 }>;
 
 
-export type NewMessageSubscriptionSubscription = { __typename?: 'Subscription', newMessage: { __typename?: 'Message', text: string, listingId: string, user?: { __typename?: 'User', avatar?: string | null, firstName?: string | null, lastName?: string | null } | null } };
+export type NewMessageSubscriptionSubscription = { __typename?: 'Subscription', newMessage: { __typename?: 'ConversationMessage', id: string, text: string, fromHost: boolean, createdDate: any } };
 
-export type ViewMessagesQueryVariables = Exact<{
-  listingId: Scalars['String'];
-}>;
+export type UpdateInboxSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ViewMessagesQuery = { __typename?: 'Query', messages?: Array<{ __typename?: 'Message', text: string, listingId: string, user?: { __typename?: 'User', avatar?: string | null, firstName?: string | null, lastName?: string | null } | null }> | null };
+export type UpdateInboxSubscriptionSubscription = { __typename?: 'Subscription', updateInbox: { __typename?: 'InboxMessage', id: string, text: string, conversationId: string, fromHost: boolean, createdDate: any, listingId: string } };
 
 
 export const SendForgotPasswordEmailDocument = gql`
@@ -796,7 +789,7 @@ export type GetRandomUserCredentailsQueryHookResult = ReturnType<typeof useGetRa
 export type GetRandomUserCredentailsLazyQueryHookResult = ReturnType<typeof useGetRandomUserCredentailsLazyQuery>;
 export type GetRandomUserCredentailsQueryResult = Apollo.QueryResult<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>;
 export const CreateBookingDocument = gql`
-    mutation CreateBooking($listingId: ID!, $input: BookingInput!) {
+    mutation CreateBooking($listingId: String!, $input: BookingInput!) {
   createBooking(listingId: $listingId, input: $input)
 }
     `;
@@ -1037,8 +1030,8 @@ export type ViewListingQueryHookResult = ReturnType<typeof useViewListingQuery>;
 export type ViewListingLazyQueryHookResult = ReturnType<typeof useViewListingLazyQuery>;
 export type ViewListingQueryResult = Apollo.QueryResult<ViewListingQuery, ViewListingQueryVariables>;
 export const CreateMessageDocument = gql`
-    mutation CreateMessage($listingId: String!, $text: String!) {
-  createMessage(listingId: $listingId, text: $text)
+    mutation CreateMessage($conversationId: String!, $text: String!) {
+  createMessage(conversationId: $conversationId, text: $text)
 }
     `;
 export type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
@@ -1056,7 +1049,7 @@ export type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutat
  * @example
  * const [createMessageMutation, { data, loading, error }] = useCreateMessageMutation({
  *   variables: {
- *      listingId: // value for 'listingId'
+ *      conversationId: // value for 'conversationId'
  *      text: // value for 'text'
  *   },
  * });
@@ -1068,9 +1061,48 @@ export function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
 export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
 export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
-export const PopulateGuestInboxDocument = gql`
-    query PopulateGuestInbox {
-  populateGuestInbox {
+export const CreateConversationDocument = gql`
+    mutation CreateConversation($listingId: String!, $text: String!) {
+  createConversation(listingId: $listingId, text: $text) {
+    ... on ConversationId {
+      conversationId
+    }
+    ... on Redirect {
+      redirect
+    }
+  }
+}
+    `;
+export type CreateConversationMutationFn = Apollo.MutationFunction<CreateConversationMutation, CreateConversationMutationVariables>;
+
+/**
+ * __useCreateConversationMutation__
+ *
+ * To run a mutation, you first call `useCreateConversationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateConversationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createConversationMutation, { data, loading, error }] = useCreateConversationMutation({
+ *   variables: {
+ *      listingId: // value for 'listingId'
+ *      text: // value for 'text'
+ *   },
+ * });
+ */
+export function useCreateConversationMutation(baseOptions?: Apollo.MutationHookOptions<CreateConversationMutation, CreateConversationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateConversationMutation, CreateConversationMutationVariables>(CreateConversationDocument, options);
+      }
+export type CreateConversationMutationHookResult = ReturnType<typeof useCreateConversationMutation>;
+export type CreateConversationMutationResult = Apollo.MutationResult<CreateConversationMutation>;
+export type CreateConversationMutationOptions = Apollo.BaseMutationOptions<CreateConversationMutation, CreateConversationMutationVariables>;
+export const PopulateInboxDocument = gql`
+    query PopulateInbox($inboxType: InboxType!) {
+  populateInbox(inboxType: $inboxType) {
     id
     text
     fromHost
@@ -1087,78 +1119,35 @@ export const PopulateGuestInboxDocument = gql`
     `;
 
 /**
- * __usePopulateGuestInboxQuery__
+ * __usePopulateInboxQuery__
  *
- * To run a query within a React component, call `usePopulateGuestInboxQuery` and pass it any options that fit your needs.
- * When your component renders, `usePopulateGuestInboxQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePopulateInboxQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePopulateInboxQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePopulateGuestInboxQuery({
+ * const { data, loading, error } = usePopulateInboxQuery({
  *   variables: {
+ *      inboxType: // value for 'inboxType'
  *   },
  * });
  */
-export function usePopulateGuestInboxQuery(baseOptions?: Apollo.QueryHookOptions<PopulateGuestInboxQuery, PopulateGuestInboxQueryVariables>) {
+export function usePopulateInboxQuery(baseOptions: Apollo.QueryHookOptions<PopulateInboxQuery, PopulateInboxQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PopulateGuestInboxQuery, PopulateGuestInboxQueryVariables>(PopulateGuestInboxDocument, options);
+        return Apollo.useQuery<PopulateInboxQuery, PopulateInboxQueryVariables>(PopulateInboxDocument, options);
       }
-export function usePopulateGuestInboxLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateGuestInboxQuery, PopulateGuestInboxQueryVariables>) {
+export function usePopulateInboxLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateInboxQuery, PopulateInboxQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PopulateGuestInboxQuery, PopulateGuestInboxQueryVariables>(PopulateGuestInboxDocument, options);
+          return Apollo.useLazyQuery<PopulateInboxQuery, PopulateInboxQueryVariables>(PopulateInboxDocument, options);
         }
-export type PopulateGuestInboxQueryHookResult = ReturnType<typeof usePopulateGuestInboxQuery>;
-export type PopulateGuestInboxLazyQueryHookResult = ReturnType<typeof usePopulateGuestInboxLazyQuery>;
-export type PopulateGuestInboxQueryResult = Apollo.QueryResult<PopulateGuestInboxQuery, PopulateGuestInboxQueryVariables>;
-export const PopulateHostInboxDocument = gql`
-    query PopulateHostInbox {
-  populateHostInbox {
-    id
-    text
-    fromHost
-    createdDate
-    listingId
-    conversationId
-    interlocutor {
-      avatar
-      firstName
-      lastName
-    }
-  }
-}
-    `;
-
-/**
- * __usePopulateHostInboxQuery__
- *
- * To run a query within a React component, call `usePopulateHostInboxQuery` and pass it any options that fit your needs.
- * When your component renders, `usePopulateHostInboxQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePopulateHostInboxQuery({
- *   variables: {
- *   },
- * });
- */
-export function usePopulateHostInboxQuery(baseOptions?: Apollo.QueryHookOptions<PopulateHostInboxQuery, PopulateHostInboxQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PopulateHostInboxQuery, PopulateHostInboxQueryVariables>(PopulateHostInboxDocument, options);
-      }
-export function usePopulateHostInboxLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateHostInboxQuery, PopulateHostInboxQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PopulateHostInboxQuery, PopulateHostInboxQueryVariables>(PopulateHostInboxDocument, options);
-        }
-export type PopulateHostInboxQueryHookResult = ReturnType<typeof usePopulateHostInboxQuery>;
-export type PopulateHostInboxLazyQueryHookResult = ReturnType<typeof usePopulateHostInboxLazyQuery>;
-export type PopulateHostInboxQueryResult = Apollo.QueryResult<PopulateHostInboxQuery, PopulateHostInboxQueryVariables>;
-export const PopulateConversationWithHostDocument = gql`
-    query PopulateConversationWithHost($conversationId: String!) {
-  populateConversationWithHost(conversationId: $conversationId) {
+export type PopulateInboxQueryHookResult = ReturnType<typeof usePopulateInboxQuery>;
+export type PopulateInboxLazyQueryHookResult = ReturnType<typeof usePopulateInboxLazyQuery>;
+export type PopulateInboxQueryResult = Apollo.QueryResult<PopulateInboxQuery, PopulateInboxQueryVariables>;
+export const PopulateConversationDocument = gql`
+    query PopulateConversation($conversationId: String!) {
+  populateConversation(conversationId: $conversationId) {
     interlocutorId
     interlocutor {
       avatar
@@ -1182,94 +1171,39 @@ export const PopulateConversationWithHostDocument = gql`
     `;
 
 /**
- * __usePopulateConversationWithHostQuery__
+ * __usePopulateConversationQuery__
  *
- * To run a query within a React component, call `usePopulateConversationWithHostQuery` and pass it any options that fit your needs.
- * When your component renders, `usePopulateConversationWithHostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePopulateConversationQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePopulateConversationQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePopulateConversationWithHostQuery({
+ * const { data, loading, error } = usePopulateConversationQuery({
  *   variables: {
  *      conversationId: // value for 'conversationId'
  *   },
  * });
  */
-export function usePopulateConversationWithHostQuery(baseOptions: Apollo.QueryHookOptions<PopulateConversationWithHostQuery, PopulateConversationWithHostQueryVariables>) {
+export function usePopulateConversationQuery(baseOptions: Apollo.QueryHookOptions<PopulateConversationQuery, PopulateConversationQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PopulateConversationWithHostQuery, PopulateConversationWithHostQueryVariables>(PopulateConversationWithHostDocument, options);
+        return Apollo.useQuery<PopulateConversationQuery, PopulateConversationQueryVariables>(PopulateConversationDocument, options);
       }
-export function usePopulateConversationWithHostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateConversationWithHostQuery, PopulateConversationWithHostQueryVariables>) {
+export function usePopulateConversationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateConversationQuery, PopulateConversationQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PopulateConversationWithHostQuery, PopulateConversationWithHostQueryVariables>(PopulateConversationWithHostDocument, options);
+          return Apollo.useLazyQuery<PopulateConversationQuery, PopulateConversationQueryVariables>(PopulateConversationDocument, options);
         }
-export type PopulateConversationWithHostQueryHookResult = ReturnType<typeof usePopulateConversationWithHostQuery>;
-export type PopulateConversationWithHostLazyQueryHookResult = ReturnType<typeof usePopulateConversationWithHostLazyQuery>;
-export type PopulateConversationWithHostQueryResult = Apollo.QueryResult<PopulateConversationWithHostQuery, PopulateConversationWithHostQueryVariables>;
-export const PopulateConversationWithGuestDocument = gql`
-    query populateConversationWithGuest($conversationId: String!) {
-  populateConversationWithGuest(conversationId: $conversationId) {
-    interlocutorId
-    interlocutor {
-      avatar
-      firstName
-      lastName
-    }
-    listingId
-    listing {
-      name
-      img
-    }
-    conversationId
-    messages {
-      id
-      text
-      fromHost
-      createdDate
-    }
-  }
-}
-    `;
-
-/**
- * __usePopulateConversationWithGuestQuery__
- *
- * To run a query within a React component, call `usePopulateConversationWithGuestQuery` and pass it any options that fit your needs.
- * When your component renders, `usePopulateConversationWithGuestQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePopulateConversationWithGuestQuery({
- *   variables: {
- *      conversationId: // value for 'conversationId'
- *   },
- * });
- */
-export function usePopulateConversationWithGuestQuery(baseOptions: Apollo.QueryHookOptions<PopulateConversationWithGuestQuery, PopulateConversationWithGuestQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PopulateConversationWithGuestQuery, PopulateConversationWithGuestQueryVariables>(PopulateConversationWithGuestDocument, options);
-      }
-export function usePopulateConversationWithGuestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PopulateConversationWithGuestQuery, PopulateConversationWithGuestQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PopulateConversationWithGuestQuery, PopulateConversationWithGuestQueryVariables>(PopulateConversationWithGuestDocument, options);
-        }
-export type PopulateConversationWithGuestQueryHookResult = ReturnType<typeof usePopulateConversationWithGuestQuery>;
-export type PopulateConversationWithGuestLazyQueryHookResult = ReturnType<typeof usePopulateConversationWithGuestLazyQuery>;
-export type PopulateConversationWithGuestQueryResult = Apollo.QueryResult<PopulateConversationWithGuestQuery, PopulateConversationWithGuestQueryVariables>;
+export type PopulateConversationQueryHookResult = ReturnType<typeof usePopulateConversationQuery>;
+export type PopulateConversationLazyQueryHookResult = ReturnType<typeof usePopulateConversationLazyQuery>;
+export type PopulateConversationQueryResult = Apollo.QueryResult<PopulateConversationQuery, PopulateConversationQueryVariables>;
 export const NewMessageSubscriptionDocument = gql`
-    subscription NewMessageSubscription($listingId: String!) {
-  newMessage(listingId: $listingId) {
+    subscription NewMessageSubscription($conversationId: String!) {
+  newMessage(conversationId: $conversationId) {
+    id
     text
-    listingId
-    user {
-      avatar
-      firstName
-      lastName
-    }
+    fromHost
+    createdDate
   }
 }
     `;
@@ -1286,7 +1220,7 @@ export const NewMessageSubscriptionDocument = gql`
  * @example
  * const { data, loading, error } = useNewMessageSubscriptionSubscription({
  *   variables: {
- *      listingId: // value for 'listingId'
+ *      conversationId: // value for 'conversationId'
  *   },
  * });
  */
@@ -1296,44 +1230,37 @@ export function useNewMessageSubscriptionSubscription(baseOptions: Apollo.Subscr
       }
 export type NewMessageSubscriptionSubscriptionHookResult = ReturnType<typeof useNewMessageSubscriptionSubscription>;
 export type NewMessageSubscriptionSubscriptionResult = Apollo.SubscriptionResult<NewMessageSubscriptionSubscription>;
-export const ViewMessagesDocument = gql`
-    query ViewMessages($listingId: String!) {
-  messages(listingId: $listingId) {
+export const UpdateInboxSubscriptionDocument = gql`
+    subscription UpdateInboxSubscription {
+  updateInbox {
+    id
     text
+    conversationId
+    fromHost
+    createdDate
     listingId
-    user {
-      avatar
-      firstName
-      lastName
-    }
   }
 }
     `;
 
 /**
- * __useViewMessagesQuery__
+ * __useUpdateInboxSubscriptionSubscription__
  *
- * To run a query within a React component, call `useViewMessagesQuery` and pass it any options that fit your needs.
- * When your component renders, `useViewMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUpdateInboxSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUpdateInboxSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useViewMessagesQuery({
+ * const { data, loading, error } = useUpdateInboxSubscriptionSubscription({
  *   variables: {
- *      listingId: // value for 'listingId'
  *   },
  * });
  */
-export function useViewMessagesQuery(baseOptions: Apollo.QueryHookOptions<ViewMessagesQuery, ViewMessagesQueryVariables>) {
+export function useUpdateInboxSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<UpdateInboxSubscriptionSubscription, UpdateInboxSubscriptionSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ViewMessagesQuery, ViewMessagesQueryVariables>(ViewMessagesDocument, options);
+        return Apollo.useSubscription<UpdateInboxSubscriptionSubscription, UpdateInboxSubscriptionSubscriptionVariables>(UpdateInboxSubscriptionDocument, options);
       }
-export function useViewMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ViewMessagesQuery, ViewMessagesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ViewMessagesQuery, ViewMessagesQueryVariables>(ViewMessagesDocument, options);
-        }
-export type ViewMessagesQueryHookResult = ReturnType<typeof useViewMessagesQuery>;
-export type ViewMessagesLazyQueryHookResult = ReturnType<typeof useViewMessagesLazyQuery>;
-export type ViewMessagesQueryResult = Apollo.QueryResult<ViewMessagesQuery, ViewMessagesQueryVariables>;
+export type UpdateInboxSubscriptionSubscriptionHookResult = ReturnType<typeof useUpdateInboxSubscriptionSubscription>;
+export type UpdateInboxSubscriptionSubscriptionResult = Apollo.SubscriptionResult<UpdateInboxSubscriptionSubscription>;

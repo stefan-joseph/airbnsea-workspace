@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Stack } from "@mui/material";
 import { Field, FieldProps } from "formik";
 import { useContext, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { Calendar } from "../../../../../components/calendar/Calendar";
 import { OutlinedButton } from "../../../../../components/OutlinedButton";
@@ -14,6 +15,14 @@ export const When = () => {
     navbarState: { subSearch },
     dispatch,
   } = useContext(NavbarContext);
+
+  const [searchParams] = useSearchParams();
+  const start = searchParams.get("start");
+  const end = searchParams.get("end");
+
+  const [isStartSelection, setIsStartSelection] = useState<boolean>(
+    !start || (start && end) ? true : false
+  );
 
   const [monthsDisplayed, setMonthsDisplayed] = useState(4);
 
@@ -56,6 +65,8 @@ export const When = () => {
                 setFieldValue={setFieldValue}
                 mobile
                 numOfMonthsDisplayed={monthsDisplayed}
+                isStartSelection={isStartSelection}
+                setIsStartSelection={setIsStartSelection}
               />
 
               <Box padding={2}>
@@ -72,6 +83,7 @@ export const When = () => {
                   if (values.start || values.end) {
                     setFieldValue("start", null);
                     setFieldValue("end", null);
+                    setIsStartSelection(true);
                   } else {
                     dispatch({
                       type: "SET_SUB_SEARCH",

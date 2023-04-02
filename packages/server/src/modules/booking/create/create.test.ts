@@ -13,7 +13,7 @@ import {
 } from "../../shared/test-utils/testConstants";
 import { cannotBookOwnListing, datesUnavailable } from "./utils/errorMessages";
 import { v4 as uuidv4 } from "uuid";
-import { formatNoListingErrorMessage } from "../../shared/utils/errorMessages";
+import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorMessages";
 
 let userId1: string;
 let listingId: string;
@@ -57,7 +57,7 @@ describe("create booking", () => {
     console.log(errors);
 
     expect(errors[0].message).toEqual(
-      formatNoListingErrorMessage(testListingId)
+      formatNotFoundWithGivenIdErrorMessage("listing", testListingId)
     );
   });
 

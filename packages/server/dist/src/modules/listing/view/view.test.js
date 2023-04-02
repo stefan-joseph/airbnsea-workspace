@@ -33,7 +33,7 @@ describe("view listing", () => {
     test("user attempts to view listing with incorrect id", () => __awaiter(void 0, void 0, void 0, function* () {
         const incorrectListingId = (0, uuid_1.v4)();
         const { errors } = yield client.viewListing(incorrectListingId);
-        expect(errors[0].message).toEqual((0, errorMessages_1.formatNoListingErrorMessage)(incorrectListingId));
+        expect(errors[0].message).toEqual((0, errorMessages_1.formatNotFoundWithGivenIdErrorMessage)("listing", incorrectListingId));
     }));
     test("user successfully views listing", () => __awaiter(void 0, void 0, void 0, function* () {
         const { data } = yield client.viewListing(listingId);

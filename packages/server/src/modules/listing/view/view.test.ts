@@ -5,7 +5,7 @@ import { TestClient } from "../../shared/test-utils/TestClient";
 import { testUser1, testListing } from "../../shared/test-utils/testConstants";
 
 import { v4 as uuidv4 } from "uuid";
-import { formatNoListingErrorMessage } from "../../shared/utils/errorMessages";
+import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorMessages";
 import { imageUrl } from "../../shared/utils/constants";
 
 let userId1: string;
@@ -37,7 +37,7 @@ describe("view listing", () => {
     const { errors } = await client.viewListing(incorrectListingId);
 
     expect(errors[0].message).toEqual(
-      formatNoListingErrorMessage(incorrectListingId)
+      formatNotFoundWithGivenIdErrorMessage("listing", incorrectListingId)
     );
   });
 

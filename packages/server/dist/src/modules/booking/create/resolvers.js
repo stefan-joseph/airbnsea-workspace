@@ -30,7 +30,7 @@ exports.resolvers = {
             }
             const listing = yield Listing_1.Listing.findOne({ where: { id: listingId } });
             if (!listing) {
-                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)((0, errorMessages_2.formatNoListingErrorMessage)(listingId));
+                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)((0, errorMessages_2.formatNotFoundWithGivenIdErrorMessage)("listing", listingId));
             }
             if ((listing === null || listing === void 0 ? void 0 : listing.userId) === session.userId) {
                 return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.cannotBookOwnListing);

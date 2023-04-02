@@ -23,11 +23,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ViewMessagesDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationWithGuestLazyQuery = exports.usePopulateConversationWithGuestQuery = exports.PopulateConversationWithGuestDocument = exports.usePopulateConversationWithHostLazyQuery = exports.usePopulateConversationWithHostQuery = exports.PopulateConversationWithHostDocument = exports.usePopulateHostInboxLazyQuery = exports.usePopulateHostInboxQuery = exports.PopulateHostInboxDocument = exports.usePopulateGuestInboxLazyQuery = exports.usePopulateGuestInboxQuery = exports.PopulateGuestInboxDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useGetRandomUserCredentailsLazyQuery = exports.useGetRandomUserCredentailsQuery = exports.GetRandomUserCredentailsDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.VesselType = exports.Status = void 0;
-exports.useViewMessagesLazyQuery = exports.useViewMessagesQuery = void 0;
+exports.useUpdateInboxSubscriptionSubscription = exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = exports.usePopulateConversationQuery = exports.PopulateConversationDocument = exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useGetRandomUserCredentailsLazyQuery = exports.useGetRandomUserCredentailsQuery = exports.GetRandomUserCredentailsDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.VesselType = exports.Status = exports.InboxType = void 0;
 const client_1 = require("@apollo/client");
 const Apollo = __importStar(require("@apollo/client"));
 const defaultOptions = {};
+var InboxType;
+(function (InboxType) {
+    InboxType["Guest"] = "GUEST";
+    InboxType["Host"] = "HOST";
+})(InboxType = exports.InboxType || (exports.InboxType = {}));
 var Status;
 (function (Status) {
     Status["Active"] = "active";
@@ -137,7 +141,7 @@ function useGetRandomUserCredentailsLazyQuery(baseOptions) {
 }
 exports.useGetRandomUserCredentailsLazyQuery = useGetRandomUserCredentailsLazyQuery;
 exports.CreateBookingDocument = (0, client_1.gql) `
-    mutation CreateBooking($listingId: ID!, $input: BookingInput!) {
+    mutation CreateBooking($listingId: String!, $input: BookingInput!) {
   createBooking(listingId: $listingId, input: $input)
 }
     `;
@@ -257,8 +261,8 @@ function useViewListingLazyQuery(baseOptions) {
 }
 exports.useViewListingLazyQuery = useViewListingLazyQuery;
 exports.CreateMessageDocument = (0, client_1.gql) `
-    mutation CreateMessage($listingId: String!, $text: String!) {
-  createMessage(listingId: $listingId, text: $text)
+    mutation CreateMessage($conversationId: String!, $text: String!) {
+  createMessage(conversationId: $conversationId, text: $text)
 }
     `;
 function useCreateMessageMutation(baseOptions) {
@@ -266,9 +270,26 @@ function useCreateMessageMutation(baseOptions) {
     return Apollo.useMutation(exports.CreateMessageDocument, options);
 }
 exports.useCreateMessageMutation = useCreateMessageMutation;
-exports.PopulateGuestInboxDocument = (0, client_1.gql) `
-    query PopulateGuestInbox {
-  populateGuestInbox {
+exports.CreateConversationDocument = (0, client_1.gql) `
+    mutation CreateConversation($listingId: String!, $text: String!) {
+  createConversation(listingId: $listingId, text: $text) {
+    ... on ConversationId {
+      conversationId
+    }
+    ... on Redirect {
+      redirect
+    }
+  }
+}
+    `;
+function useCreateConversationMutation(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useMutation(exports.CreateConversationDocument, options);
+}
+exports.useCreateConversationMutation = useCreateConversationMutation;
+exports.PopulateInboxDocument = (0, client_1.gql) `
+    query PopulateInbox($inboxType: InboxType!) {
+  populateInbox(inboxType: $inboxType) {
     id
     text
     fromHost
@@ -283,46 +304,19 @@ exports.PopulateGuestInboxDocument = (0, client_1.gql) `
   }
 }
     `;
-function usePopulateGuestInboxQuery(baseOptions) {
+function usePopulateInboxQuery(baseOptions) {
     const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useQuery(exports.PopulateGuestInboxDocument, options);
+    return Apollo.useQuery(exports.PopulateInboxDocument, options);
 }
-exports.usePopulateGuestInboxQuery = usePopulateGuestInboxQuery;
-function usePopulateGuestInboxLazyQuery(baseOptions) {
+exports.usePopulateInboxQuery = usePopulateInboxQuery;
+function usePopulateInboxLazyQuery(baseOptions) {
     const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useLazyQuery(exports.PopulateGuestInboxDocument, options);
+    return Apollo.useLazyQuery(exports.PopulateInboxDocument, options);
 }
-exports.usePopulateGuestInboxLazyQuery = usePopulateGuestInboxLazyQuery;
-exports.PopulateHostInboxDocument = (0, client_1.gql) `
-    query PopulateHostInbox {
-  populateHostInbox {
-    id
-    text
-    fromHost
-    createdDate
-    listingId
-    conversationId
-    interlocutor {
-      avatar
-      firstName
-      lastName
-    }
-  }
-}
-    `;
-function usePopulateHostInboxQuery(baseOptions) {
-    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useQuery(exports.PopulateHostInboxDocument, options);
-}
-exports.usePopulateHostInboxQuery = usePopulateHostInboxQuery;
-function usePopulateHostInboxLazyQuery(baseOptions) {
-    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useLazyQuery(exports.PopulateHostInboxDocument, options);
-}
-exports.usePopulateHostInboxLazyQuery = usePopulateHostInboxLazyQuery;
-exports.PopulateConversationWithHostDocument = (0, client_1.gql) `
-    query PopulateConversationWithHost($conversationId: String!) {
-  populateConversationWithHost(conversationId: $conversationId) {
+exports.usePopulateInboxLazyQuery = usePopulateInboxLazyQuery;
+exports.PopulateConversationDocument = (0, client_1.gql) `
+    query PopulateConversation($conversationId: String!) {
+  populateConversation(conversationId: $conversationId) {
     interlocutorId
     interlocutor {
       avatar
@@ -344,60 +338,23 @@ exports.PopulateConversationWithHostDocument = (0, client_1.gql) `
   }
 }
     `;
-function usePopulateConversationWithHostQuery(baseOptions) {
+function usePopulateConversationQuery(baseOptions) {
     const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useQuery(exports.PopulateConversationWithHostDocument, options);
+    return Apollo.useQuery(exports.PopulateConversationDocument, options);
 }
-exports.usePopulateConversationWithHostQuery = usePopulateConversationWithHostQuery;
-function usePopulateConversationWithHostLazyQuery(baseOptions) {
+exports.usePopulateConversationQuery = usePopulateConversationQuery;
+function usePopulateConversationLazyQuery(baseOptions) {
     const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useLazyQuery(exports.PopulateConversationWithHostDocument, options);
+    return Apollo.useLazyQuery(exports.PopulateConversationDocument, options);
 }
-exports.usePopulateConversationWithHostLazyQuery = usePopulateConversationWithHostLazyQuery;
-exports.PopulateConversationWithGuestDocument = (0, client_1.gql) `
-    query populateConversationWithGuest($conversationId: String!) {
-  populateConversationWithGuest(conversationId: $conversationId) {
-    interlocutorId
-    interlocutor {
-      avatar
-      firstName
-      lastName
-    }
-    listingId
-    listing {
-      name
-      img
-    }
-    conversationId
-    messages {
-      id
-      text
-      fromHost
-      createdDate
-    }
-  }
-}
-    `;
-function usePopulateConversationWithGuestQuery(baseOptions) {
-    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useQuery(exports.PopulateConversationWithGuestDocument, options);
-}
-exports.usePopulateConversationWithGuestQuery = usePopulateConversationWithGuestQuery;
-function usePopulateConversationWithGuestLazyQuery(baseOptions) {
-    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useLazyQuery(exports.PopulateConversationWithGuestDocument, options);
-}
-exports.usePopulateConversationWithGuestLazyQuery = usePopulateConversationWithGuestLazyQuery;
+exports.usePopulateConversationLazyQuery = usePopulateConversationLazyQuery;
 exports.NewMessageSubscriptionDocument = (0, client_1.gql) `
-    subscription NewMessageSubscription($listingId: String!) {
-  newMessage(listingId: $listingId) {
+    subscription NewMessageSubscription($conversationId: String!) {
+  newMessage(conversationId: $conversationId) {
+    id
     text
-    listingId
-    user {
-      avatar
-      firstName
-      lastName
-    }
+    fromHost
+    createdDate
   }
 }
     `;
@@ -406,27 +363,21 @@ function useNewMessageSubscriptionSubscription(baseOptions) {
     return Apollo.useSubscription(exports.NewMessageSubscriptionDocument, options);
 }
 exports.useNewMessageSubscriptionSubscription = useNewMessageSubscriptionSubscription;
-exports.ViewMessagesDocument = (0, client_1.gql) `
-    query ViewMessages($listingId: String!) {
-  messages(listingId: $listingId) {
+exports.UpdateInboxSubscriptionDocument = (0, client_1.gql) `
+    subscription UpdateInboxSubscription {
+  updateInbox {
+    id
     text
+    conversationId
+    fromHost
+    createdDate
     listingId
-    user {
-      avatar
-      firstName
-      lastName
-    }
   }
 }
     `;
-function useViewMessagesQuery(baseOptions) {
+function useUpdateInboxSubscriptionSubscription(baseOptions) {
     const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useQuery(exports.ViewMessagesDocument, options);
+    return Apollo.useSubscription(exports.UpdateInboxSubscriptionDocument, options);
 }
-exports.useViewMessagesQuery = useViewMessagesQuery;
-function useViewMessagesLazyQuery(baseOptions) {
-    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useLazyQuery(exports.ViewMessagesDocument, options);
-}
-exports.useViewMessagesLazyQuery = useViewMessagesLazyQuery;
+exports.useUpdateInboxSubscriptionSubscription = useUpdateInboxSubscriptionSubscription;
 //# sourceMappingURL=graphql-hooks.js.map

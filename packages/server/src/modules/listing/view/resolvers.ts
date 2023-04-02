@@ -1,6 +1,6 @@
 import { Listing } from "../../../entity/Listing";
 import { Resolvers } from "../../../types/types";
-import { formatNoListingErrorMessage } from "../../shared/utils/errorMessages";
+import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorMessages";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
 import { imageUrl } from "../../shared/utils/constants";
 
@@ -14,7 +14,9 @@ export const resolvers: Resolvers = {
     viewListing: async (_, { listingId }) => {
       const listing = await Listing.findOneBy({ id: listingId });
       if (!listing) {
-        return formatGraphQLYogaError(formatNoListingErrorMessage(listingId));
+        return formatGraphQLYogaError(
+          formatNotFoundWithGivenIdErrorMessage("listing", listingId)
+        );
       }
       return listing;
     },

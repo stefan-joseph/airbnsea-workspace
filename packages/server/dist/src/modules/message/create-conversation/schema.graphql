@@ -1,0 +1,16 @@
+type Mutation {
+  createConversation(
+    listingId: String!
+    text: String!
+  ): CreateConversationResponse!
+}
+
+union CreateConversationResponse = ConversationId | Redirect
+
+type ConversationId {
+  conversationId: ID!
+}
+
+type Redirect {
+  redirect: String!
+}

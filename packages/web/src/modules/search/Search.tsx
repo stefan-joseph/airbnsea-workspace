@@ -1,13 +1,11 @@
-import { Box, Pagination, PaginationItem, useMediaQuery } from "@mui/material";
+import { Pagination, PaginationItem, useMediaQuery } from "@mui/material";
 
 import { Results } from "./components/Results";
-import { Navbar } from "../navbar/Navbar";
+
 import { useSearchListingsLazyQuery } from "@airbnb-clone/controller";
 import { useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 
-import { BottomNavbar } from "../../components/BottomNavbar";
-import { bottomNavbarHeight } from "../../constants/constants";
 import { AppContainer } from "../../components/AppContainer";
 
 interface Search {

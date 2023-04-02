@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testBookingOverlap = exports.testBookingInPast = exports.testBooking = exports.testListing = exports.testUser2 = exports.testUser1 = void 0;
+exports.testBookingOverlap = exports.testBookingInPast = exports.testBooking = exports.testListing = exports.testUser3 = exports.testUser2 = exports.testUser1 = void 0;
 const common_1 = require("@airbnb-clone/common");
 const dayjs = require("dayjs");
 const types_1 = require("../../../types/types");
@@ -16,6 +16,13 @@ exports.testUser2 = {
     password: "kdzjvndsjkvbj",
     firstName: "Sarah",
     lastName: "Smith",
+    avatar: "http://testavatar.com",
+};
+exports.testUser3 = {
+    email: "carl@carl.com",
+    password: "asfjhbvjvbkdj",
+    firstName: "Carl",
+    lastName: "Hodgepodge",
     avatar: "http://testavatar.com",
 };
 exports.testListing = {

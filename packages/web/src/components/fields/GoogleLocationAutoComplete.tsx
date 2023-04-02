@@ -5,6 +5,7 @@ import {
   Dispatch,
   SetStateAction,
   useRef,
+  ReactElement,
 } from "react";
 import Box from "@mui/material/Box";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
@@ -19,20 +20,8 @@ import { InputProps, Paper } from "@mui/material";
 import { IoLocationOutline } from "react-icons/io5";
 
 import { borderRadius } from "../../constants/constants";
-
-// const GOOGLE_MAPS_API_KEY = "AIzaSyAn-mMEpHQHRKd3FyQDtfbaxLm5PDkaNm4";
-
-function loadScript(src: string, position: HTMLElement | null, id: string) {
-  if (!position) {
-    return;
-  }
-
-  const script = document.createElement("script");
-  script.setAttribute("async", "");
-  script.setAttribute("id", id);
-  script.src = src;
-  position.appendChild(script);
-}
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import { renderGoogleConnection } from "../../utils/renderGoogleConnection";
 
 const autocompleteService = { current: null };
 
@@ -52,7 +41,7 @@ interface PlaceType {
 }
 
 interface Props {
-  setPlaceId?: Dispatch<SetStateAction<string>>;
+  // setPlaceId?: Dispatch<SetStateAction<string>>;
   textFieldProps?: TextFieldProps;
   textFieldInputProps?: InputProps;
   paperComponent?: (props: React.HTMLAttributes<HTMLElement>) => JSX.Element;
@@ -61,6 +50,7 @@ interface Props {
     setOpen: Dispatch<SetStateAction<boolean>>
   ) => JSX.Element;
   onInputChange?: (value: string) => void;
+  handleChange?: (Params: { placeId: string }) => void;
   outsideValue?: string;
   popperWidth?: number;
   isMobile?: boolean;
@@ -68,17 +58,20 @@ interface Props {
 }
 
 export const GoogleLocationAutoComplete = ({
-  setPlaceId,
+  // setPlaceId,
   textFieldProps,
   textFieldInputProps,
   paperComponent,
   renderInput,
   onInputChange,
+  handleChange,
   outsideValue,
   popperWidth,
   isMobile,
   noValueDisplayComponent,
 }: Props) => {
+  console.log("hello");
+
   const anchorEl = useRef();
   const [value, setValue] = useState<PlaceType | null>(null);
   const [inputValue, setInputValue] = useState("");
@@ -153,8 +146,8 @@ export const GoogleLocationAutoComplete = ({
     };
   }, [value, inputValue, fetch, outsideValue]);
 
-  return (
-    <>
+  const render = (status: Status): ReactElement => {
+    return (
       <Autocomplete
         ref={anchorEl}
         open={open}
@@ -172,10 +165,12 @@ export const GoogleLocationAutoComplete = ({
         includeInputInList
         filterSelectedOptions
         value={value}
-        onChange={(event: any, newValue: PlaceType | null) => {
+        onChange={(_: any, newValue: PlaceType | null) => {
           setOptions(newValue ? [newValue, ...options] : options);
           setValue(newValue);
-          if (newValue?.place_id && setPlaceId) setPlaceId(newValue.place_id);
+          if (newValue?.place_id && handleChange) {
+            handleChange({ placeId: newValue.place_id });
+          }
         }}
         onInputChange={handleInputChange}
         clearOnEscape={false}
@@ -280,6 +275,16 @@ export const GoogleLocationAutoComplete = ({
             </Box>
           );
         }}
+      />
+    );
+  };
+
+  return (
+    <>
+      <Wrapper
+        apiKey={process.env.REACT_APP_GOOGLE_API_KEY as string}
+        libraries={["places", "drawing", "geometry"]}
+        render={render}
       />
       {!open && noValueDisplayComponent}
     </>

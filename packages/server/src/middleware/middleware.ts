@@ -10,7 +10,7 @@ const isAuthenticated = async (
   info: any
 ) => {
   if (!context.req.session.userId) {
-    return formatGraphQLYogaError(`Please log in to use this service`);
+    return formatGraphQLYogaError("Please log in to use this service");
   }
   return resolve(root, args, context, info);
 };
@@ -22,16 +22,17 @@ export const authMiddleware = {
 
     createBooking: isAuthenticated,
 
+    createConversation: isAuthenticated,
     createMessage: isAuthenticated,
   },
   Query: {
     me: isAuthenticated,
 
-    populateGuestInbox: isAuthenticated,
-    populateHostInbox: isAuthenticated,
-    populateConversationWithHost: isAuthenticated,
-    populateConversationWithGuest: isAuthenticated,
+    populateInbox: isAuthenticated,
+    populateConversation: isAuthenticated,
+    // populateConversationWithGuest: isAuthenticated,
   },
+  Subscription: { newMessage: isAuthenticated },
 };
 
 export const isValidUuid = async (
@@ -43,7 +44,7 @@ export const isValidUuid = async (
 ) => {
   const id = Object.keys(args).find((key) => key.includes("Id"));
 
-  // typecast ok: id will have to be present otherwise graphql will throw error
+  // typecast ok: id will have to be present otherwise graphql will throw error on request
   if (!validate(args[id as string])) {
     return formatGraphQLYogaError(formatBadUuidErrorMessage(id as string));
   }
@@ -53,12 +54,14 @@ export const isValidUuid = async (
 
 export const listingIdMiddleware = {
   Mutation: {
+    createConversation: isValidUuid,
     createMessage: isValidUuid,
 
     createBooking: isValidUuid,
   },
   Query: {
-    populateConversationWithHost: isValidUuid,
-    populateConversationWithGuest: isValidUuid,
+    populateConversation: isValidUuid,
+    // populateConversationWithGuest: isValidUuid,
   },
+  Subscription: { newMessage: isValidUuid },
 };

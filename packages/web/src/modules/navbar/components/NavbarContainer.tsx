@@ -56,7 +56,7 @@ export const NavbarContainer = ({
         width: "100vw",
         backgroundColor: "#FFF",
         height: subSearch ? 150 : matches ? searchBarHeight : 80,
-        transition: `height ${searchBarTransitionTime} ${searchBarTimingFunction}`,
+        transition: `height ${searchBarTransitionTime}ms ${searchBarTimingFunction}`,
       }}
     >
       {children}

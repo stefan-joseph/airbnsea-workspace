@@ -20,10 +20,16 @@ let mainPhotos = [
     "v1676151438/airbnsea/r6hxqdpyfdkxmnndojq0.jpg",
     "v1676151793/airbnsea/zoxqdwbgsjtnxc2x7ndw.jpg",
     "v1676151778/airbnsea/f0rzeg0nnkv7dkoxrxog.jpg",
+    "v1677170390/airbnsea/fmqzckxz0ctegjgbqqtk.jpg",
+    "v1677170356/airbnsea/gvftrf0rbkezsdxus8ki.jpg",
+    "v1677170344/airbnsea/yrmewo73mmip6m137pua.jpg",
+    "v1677170336/airbnsea/nysajczbp6x5f8jjyslm.jpg",
+    "v1677170330/airbnsea/rjwz1jo6irczd30hiwqg.jpg",
     "v1676151770/airbnsea/tpwnxmuvgpulzjibidrk.jpg",
 ];
-const refreshMainPhotos = mainPhotos;
+const refreshMainPhotos = [...mainPhotos];
 const secondaryPhotos = [
+    "v1677170381/airbnsea/iep9oprr9dzcp3ghxrmf.jpg",
     "v1669565060/airbnsea/r6nyijnhbrrflyopwa5t.jpg",
     "v1669565153/airbnsea/vyo2lfnkqrjudbseayde.jpg",
     "v1669565194/airbnsea/rb8zb25dxgtoaab5houl.jpg",
@@ -35,8 +41,9 @@ const secondaryPhotos = [
     "v1669565123/airbnsea/ylazxmbjbcdlnhba9upw.jpg",
 ];
 const getPhoto = () => {
+    console.log("refreshMainPhotos!!!", refreshMainPhotos);
     if (mainPhotos.length < 1) {
-        mainPhotos = refreshMainPhotos;
+        mainPhotos = [...refreshMainPhotos];
     }
     return mainPhotos.pop();
 };

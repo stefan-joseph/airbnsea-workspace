@@ -3,11 +3,11 @@ import { Field, Form, Formik } from "formik";
 import { loginSchema } from "@airbnb-clone/common";
 import { LoginUserMutationVariables } from "@airbnb-clone/controller";
 import { NormalizedErrorMap } from "@airbnb-clone/controller/dist/types/NormalizedErrorMap";
-import { Box, Button, Skeleton, Stack, Typography } from "@mui/material";
+import { Button, Skeleton, Stack, Typography } from "@mui/material";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
-import { HomeIcon } from "../../../components/HomeIcon";
 import { useGetRandomUserCredentailsLazyQuery } from "@airbnb-clone/controller";
+import { AuthPageContainer } from "../components/AuthPageContainer";
 
 interface Props {
   submit: (
@@ -21,22 +21,7 @@ export const LoginView = ({ onFinish, submit }: Props) => {
     useGetRandomUserCredentailsLazyQuery();
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <HomeIcon
-        sx={{
-          position: "absolute",
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-          fontSize: { xs: 26, md: 30 },
-        }}
-      />
+    <AuthPageContainer>
       <Formik
         initialValues={{
           email: "",
@@ -104,7 +89,12 @@ export const LoginView = ({ onFinish, submit }: Props) => {
                   component={TextInput2}
                 />
               )}
-              <Button type="submit" variant="contained" fullWidth>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
                 Log in
               </Button>
               <Typography>
@@ -123,6 +113,6 @@ export const LoginView = ({ onFinish, submit }: Props) => {
           </Form>
         )}
       </Formik>
-    </Box>
+    </AuthPageContainer>
   );
 };

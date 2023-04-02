@@ -1,24 +1,17 @@
 type Query {
-  populateGuestInbox: [MessageWithHost!]!
-  populateHostInbox: [MessageWithGuest!]!
+  populateInbox(inboxType: InboxType!): [InboxMessage!]!
 }
 
-type MessageWithHost {
+enum InboxType {
+  GUEST
+  HOST
+}
+
+type InboxMessage {
   id: ID!
   text: String!
   fromHost: Boolean!
-  userIdOfHost: ID
-  listingId: ID!
-  conversationId: ID!
-  createdDate: Date!
-  interlocutor: User
-}
-
-type MessageWithGuest {
-  id: ID!
-  text: String!
-  fromHost: Boolean!
-  userIdOfGuest: ID
+  interlocutorId: ID
   listingId: ID!
   conversationId: ID!
   createdDate: Date!

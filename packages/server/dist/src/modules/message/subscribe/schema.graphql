@@ -1,3 +1,4 @@
 type Subscription {
   newMessage(conversationId: String!): ConversationMessage!
+  updateInbox: InboxMessage!
 }

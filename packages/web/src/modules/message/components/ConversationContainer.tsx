@@ -69,7 +69,7 @@ export const ConversationContainer = ({
         <Loader />
       ) : (
         <>
-          {!matches && (
+          {!matches && data?.listing && (
             <>
               <Link to={`/listing/${data?.listingId}/view`}>
                 <Stack direction="row" alignItems="center" padding={2}>
@@ -95,7 +95,7 @@ export const ConversationContainer = ({
           )}
           {children}
           <Box marginTop="auto" padding={3} paddingBottom={2} paddingTop={2}>
-            <CreateMessage listingId={data?.listingId} />
+            <CreateMessage conversationId={data?.conversationId} />
           </Box>
         </>
       )}

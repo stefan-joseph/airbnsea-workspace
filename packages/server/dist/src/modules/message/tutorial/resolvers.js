@@ -23,11 +23,6 @@ exports.resolvers = {
             return newMessage;
         },
     },
-    Subscription: {
-        newMessageTut: {
-            subscribe: (_, { roomId }, { pubSub }) => pubSub.subscribe("newMessage", roomId),
-            resolve: (payload) => payload,
-        },
-    },
+    Subscription: {},
 };
 //# sourceMappingURL=resolvers.js.map

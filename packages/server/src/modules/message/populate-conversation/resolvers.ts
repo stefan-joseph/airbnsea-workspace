@@ -2,7 +2,9 @@ import { Listing } from "../../../entity/Listing";
 import { Message } from "../../../entity/Message";
 import { Resolvers } from "../../../types/types";
 import { imageUrl } from "../../shared/utils/constants";
+import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorMessages";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
+import { noPermissionToViewConversationErrorMessage } from "./utils/errorMessages";
 
 export const resolvers: Resolvers = {
   Conversation: {
@@ -17,7 +19,7 @@ export const resolvers: Resolvers = {
   },
 
   Query: {
-    populateConversationWithHost: async (
+    populateConversation: async (
       _,
       { conversationId },
       {
@@ -27,49 +29,87 @@ export const resolvers: Resolvers = {
       }
     ) => {
       const messages = await Message.find({
-        where: { userIdOfGuest: userId, conversationId },
+        where: { conversationId },
         order: { createdDate: "ASC" },
       });
 
       if (messages.length < 1) {
         return formatGraphQLYogaError(
-          "No existing conversation with this listing"
+          formatNotFoundWithGivenIdErrorMessage("conversation", conversationId)
         );
       }
 
-      return {
-        interlocutorId: messages[0].userIdOfHost,
-        listingId: messages[0].listingId,
-        conversationId,
-        messages,
-      };
-    },
-    populateConversationWithGuest: async (
-      _,
-      { conversationId },
-      {
-        req: {
-          session: { userId },
-        },
-      }
-    ) => {
-      const messages = await Message.find({
-        where: { userIdOfHost: userId, conversationId },
-        order: { createdDate: "ASC" },
-      });
+      const { userIdOfGuest, userIdOfHost } = messages[0];
 
-      if (messages.length < 1) {
+      if (userIdOfGuest !== userId && userIdOfHost !== userId) {
         return formatGraphQLYogaError(
-          "No existing conversation with this listing"
+          noPermissionToViewConversationErrorMessage
         );
       }
 
+      const interlocutorId =
+        userIdOfGuest === userId ? userIdOfHost : userIdOfGuest;
+
       return {
-        interlocutorId: messages[0].userIdOfGuest,
+        interlocutorId,
         listingId: messages[0].listingId,
         conversationId,
         messages,
       };
     },
+    // populateConversationWithHost: async (
+    //   _,
+    //   { conversationId },
+    //   {
+    //     req: {
+    //       session: { userId },
+    //     },
+    //   }
+    // ) => {
+    //   const messages = await Message.find({
+    //     where: { userIdOfGuest: userId, conversationId },
+    //     order: { createdDate: "ASC" },
+    //   });
+
+    //   if (messages.length < 1) {
+    //     return formatGraphQLYogaError(
+    //       "No existing conversation with this listing"
+    //     );
+    //   }
+
+    //   return {
+    //     interlocutorId: messages[0].userIdOfHost,
+    //     listingId: messages[0].listingId,
+    //     conversationId,
+    //     messages,
+    //   };
+    // },
+    // populateConversationWithGuest: async (
+    //   _,
+    //   { conversationId },
+    //   {
+    //     req: {
+    //       session: { userId },
+    //     },
+    //   }
+    // ) => {
+    //   const messages = await Message.find({
+    //     where: { userIdOfHost: userId, conversationId },
+    //     order: { createdDate: "ASC" },
+    //   });
+
+    //   if (messages.length < 1) {
+    //     return formatGraphQLYogaError(
+    //       "No existing conversation with this listing"
+    //     );
+    //   }
+
+    //   return {
+    //     interlocutorId: messages[0].userIdOfGuest,
+    //     listingId: messages[0].listingId,
+    //     conversationId,
+    //     messages,
+    //   };
+    // },
   },
 };

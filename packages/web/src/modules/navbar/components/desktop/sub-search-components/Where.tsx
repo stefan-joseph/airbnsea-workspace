@@ -1,13 +1,11 @@
 import { Field, FieldProps } from "formik";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { GoogleLocationAutoComplete } from "../../../../../components/fields/GoogleLocationAutoComplete";
-import { PopperMenu } from "../../../../../components/PopperMenu";
-import { SearchSuggestions } from "../../../../../components/SearchSuggestions";
+import GoogleRestart from "../../../../../components/fields/GoogleRestart";
+import { searchBarTransitionTime } from "../../../../../constants/constants";
 import { formatSearchedLocation } from "../../../../../utils/formatSearchedLocation";
 import { NavbarContext } from "../../../Navbar";
-import { ClearButton } from "../ClearButton";
 import { CollapsedSubSearch } from "../components/CollapsedSubSearch";
 import { DummyFabButton } from "../components/DummyFabButton";
 import { ExpandedSubSearch } from "../components/ExpandedSubSearch";
@@ -22,7 +20,14 @@ export const Where = ({ index, dividerRefs, searchBarRef }: SubSearchProps) => {
     dispatch,
   } = useContext(NavbarContext);
 
-  const [placeId, setPlaceId] = useState("");
+  const [animationFinished, setAnimationFinished] = useState(false);
+
+  // @TODO temporary solution. Need DisablePortal = true solution?
+  useEffect(() => {
+    subSearch &&
+      setTimeout(() => setAnimationFinished(true), searchBarTransitionTime);
+    !subSearch && setAnimationFinished(false);
+  }, [subSearch]);
 
   if (!subSearch)
     return (
@@ -54,49 +59,23 @@ export const Where = ({ index, dividerRefs, searchBarRef }: SubSearchProps) => {
                 isPlaceholder={!!value}
                 label="Where"
                 inputField={
-                  <GoogleLocationAutoComplete
-                    setPlaceId={setPlaceId}
-                    textFieldProps={{
-                      placeholder: "Search Destinations",
-                      variant: "standard",
-                      label: "",
+                  <GoogleRestart
+                    handleInputChange={(value) => {
+                      setFieldValue("where", value || null);
                     }}
-                    textFieldInputProps={{
-                      disableUnderline: true,
-                      endAdornment: undefined,
-                      sx: {
-                        fontSize: 14,
-                        fontWeight: value ? 600 : undefined,
-                      },
-                    }}
-                    onInputChange={(value) =>
-                      setFieldValue && setFieldValue("where", value)
+                    nextSubSearch={() =>
+                      dispatch({
+                        type: "SET_SUB_SEARCH",
+                        payload: 2,
+                      })
                     }
-                    outsideValue={value ? value : undefined}
-                    popperWidth={400}
-                    noValueDisplayComponent={
-                      searchBarRef ? (
-                        <PopperMenu
-                          open={(index as number) + 1 === subSearch}
-                          anchorEl={searchBarRef}
-                          placement="bottom-start"
-                          marginTop={1}
-                          width={460}
-                          disableAnimation={!!value}
-                        >
-                          <SearchSuggestions />
-                        </PopperMenu>
-                      ) : undefined
-                    }
+                    isSelected={(index as number) + 1 === subSearch}
+                    inputValue={value}
+                    searchBarRef={searchBarRef}
+                    open={subSearch === 1 && animationFinished}
                   />
                 }
-              >
-                <ClearButton
-                  isShowing={(index as number) + 1 === subSearch && value}
-                  handleClick={() => setFieldValue("where", null)}
-                  marginRight={1}
-                />
-              </ExpandedSubSearch>
+              />
             </>
           )}
         </Field>

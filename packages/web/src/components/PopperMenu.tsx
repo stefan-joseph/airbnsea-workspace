@@ -39,9 +39,10 @@ export const PopperMenu = ({
       transition
       disablePortal
       // prevent parent component from firing because we have disabled portal
-      onClick={(e) => e.stopPropagation()}
+      // this prevents from clickAwayListener from firing first try on booking calendar close attempt
+      // onClick={(e) => e.stopPropagation()}
       sx={{
-        zIndex: 10,
+        zIndex: 999,
         position: "absolute",
         cursor: "default",
       }}
@@ -74,9 +75,7 @@ export const PopperMenu = ({
             }}
           >
             <ClickAwayListener
-              onClickAway={(e) => {
-                handleClose && handleClose(e);
-              }}
+              onClickAway={(e) => handleClose && handleClose(e)}
             >
               <Box>{children}</Box>
             </ClickAwayListener>

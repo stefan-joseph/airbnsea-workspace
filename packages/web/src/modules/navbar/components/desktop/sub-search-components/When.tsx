@@ -6,7 +6,6 @@ import { PopperMenu } from "../../../../../components/PopperMenu";
 import { NavbarContext } from "../../../Navbar";
 import { CollapsedSubSearch } from "../components/CollapsedSubSearch";
 import { DummyFabButton } from "../components/DummyFabButton";
-import { DesktopCalendar } from "../../../../../components/calendar/components/DesktopCalendar";
 import { SearchDivider } from "../components/SearchDivider";
 import { SubSearchProps } from "./types";
 import { ExpandedSubSearch } from "../components/ExpandedSubSearch";
@@ -29,11 +28,9 @@ export const When = ({
     navbarState: { subSearch },
   } = useContext(NavbarContext);
 
-  // const [isStartSelection, setIsStartSelection] = useState<boolean>(
-  //   !values?.start || (values.start && values.end) ? true : false
-  // );
-
-  const [isStartSelection, setIsStartSelection] = useState<boolean>(true);
+  const [isStartSelection, setIsStartSelection] = useState<boolean>(
+    !start || (start && end) ? true : false
+  );
 
   if (!subSearch)
     return (
@@ -81,7 +78,7 @@ export const When = ({
                     value
                   }
                   handleClick={() => setFieldValue("start", null)}
-                  marginRight={1}
+                  margin={"0px 6px 0px 0px"}
                 />
               </ExpandedSubSearch>
             )}
@@ -125,7 +122,7 @@ export const When = ({
                     value
                   }
                   handleClick={() => setFieldValue("end", null)}
-                  marginRight={1}
+                  margin={"0px 6px 0px 0px"}
                 />
               </ExpandedSubSearch>
             )}
@@ -151,6 +148,8 @@ export const When = ({
                 end={values.end}
                 setFieldValue={setFieldValue}
                 bookingCalendar={false}
+                isStartSelection={isStartSelection}
+                setIsStartSelection={setIsStartSelection}
               />
             )}
           </Field>

@@ -1,11 +1,19 @@
-subscription NewMessageSubscription($listingId: String!) {
-  newMessage(listingId: $listingId) {
+subscription NewMessageSubscription($conversationId: String!) {
+  newMessage(conversationId: $conversationId) {
+    id
     text
+    fromHost
+    createdDate
+  }
+}
+
+subscription UpdateInboxSubscription {
+  updateInbox {
+    id
+    text
+    conversationId
+    fromHost
+    createdDate
     listingId
-    user {
-      avatar
-      firstName
-      lastName
-    }
   }
 }

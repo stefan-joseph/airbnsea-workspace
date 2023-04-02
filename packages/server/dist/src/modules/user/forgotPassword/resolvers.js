@@ -28,9 +28,7 @@ exports.resolvers = {
             if (!user)
                 return true;
             yield (0, forgotPasswordLockAccount_1.forgotPasswordLockAccount)(user.id, redis);
-            const url = yield (0, createForgotPasswordLink_1.createForgotPasswordLink)((process.env.NODE_ENV === "development"
-                ? process.env.FRONTEND_HOST_DEV
-                : process.env.FRONTEND_HOST_PROD), user.id, redis);
+            const url = yield (0, createForgotPasswordLink_1.createForgotPasswordLink)(process.env.FRONTEND_HOST, user.id, redis);
             yield (0, sendEmail_1.sendEmail)(email, url, "Click here to reset your password");
             return true;
         }),

@@ -6,7 +6,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import { BookingButton } from "./BookingButton";
@@ -15,8 +14,9 @@ import { BookingProps } from "./Booking";
 import { Calendar } from "../../components/calendar/Calendar";
 import { PriceAndRatingStack } from "./PriceAndRatingStack";
 import { searchBarBorderColor } from "../../constants/constants";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { getDayDifference } from "../../utils/getDayDifference";
+import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 export const MobileBooking = ({
   price,
@@ -24,6 +24,14 @@ export const MobileBooking = ({
   calendarOpen,
   setCalendarOpen,
 }: BookingProps) => {
+  const [searchParams] = useSearchParams();
+  const start = searchParams.get("start");
+  const end = searchParams.get("end");
+
+  const [isStartSelection, setIsStartSelection] = useState<boolean>(
+    !start || (start && end) ? true : false
+  );
+
   return (
     <Field>
       {({ form: { values, setFieldValue } }: FieldProps) => (
@@ -93,6 +101,8 @@ export const MobileBooking = ({
                     start={values.start}
                     end={values.end}
                     setFieldValue={setFieldValue}
+                    isStartSelection={isStartSelection}
+                    setIsStartSelection={setIsStartSelection}
                   />
                 </Box>
                 <Stack

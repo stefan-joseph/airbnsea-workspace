@@ -1,7 +1,7 @@
 import { dateFormat } from "@airbnb-clone/common";
 import {
   ConversationMessage,
-  PopulateConversationWithHostQuery,
+  PopulateConversationQuery,
 } from "@airbnb-clone/controller";
 import { Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
@@ -16,7 +16,7 @@ export const Messages = ({
   isHost,
 }: {
   messages: ConversationMessage[];
-  interlocutor: PopulateConversationWithHostQuery["populateConversationWithHost"]["interlocutor"];
+  interlocutor: PopulateConversationQuery["populateConversation"]["interlocutor"];
   isHost?: boolean;
 }) => {
   const {

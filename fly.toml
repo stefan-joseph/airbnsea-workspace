@@ -6,7 +6,7 @@ kill_timeout = 5
 processes = []
 
 [env]
-  FRONTEND_HOST_PROD="https://airbnsea.netlify.app"
+  FRONTEND_HOST="https://airbnsea.netlify.app"
   NODE_ENV='production'
 
 [experimental]

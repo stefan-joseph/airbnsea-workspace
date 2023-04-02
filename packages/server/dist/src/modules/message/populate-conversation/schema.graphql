@@ -1,6 +1,7 @@
 type Query {
-  populateConversationWithHost(conversationId: String!): Conversation!
-  populateConversationWithGuest(conversationId: String!): Conversation!
+  # populateConversationWithHost(conversationId: String!): Conversation!
+  # populateConversationWithGuest(conversationId: String!): Conversation!
+  populateConversation(conversationId: String!): Conversation!
 }
 
 type Conversation {

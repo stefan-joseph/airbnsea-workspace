@@ -97,7 +97,7 @@ export const Address = ({ setFieldValue, values }: Props) => {
     );
   return (
     <GoogleLocationAutoComplete
-      setPlaceId={setPlaceId}
+      handleChange={({ placeId }) => setPlaceId(placeId)}
       textFieldInputProps={{
         startAdornment: (
           <InputAdornment position="start">

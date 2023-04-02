@@ -2,7 +2,7 @@ import "dotenv/config";
 import { createServer, createPubSub } from "@graphql-yoga/node";
 import { createRedisEventTarget } from "@graphql-yoga/redis-event-target";
 import Redis from "ioredis";
-// import { runSeeders } from "typeorm-extension";
+import { runSeeders } from "typeorm-extension";
 // import rateLimit from "express-rate-limit";
 // import RateLimitRedisStore from "rate-limit-redis";
 // import passport = require("passport");
@@ -21,8 +21,7 @@ import { generateModularSchema } from "./utils/generateModularSchema";
 import { authMiddleware, listingIdMiddleware } from "./middleware/middleware";
 import { userLoader } from "./loaders/userLoader";
 import { getTypeormConnection } from "./utils/getTypeormConnection";
-
-export type MessagePayload = { from: string; body: string };
+import { ConversationMessage, InboxMessage } from "./types/types";
 
 export const startServer = async () => {
   const app = express();
@@ -75,14 +74,16 @@ export const startServer = async () => {
   });
 
   const pubSub = createPubSub<{
-    newMessage: [payload: MessagePayload];
+    newMessage: [payload: ConversationMessage];
+    newInboxUpdate: [payload: InboxMessage];
   }>({ eventTarget });
 
-  await getTypeormConnection().initialize();
-  // .then(async () => {
-  //   await getTypeormConnection().synchronize(true);
-  //   await runSeeders(getTypeormConnection());
-  // });
+  await getTypeormConnection()
+    .initialize()
+    .then(async () => {
+      await getTypeormConnection().synchronize(true);
+      await runSeeders(getTypeormConnection());
+    });
 
   // clear cache
   // await redis.del(listingCacheKey);
@@ -108,9 +109,7 @@ export const startServer = async () => {
     // origin:
     //   process.env.NODE_ENV === "test"
     //     ? "*"
-    //     : process.env.NODE_ENV === "development"
-    //     ? process.env.FRONTEND_HOST_DEV
-    //     : process.env.FRONTEND_HOST_PROD,
+    //     :process.env.FRONTEND_HOST
     origin: "*",
   };
   app.use(cors(corsOptions));

@@ -1,13 +1,17 @@
 import { Form, Formik } from "formik";
 import { useContext } from "react";
 import { useSearchParams } from "react-router-dom";
+import dayjs from "dayjs";
+import { searchSchema } from "@airbnb-clone/common";
+
 import { NavbarContext } from "../Navbar";
+import { dateFormat } from "@airbnb-clone/common";
 
 export interface SearchValues {
   where: string | null;
   start: string | null;
   end: string | null;
-  guests: number | string;
+  guests: number | null;
 }
 
 export const SearchBarForm = ({
@@ -22,27 +26,36 @@ export const SearchBarForm = ({
   const guests = searchParams.get("guests");
 
   const { dispatch } = useContext(NavbarContext);
+
   return (
     <Formik
       initialValues={{
-        where,
+        where: where,
         start,
         end,
-        guests: guests ? +guests : 0,
+        guests: guests ? +guests : null,
       }}
-      onSubmit={async (values: SearchValues, { setErrors }) => {
+      validationSchema={searchSchema}
+      onSubmit={async (values: SearchValues) => {
         console.log("values", values);
-        // @TODO where is "" instead of null after you type and then backspace to delete
+        if (values.start && !values.end) {
+          values.end = dayjs(values.start).add(1, "day").format(dateFormat);
+        }
+
+        if (!values.start && values.end) {
+          values.start = dayjs(values.end)
+            .subtract(1, "day")
+            .format(dateFormat);
+        }
+
         Object.keys(values).forEach((v) => {
           if (
             values[v as keyof SearchValues] == null ||
             values[v as keyof SearchValues] === 0
           )
             delete values[v as keyof SearchValues];
-          else
-            values[v as keyof SearchValues] =
-              "" + values[v as keyof SearchValues];
         });
+
         console.log("values", values);
 
         setSearchParams({ ...(values as { [key: string]: any }) });

@@ -1,6 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VesselType = exports.Status = void 0;
+exports.VesselType = exports.Status = exports.InboxType = void 0;
+var InboxType;
+(function (InboxType) {
+    InboxType["Guest"] = "GUEST";
+    InboxType["Host"] = "HOST";
+})(InboxType = exports.InboxType || (exports.InboxType = {}));
 var Status;
 (function (Status) {
     Status["Active"] = "active";

@@ -42,12 +42,12 @@ export const DesktopSearchBar = () => {
           return (
             <Box
               key={index}
-              onClick={() =>
+              onClick={() => {
                 dispatch({
                   type: "SET_SUB_SEARCH",
                   payload: index + 1,
-                })
-              }
+                });
+              }}
               sx={{
                 flex: 1,
                 width: "30%",

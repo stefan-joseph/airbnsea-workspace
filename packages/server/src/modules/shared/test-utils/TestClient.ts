@@ -1,4 +1,4 @@
-import { BookingInput } from "../../../types/types";
+import { BookingInput, InboxType } from "../../../types/types";
 
 const rp = require("request-promise");
 
@@ -150,13 +150,33 @@ export class TestClient {
     });
   }
 
-  async createMessage(listingId: string, text: string) {
+  async createConversation(listingId: string, text: string) {
     return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
           mutation {
-            createMessage(listingId: "${listingId}",
+            createConversation(listingId: "${listingId}", text: "${text}"){
+              ... on ConversationId {
+                conversationId
+              }
+              ... on Redirect {
+                redirect
+              }
+            }
+          }
+        `,
+      },
+    });
+  }
+
+  async createMessage(conversationId: string, text: string) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+          mutation {
+            createMessage(conversationId: "${conversationId}",
             text: "${text}")
           }
         `,
@@ -164,19 +184,19 @@ export class TestClient {
     });
   }
 
-  async populateGuestInbox() {
+  async populateInbox(inboxType: InboxType) {
     return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
           query {
-            populateGuestInbox {
+            populateInbox(inboxType: ${inboxType}) {
               id
               text
               fromHost
               createdDate
-              userIdOfHost
               conversationId
+              interlocutorId
               interlocutor {
                 avatar
                 firstName
@@ -189,38 +209,13 @@ export class TestClient {
     });
   }
 
-  async populateHostInbox() {
+  async populateConversation(conversationId: string) {
     return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
           query {
-            populateHostInbox {
-              id
-              text
-              fromHost
-              createdDate
-              userIdOfGuest
-              conversationId
-              interlocutor {
-                avatar
-                firstName
-                lastName
-              }
-            }
-          }
-        `,
-      },
-    });
-  }
-
-  async populateConversationWithHost(conversationId: string) {
-    return rp.post(this.url, {
-      ...this.options,
-      body: {
-        query: `
-          query {
-            populateConversationWithHost(conversationId: "${conversationId}") {
+            populateConversation(conversationId: "${conversationId}") {
               interlocutorId
               interlocutor {
                 avatar
@@ -245,34 +240,21 @@ export class TestClient {
     });
   }
 
-  async populateConversationWithGuest(conversationId: string) {
-    return rp.post(this.url, {
-      ...this.options,
-      body: {
-        query: `
-          query {
-            populateConversationWithGuest(conversationId: "${conversationId}") {
-              interlocutorId
-              interlocutor {
-                avatar
-                firstName
-                lastName
-              }
-              listingId
-              listing {
-                name
-                img
-              }
-              messages {
-                id
-                text
-                fromHost
-                createdDate
-              }
-            }
-          }
-        `,
-      },
-    });
-  }
+  // async newMessage(conversationId: string) {
+  //   return rp.post(this.url, {
+  //     ...this.options,
+  //     body: {
+  //       query: `
+  //         subscription {
+  //           newMessage(conversationId: "${conversationId}") {
+  //             id
+  //             text
+  //             fromHost
+  //             createdDate
+  //           }
+  //         }
+  //       `,
+  //     },
+  //   });
+  // }
 }

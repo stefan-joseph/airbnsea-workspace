@@ -2,7 +2,6 @@ import {
   Box,
   Divider,
   Drawer,
-  Grid,
   Stack,
   Typography,
   useMediaQuery,
@@ -17,11 +16,9 @@ import {
   desktopMinWidth,
   searchBarHeight,
 } from "../../constants/constants";
-import { AsGuestTab } from "./components/AsGuestTab";
-import { AsHostTab } from "./components/AsHostTab";
 import { TabButton } from "./components/TabButton";
-import { ConversationWithHost } from "./components/ConversationWithHost";
-import { ConversationWithGuest } from "./components/ConversationWithGuest";
+import { PopulateConversation } from "./components/PopulateConversation";
+import { PopulateInbox } from "./components/PopulateInbox";
 
 export const Message = () => {
   const { conversationId } = useParams();
@@ -82,7 +79,7 @@ export const Message = () => {
               paddingLeft={appSidePaddingAlt}
               paddingRight={appSidePaddingAlt}
             >
-              {tabOpen === "guest" ? <AsGuestTab /> : <AsHostTab />}
+              <PopulateInbox />
             </Box>
           </Stack>
         </Stack>
@@ -90,11 +87,7 @@ export const Message = () => {
           <>
             <Divider orientation="vertical" flexItem />
             <Stack flex={1}>
-              {tabOpen === "guest" ? (
-                <ConversationWithHost />
-              ) : (
-                <ConversationWithGuest />
-              )}
+              <PopulateConversation />
             </Stack>
           </>
         )}
@@ -105,11 +98,7 @@ export const Message = () => {
           anchor="right"
           PaperProps={{ sx: { width: "100vw" } }}
         >
-          {tabOpen === "guest" ? (
-            <ConversationWithHost />
-          ) : (
-            <ConversationWithGuest />
-          )}
+          <PopulateConversation />
         </Drawer>
       )}
     </AppContainer>

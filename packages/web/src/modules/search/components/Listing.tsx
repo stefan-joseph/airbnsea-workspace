@@ -1,22 +1,21 @@
 import { Box, Grid, Skeleton, Typography } from "@mui/material";
-
-import Carousel from "react-material-ui-carousel";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import { SearchListingResult } from "@airbnb-clone/controller";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import CircleIcon from "@mui/icons-material/Circle";
+
+import { PhotoCarousel } from "./PhotoCarousel";
 import { useState } from "react";
 
 export const Listing: React.FC<{
   data: SearchListingResult | undefined;
   mapShowing: boolean;
-}> = ({ data, mapShowing }, props) => {
+}> = ({ data, mapShowing }) => {
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
   const where = searchParams.get("where");
 
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
 
   const handleNavigation = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -43,96 +42,16 @@ export const Listing: React.FC<{
       sx={{ width: "100%" }}
     >
       <Box
-        sx={{ color: "initial", pb: 2, cursor: "pointer" }}
+        onMouseOver={() => setIsHovering(true)}
+        onMouseOut={() => setIsHovering(false)}
         onClick={(e) => data?.id && handleNavigation(e, data.id)}
+        sx={{ color: "initial", pb: 2, cursor: "pointer" }}
       >
-        <Box
-          sx={{
-            borderRadius: 4,
-            overflow: "hidden",
-            position: "relative",
-          }}
-        >
-          {!imageLoaded && (
-            <Skeleton
-              variant="rounded"
-              sx={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-              }}
-            />
+        <Box borderRadius={4} overflow="hidden" position="relative">
+          {data?.photos && (
+            <PhotoCarousel photos={data.photos} showArrowButtons={isHovering} />
           )}
-          <Carousel
-            autoPlay={false}
-            animation="slide"
-            duration={400}
-            sx={{
-              aspectRatio: "1 / 1",
-              "&:hover .carousel-nav-buttons": {
-                opacity: 0.6,
-              },
-              ".carousel-nav-buttons:hover": {
-                opacity: "0.8 !important",
-              },
-            }}
-            navButtonsProps={{
-              style: {
-                backgroundColor: "rgb(255, 255, 255)",
-                color: "rgb(0,0,0)",
-                height: "30px",
-                width: "30px",
-              },
-              className: "carousel-nav-buttons",
-            }}
-            indicatorContainerProps={{
-              style: {
-                position: "absolute",
-                zIndex: 1,
-                bottom: 8,
-                pointerEvents: "none",
-              },
-            }}
-            IndicatorIcon={<CircleIcon sx={{ fontSize: 8 }} />}
-            indicatorIconButtonProps={{
-              style: {
-                color: "rgb(255, 255, 255, 0.6)",
-                padding: "2px",
-                transition: "400ms",
-              },
-            }}
-            activeIndicatorIconButtonProps={{
-              style: {
-                color: "rgb(255, 255, 255)",
-              },
-            }}
-          >
-            {data?.photos?.map((url, i) => (
-              <Box
-                key={url}
-                sx={{
-                  width: "100%",
-                  aspectRatio: "1 / 1",
-                  position: "relative",
-                }}
-              >
-                <img
-                  src={url}
-                  alt={`listing image ${i + 1}`}
-                  style={{
-                    objectFit: "cover",
-                    height: "100%",
-                    width: "100%",
-                    opacity: imageLoaded ? 1 : 0,
-                    transition: "opacity 200ms ease-out 0s",
-                  }}
-                  onLoad={() => setImageLoaded(true)}
-                />
-              </Box>
-            ))}
-          </Carousel>
         </Box>
-
         <Box sx={{ p: 0.4, pt: 1 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography
@@ -176,7 +95,7 @@ export const Listing: React.FC<{
           {where && (
             <Typography
               fontWeight={200}
-              sx={{ color: "grey.800", marginBottom: -0.2 }}
+              sx={{ color: "grey.700", marginBottom: -0.2 }}
             >
               {data?.distance ? (
                 Math.round(data.distance) === 0 ? (
@@ -189,7 +108,7 @@ export const Listing: React.FC<{
               )}
             </Typography>
           )}
-          <Typography fontWeight={200} gutterBottom sx={{ color: "grey.800" }}>
+          <Typography fontWeight={200} gutterBottom sx={{ color: "grey.700" }}>
             {data ? (
               `${data?.beds} bed${data?.beds === 1 ? "" : "s"} · ${
                 data?.guests
@@ -205,7 +124,7 @@ export const Listing: React.FC<{
                 <Box
                   component="span"
                   fontWeight={200}
-                  sx={{ color: "grey.800" }}
+                  sx={{ color: "grey.700" }}
                 >
                   night
                 </Box>

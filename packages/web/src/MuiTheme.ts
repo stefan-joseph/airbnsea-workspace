@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import { mainBlackColor } from "./constants/constants";
 
 export const theme = createTheme({
@@ -11,6 +11,7 @@ export const theme = createTheme({
       // main: "#0d9488", // lighter green
       // main: "#0e7490", // cyan
       main: "#0891b2", //lighter cyan
+
       // dark: will be calculated from palette.primary.main,
       // contrastText: will be calculated to contrast with palette.primary.main
     },
@@ -18,6 +19,7 @@ export const theme = createTheme({
       main: mainBlackColor,
     },
     info: { main: "#222222" },
+    error: { main: "#C13515" },
   },
 
   breakpoints: {

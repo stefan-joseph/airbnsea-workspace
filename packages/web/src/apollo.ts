@@ -61,8 +61,7 @@ class SSELink extends ApolloLink {
   }
 }
 
-// const uri = "http://localhost:4000/graphql";
-const sseLink = new SSELink({ uri });
+const sseLink = new SSELink({ uri, withCredentials: true });
 
 const link = split(
   ({ query }) => {
@@ -70,7 +69,6 @@ const link = split(
     return kind === "OperationDefinition" && operation === "subscription";
   },
   sseLink,
-  // httpLink,
   httpLink
 );
 

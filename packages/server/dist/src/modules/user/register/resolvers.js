@@ -45,9 +45,7 @@ exports.resolvers = {
                 password,
             });
             yield user.save();
-            const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)((process.env.NODE_ENV === "development"
-                ? process.env.FRONTEND_HOST_DEV
-                : process.env.FRONTEND_HOST_PROD), user.id, redis);
+            const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)(process.env.FRONTEND_HOST, user.id, redis);
             if (process.env.NODE_ENV !== "test") {
                 yield (0, sendEmail_1.sendEmail)(email, url, "Click here to confirm your email");
             }

@@ -1,6 +1,6 @@
 import { ButtonBase, Paper, Stack, Typography } from "@mui/material";
 import { useContext } from "react";
-import { IoSearchOutline, IoOptionsOutline } from "react-icons/io5";
+import { IoSearch, IoOptionsOutline } from "react-icons/io5";
 
 import { searchBarBorderColor } from "../../../../../constants/constants";
 import { NavbarContext } from "../../../Navbar";
@@ -15,10 +15,7 @@ export const DisplayBar = () => {
   const end = searchParams.get("end");
   const who = searchParams.get("guests");
 
-  const {
-    navbarState: { subSearch },
-    dispatch,
-  } = useContext(NavbarContext);
+  const { dispatch } = useContext(NavbarContext);
   return (
     <Paper
       onClick={() =>
@@ -39,7 +36,7 @@ export const DisplayBar = () => {
         marginLeft={2}
         marginRight={1.4}
       >
-        <IoSearchOutline size={22} />
+        <IoSearch size={20} />
         <Stack flex={1}>
           <Typography fontSize={15} fontWeight={700}>
             Where to?

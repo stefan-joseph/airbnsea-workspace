@@ -74,6 +74,7 @@ export const Results: React.FC<{
           sx={{
             padding: 0,
             position: { xs: "absolute", md: "initial" },
+            height: { xs: "100%", md: "unset" },
             zIndex: 1,
             width: "100%",
             display: { xs: mapOpen ? "initial" : "none", md: "initial" },

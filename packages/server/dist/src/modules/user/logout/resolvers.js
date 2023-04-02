@@ -13,12 +13,12 @@ exports.resolvers = void 0;
 const removeAllOfUsersSessions_1 = require("../../../utils/removeAllOfUsersSessions");
 exports.resolvers = {
     Mutation: {
-        logout: (_, __, { req: { session }, redis, response }) => __awaiter(void 0, void 0, void 0, function* () {
+        logout: (_, __, { req: { session }, redis, res }) => __awaiter(void 0, void 0, void 0, function* () {
             console.log(session.userId);
             const { userId } = session;
             if (userId) {
                 yield (0, removeAllOfUsersSessions_1.removeAllOfUsersSessions)(userId, redis);
-                response.clearCookie("qid");
+                res.clearCookie("qid");
                 return true;
             }
             return false;

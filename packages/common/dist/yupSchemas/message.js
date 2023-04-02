@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.messageSchema = exports.messageRequired = void 0;
 const yup = __importStar(require("yup"));
-exports.messageRequired = "A message is required";
+exports.messageRequired = "Please add a message.";
 exports.messageSchema = yup.object().shape({
     text: yup.string().required(exports.messageRequired),
 });

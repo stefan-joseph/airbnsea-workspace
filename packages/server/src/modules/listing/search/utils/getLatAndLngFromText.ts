@@ -1,18 +1,32 @@
 import { GraphQLYogaError } from "@graphql-yoga/node";
-import { Client, PlaceInputType } from "@googlemaps/google-maps-services-js";
+import { Client } from "@googlemaps/google-maps-services-js";
 const client = new Client({});
 
 export const getLatAndLngFromText = async (where: string) => {
-  const { data } = await client.findPlaceFromText({
-    params: {
-      input: where,
-      inputtype: PlaceInputType.textQuery,
-      key: process.env.GOOGLE_MAPS_API_KEY as string,
-    },
-    timeout: 2000,
-  });
+  const findClosestAutocompletePrediction = async (input: string) => {
+    let result = await client.placeAutocomplete({
+      params: {
+        input,
+        key: process.env.GOOGLE_MAPS_API_KEY as string,
+      },
+      timeout: 2000,
+    });
 
-  if (data.status !== "OK" || !data.candidates[0].place_id) {
+    if (result.data.status === "ZERO_RESULTS") {
+      // if no predictions remove last character and try again recursively until result found
+      result = await findClosestAutocompletePrediction(
+        input.substring(0, input.length - 1)
+      );
+    }
+
+    return result;
+  };
+
+  const { data } = await findClosestAutocompletePrediction(where);
+
+  const { place_id } = data.predictions[0];
+
+  if (data.status !== "OK" || !place_id) {
     return Promise.reject(
       new GraphQLYogaError(`Could not search with the location: ${where}`)
     );
@@ -20,7 +34,7 @@ export const getLatAndLngFromText = async (where: string) => {
 
   const { data: data2 } = await client.placeDetails({
     params: {
-      place_id: data.candidates[0].place_id,
+      place_id: place_id,
       fields: ["geometry"],
       key: process.env.GOOGLE_MAPS_API_KEY as string,
     },

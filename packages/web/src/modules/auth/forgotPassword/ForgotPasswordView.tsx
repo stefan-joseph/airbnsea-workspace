@@ -1,10 +1,10 @@
 import { Field, Form, Formik } from "formik";
 import { forgotPasswordSchema } from "@airbnb-clone/common";
 import { SendForgotPasswordEmailMutationVariables } from "@airbnb-clone/controller";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import { Link } from "react-router-dom";
-import { HomeIcon } from "../../../components/HomeIcon";
+import { AuthPageContainer } from "../components/AuthPageContainer";
 
 interface Props {
   submit: (values: SendForgotPasswordEmailMutationVariables) => Promise<null>;
@@ -13,22 +13,7 @@ interface Props {
 
 export const ForgotPasswordView = ({ submit, onFinish }: Props) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <HomeIcon
-        sx={{
-          position: "absolute",
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-          fontSize: { xs: 26, md: 30 },
-        }}
-      />
+    <AuthPageContainer>
       <Formik
         initialValues={{
           email: "",
@@ -56,7 +41,7 @@ export const ForgotPasswordView = ({ submit, onFinish }: Props) => {
                 size="small"
                 component={TextInput2}
               />
-              <Button type="submit" variant="contained">
+              <Button type="submit" variant="contained" color="primary">
                 Reset Password
               </Button>
               <Typography>
@@ -69,6 +54,6 @@ export const ForgotPasswordView = ({ submit, onFinish }: Props) => {
           </Form>
         )}
       </Formik>
-    </Box>
+    </AuthPageContainer>
   );
 };

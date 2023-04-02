@@ -36,20 +36,35 @@ export const renderDay: (props: Props) => JSX.Element = ({
   loading,
   data,
 }: Props) => {
+  const isStartDate = dayjs(day).format(dateFormat) === start;
+
+  const isEndDate = dayjs(day).format(dateFormat) === end;
+
+  const endOrDateHovered = end || dateHovered;
+
+  const conditionalEdgeCases =
+    (!dayjs(day).add(1, "day").isAfter(day, "month") &&
+      !DayComponentProps.outsideCurrentMonth) ||
+    (dayjs(day).add(1, "day").isAfter(day, "month") &&
+      !DayComponentProps.outsideCurrentMonth) ||
+    (DayComponentProps.outsideCurrentMonth &&
+      dayjs(day).subtract(1, "day").isBefore(day, "month"));
+
+  const isGrey =
+    (dayjs(day).isAfter(start) || dayjs(day).isSame(start)) &&
+    (dayjs(day).isBefore(endOrDateHovered) ||
+      (dayjs(day).isSame(endOrDateHovered) && conditionalEdgeCases));
+
+  const isFadeToGrey =
+    DayComponentProps.outsideCurrentMonth &&
+    dayjs(day).add(1, "day").isAfter(day, "month");
+
+  const isFadeFromGrey =
+    DayComponentProps.outsideCurrentMonth &&
+    dayjs(day).subtract(1, "day").isBefore(day, "month");
+
   if (!bookingCalendar) {
-    const isStartDate = dayjs(day).format(dateFormat) === start;
-
-    const isEndDate = dayjs(day).format(dateFormat) === end;
-
-    const isBetween = dayjs(day).isAfter(start) && dayjs(day).isBefore(end);
-
-    const isBetweenHover =
-      (dayjs(day).isBefore(dateHovered) || dayjs(day).isSame(dateHovered)) &&
-      dayjs(day).isAfter(start);
-
     const isUnavailable = Boolean(dayjs(day).isBefore(new Date(), "day"));
-
-    const isCheckoutOnly = false;
 
     return (
       <RenderDay
@@ -60,13 +75,13 @@ export const renderDay: (props: Props) => JSX.Element = ({
         formattedDay={dayjs(day).format(dateFormat)}
         isStartDate={isStartDate}
         isEndDate={isEndDate}
-        isBetween={isBetween}
-        isBetweenHover={isBetweenHover}
+        isGrey={isGrey}
         isUnavailable={isUnavailable}
-        isCheckoutOnly={isCheckoutOnly}
         setDateHovered={setDateHovered}
         dateHovered={dateHovered}
         isStartSelection={isStartSelection}
+        isFadeToGrey={isFadeToGrey}
+        isFadeFromGrey={isFadeFromGrey}
       />
     );
   }
@@ -86,16 +101,6 @@ export const renderDay: (props: Props) => JSX.Element = ({
 
   if (data?.getListingUnavailability) {
     const { getListingUnavailability: unavailableDates } = data;
-
-    const isStartDate = dayjs(day).format(dateFormat) === start;
-
-    const isEndDate = dayjs(day).format(dateFormat) === end;
-
-    const isBetween = dayjs(day).isAfter(start) && dayjs(day).isBefore(end);
-
-    const isBetweenHover =
-      (dayjs(day).isBefore(dateHovered) || dayjs(day).isSame(dateHovered)) &&
-      dayjs(day).isAfter(start);
 
     const isUnavailable = Boolean(
       unavailableDates.includes(dayjs(day).format(dateFormat)) ||
@@ -119,13 +124,14 @@ export const renderDay: (props: Props) => JSX.Element = ({
         formattedDay={dayjs(day).format(dateFormat)}
         isStartDate={isStartDate}
         isEndDate={isEndDate}
-        isBetween={isBetween}
-        isBetweenHover={isBetweenHover}
+        isGrey={isGrey}
         isUnavailable={isUnavailable}
         isCheckoutOnly={isCheckoutOnly}
         setDateHovered={setDateHovered}
         dateHovered={dateHovered}
         isStartSelection={isStartSelection}
+        isFadeToGrey={isFadeToGrey}
+        isFadeFromGrey={isFadeFromGrey}
       />
     );
 

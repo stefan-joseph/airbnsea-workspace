@@ -13,16 +13,20 @@ export const GuestsSelect = ({
       name="Guests"
       value={value}
       handleRemove={() => {
-        if (value > 0) {
+        if (value > 1) {
           setFieldValue("guests", +value - 1);
+        } else {
+          setFieldValue("guests", null);
         }
       }}
       handleAdd={() => {
         if (value < 16) {
           setFieldValue("guests", +value + 1);
+        } else if (!value) {
+          setFieldValue("guests", 1);
         }
       }}
-      disableRemove={value <= 0}
+      disableRemove={value <= 0 || !value}
       disableAdd={value >= 16}
     />
   );

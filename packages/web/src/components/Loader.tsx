@@ -9,9 +9,10 @@ export const Loader = () => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        height: "100%",
       }}
     >
-      <CircularProgress />{" "}
+      <CircularProgress />
     </Box>
   );
 };

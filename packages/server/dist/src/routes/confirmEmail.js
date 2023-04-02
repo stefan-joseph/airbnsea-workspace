@@ -18,9 +18,7 @@ const confirmEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     if (userId) {
         yield User_1.User.update({ id: userId }, { confirmed: true });
         yield redis_1.redis.del(id);
-        res.redirect((process.env.NODE_ENV === "development"
-            ? process.env.FRONTEND_HOST_DEV
-            : process.env.FRONTEND_HOST_PROD) + "/login");
+        res.redirect(process.env.FRONTEND_HOST + "/login");
     }
 });
 exports.confirmEmail = confirmEmail;

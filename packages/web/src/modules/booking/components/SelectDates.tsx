@@ -20,16 +20,19 @@ export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
 
   const popperAnchorEl = useRef<HTMLButtonElement>(null);
 
-  // const [isStartSelection, setIsStartSelection] = useState<boolean>(
-  //   !start || (start && end) ? true : false
-  // );
+  const [isStartSelection, setIsStartSelection] = useState<boolean>(
+    !start || (start && end) ? true : false
+  );
 
   return (
     <>
       <Box
         component="button"
         type="button"
-        onClick={() => setCalendarOpen(!calendarOpen)}
+        onClick={() => {
+          setIsStartSelection(start && !end ? false : true);
+          setCalendarOpen(true);
+        }}
         ref={popperAnchorEl}
         sx={{
           m: "-1px",
@@ -69,6 +72,9 @@ export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
               setFieldValue={setFieldValue}
               bookingCalendar
               handleClose={() => setCalendarOpen(false)}
+              isStartSelection={isStartSelection}
+              setIsStartSelection={setIsStartSelection}
+              setCalendarOpen={setCalendarOpen}
             />
           )}
         </Field>

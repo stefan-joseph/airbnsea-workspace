@@ -1,11 +1,9 @@
-import { SelectQueryBuilder } from "typeorm";
-import dayjs = require("dayjs");
+import { ObjectLiteral, SelectQueryBuilder } from "typeorm";
 
 import { Listing } from "../../../entity/Listing";
 import { Resolvers, SearchListingsInput } from "../../../types/types";
 import { getTypeormConnection } from "../../../utils/getTypeormConnection";
 import { Booking } from "../../../entity/Booking";
-import { dateFormat } from "@airbnb-clone/common";
 import { getLatAndLngFromText } from "./utils/getLatAndLngFromText";
 
 export const resolvers: Resolvers = {
@@ -20,6 +18,9 @@ export const resolvers: Resolvers = {
       const { where, guests, beds } = input as SearchListingsInput;
       let { start, end } = input as SearchListingsInput;
 
+      // @TODO implement yup validation here
+      // slightly different than current front end yup validation
+
       let typeormConnection = getTypeormConnection();
       let queryBuilder = typeormConnection
         .getRepository(Listing)
@@ -30,18 +31,8 @@ export const resolvers: Resolvers = {
 
       if (guests) queryBuilder.andWhere("l.guests = :guests", { guests });
       if (beds) queryBuilder.andWhere("l.beds = :beds", { beds });
-      if (start || end) {
-        // should this logic be on front end so input in search bar gets
-        // filled in with the automatically generated value?
-        // use subquery ??
-        if (!start) {
-          start = dayjs(end).subtract(1, "day").format(dateFormat);
-        } else if (!end) {
-          end = dayjs(start).add(1, "day").format(dateFormat);
-        }
-
-        //@ts-ignore
-        const notExistsQuery = <T>(builder: SelectQueryBuilder<T>) =>
+      if (start && end) {
+        const notExistsQuery = (builder: SelectQueryBuilder<ObjectLiteral>) =>
           `NOT EXISTS (${builder.getQuery()})`;
 
         queryBuilder.andWhere(
@@ -75,9 +66,10 @@ export const resolvers: Resolvers = {
           .groupBy("id")
           .orderBy("distance", "ASC");
 
-        const results = await queryBuilder.getRawMany();
-        const count = await queryBuilder.getCount();
-        // const [results, count] = Promise.all
+        const [results, count] = await Promise.all([
+          queryBuilder.getRawMany(),
+          queryBuilder.getCount(),
+        ]);
 
         return {
           results,
@@ -86,8 +78,7 @@ export const resolvers: Resolvers = {
         };
       }
 
-      const results = await queryBuilder.getMany();
-      const count = await queryBuilder.getCount();
+      const [results, count] = await queryBuilder.getManyAndCount();
 
       return { results, count };
     },

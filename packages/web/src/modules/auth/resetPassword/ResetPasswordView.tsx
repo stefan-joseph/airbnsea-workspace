@@ -3,10 +3,10 @@ import { Field, Form, Formik } from "formik";
 import { resetPasswordSchema } from "@airbnb-clone/common";
 import { ResetPasswordMutationVariables } from "@airbnb-clone/controller";
 import { NormalizedErrorMap } from "@airbnb-clone/controller/dist/types/NormalizedErrorMap";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
-import { HomeIcon } from "../../../components/HomeIcon";
+import { AuthPageContainer } from "../components/AuthPageContainer";
 
 interface Props {
   submit: (
@@ -19,22 +19,7 @@ export const ResetPasswordView = ({ submit, onFinish }: Props) => {
   const { key } = useParams();
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <HomeIcon
-        sx={{
-          position: "absolute",
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-          fontSize: { xs: 26, md: 30 },
-        }}
-      />
+    <AuthPageContainer>
       <Formik
         initialValues={{
           newPassword: "",
@@ -76,10 +61,10 @@ export const ResetPasswordView = ({ submit, onFinish }: Props) => {
               />
               <Typography>
                 <Button
-                  variant="contained"
                   type="submit"
                   disabled={!isValid}
-                  fullWidth
+                  variant="contained"
+                  color="primary"
                 >
                   Reset Password
                 </Button>
@@ -88,6 +73,6 @@ export const ResetPasswordView = ({ submit, onFinish }: Props) => {
           </Form>
         )}
       </Formik>
-    </Box>
+    </AuthPageContainer>
   );
 };

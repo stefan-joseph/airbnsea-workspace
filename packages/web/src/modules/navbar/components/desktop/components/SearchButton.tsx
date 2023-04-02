@@ -24,6 +24,7 @@ export const SearchButton = ({
       variant="contained"
       color="primary"
       type="submit"
+      onClick={(e) => e.stopPropagation()}
       disableElevation
       className="search-button"
       sx={{
@@ -39,7 +40,7 @@ export const SearchButton = ({
         m: 0.6,
         ml: 1.4,
         animation: `${
-          +searchBarTransitionTime.split("ms")[0] / 1.5
+          searchBarTransitionTime / 1.5
         }ms ${searchBarTimingFunction} 0s ${
           subSearch === 0 ? "reverse" : ""
         } expandSearch`,

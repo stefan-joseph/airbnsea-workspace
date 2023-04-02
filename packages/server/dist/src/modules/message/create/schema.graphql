@@ -1,3 +1,0 @@
-type Mutation {
-  createMessage(listingId: String!, text: String!): ID!
-}

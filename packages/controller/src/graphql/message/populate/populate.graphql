@@ -1,5 +1,5 @@
-query PopulateGuestInbox {
-  populateGuestInbox {
+query PopulateInbox($inboxType: InboxType!) {
+  populateInbox(inboxType: $inboxType) {
     id
     text
     fromHost
@@ -14,24 +14,8 @@ query PopulateGuestInbox {
   }
 }
 
-query PopulateHostInbox {
-  populateHostInbox {
-    id
-    text
-    fromHost
-    createdDate
-    listingId
-    conversationId
-    interlocutor {
-      avatar
-      firstName
-      lastName
-    }
-  }
-}
-
-query PopulateConversationWithHost($conversationId: String!) {
-  populateConversationWithHost(conversationId: $conversationId) {
+query PopulateConversation($conversationId: String!) {
+  populateConversation(conversationId: $conversationId) {
     interlocutorId
     interlocutor {
       avatar
@@ -53,25 +37,25 @@ query PopulateConversationWithHost($conversationId: String!) {
   }
 }
 
-query populateConversationWithGuest($conversationId: String!) {
-  populateConversationWithGuest(conversationId: $conversationId) {
-    interlocutorId
-    interlocutor {
-      avatar
-      firstName
-      lastName
-    }
-    listingId
-    listing {
-      name
-      img
-    }
-    conversationId
-    messages {
-      id
-      text
-      fromHost
-      createdDate
-    }
-  }
-}
+# query populateConversationWithGuest($conversationId: String!) {
+#   populateConversationWithGuest(conversationId: $conversationId) {
+#     interlocutorId
+#     interlocutor {
+#       avatar
+#       firstName
+#       lastName
+#     }
+#     listingId
+#     listing {
+#       name
+#       img
+#     }
+#     conversationId
+#     messages {
+#       id
+#       text
+#       fromHost
+#       createdDate
+#     }
+#   }
+# }

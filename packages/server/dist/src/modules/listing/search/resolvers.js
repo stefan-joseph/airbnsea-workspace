@@ -10,11 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
-const dayjs = require("dayjs");
 const Listing_1 = require("../../../entity/Listing");
 const getTypeormConnection_1 = require("../../../utils/getTypeormConnection");
 const Booking_1 = require("../../../entity/Booking");
-const common_1 = require("@airbnb-clone/common");
 const getLatAndLngFromText_1 = require("./utils/getLatAndLngFromText");
 exports.resolvers = {
     SearchListingResult: {
@@ -35,13 +33,7 @@ exports.resolvers = {
                 queryBuilder.andWhere("l.guests = :guests", { guests });
             if (beds)
                 queryBuilder.andWhere("l.beds = :beds", { beds });
-            if (start || end) {
-                if (!start) {
-                    start = dayjs(end).subtract(1, "day").format(common_1.dateFormat);
-                }
-                else if (!end) {
-                    end = dayjs(start).add(1, "day").format(common_1.dateFormat);
-                }
+            if (start && end) {
                 const notExistsQuery = (builder) => `NOT EXISTS (${builder.getQuery()})`;
                 queryBuilder.andWhere(notExistsQuery(typeormConnection
                     .getRepository(Booking_1.Booking)
@@ -63,16 +55,17 @@ exports.resolvers = {
                     .addSelect(`( 6371 * acos( cos( radians(:latitude) ) * cos( radians( l.latitude ) ) * cos( radians( l.longitude ) - radians(:longitude) ) + sin( radians(:latitude) ) * sin(radians(l.latitude)) ) )`, "distance")
                     .groupBy("id")
                     .orderBy("distance", "ASC");
-                const results = yield queryBuilder.getRawMany();
-                const count = yield queryBuilder.getCount();
+                const [results, count] = yield Promise.all([
+                    queryBuilder.getRawMany(),
+                    queryBuilder.getCount(),
+                ]);
                 return {
                     results,
                     searchLocation: { lat, lng },
                     count,
                 };
             }
-            const results = yield queryBuilder.getMany();
-            const count = yield queryBuilder.getCount();
+            const [results, count] = yield queryBuilder.getManyAndCount();
             return { results, count };
         }),
     },

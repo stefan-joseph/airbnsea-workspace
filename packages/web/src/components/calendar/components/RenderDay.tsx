@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
+import { theme } from "../../../MuiTheme";
 
 type Props = {
   start: string | null;
@@ -12,9 +13,10 @@ type Props = {
   isEndDate: boolean;
   isUnavailable: boolean;
   isStartSelection: boolean;
-  isCheckoutOnly: boolean;
-  isBetween: boolean;
-  isBetweenHover: boolean;
+  isCheckoutOnly?: boolean;
+  isGrey: boolean;
+  isFadeToGrey: boolean;
+  isFadeFromGrey: boolean;
 };
 
 export const RenderDay = ({
@@ -29,25 +31,35 @@ export const RenderDay = ({
   isUnavailable,
   isStartSelection,
   isCheckoutOnly,
-  isBetween,
-  isBetweenHover,
+  isGrey,
+  isFadeToGrey,
+  isFadeFromGrey,
 }: Props) => {
+  console.log(DayComponentProps);
+
   return (
     <Box
       sx={{
         backgroundColor:
-          isBetween ||
-          isBetweenHover ||
-          (isStartDate && (end || dateHovered)) ||
-          isEndDate
+          isGrey && !DayComponentProps.outsideCurrentMonth
             ? "grey.100"
             : "initial",
+        background:
+          isGrey && isFadeToGrey
+            ? "linear-gradient(to right, #FFF,  #F5F5F5)"
+            : isGrey && isFadeFromGrey
+            ? "linear-gradient(to right,#F5F5F5 , #FFF)"
+            : undefined,
         borderTopLeftRadius: isStartDate ? "50%" : "initial",
         borderBottomLeftRadius: isStartDate ? "50%" : "initial",
         borderTopRightRadius:
           isEndDate || dateHovered === formattedDay ? "50%" : "initial",
         borderBottomRightRadius:
           isEndDate || dateHovered === formattedDay ? "50%" : "initial",
+        opacity: DayComponentProps.outsideCurrentMonth ? 1 : "initial",
+        pointerEvents: DayComponentProps.outsideCurrentMonth
+          ? "none"
+          : "initial",
       }}
       onMouseEnter={() => {
         if (start && !end && !isUnavailable) {
@@ -65,19 +77,36 @@ export const RenderDay = ({
         className={isStartDate || isEndDate ? "Mui-selected" : undefined}
         disabled={isUnavailable}
         sx={{
-          pointerEvents:
-            isCheckoutOnly && isStartSelection ? "none" : "initial",
           color: isCheckoutOnly && isStartSelection ? "grey.600" : "initial",
           fontSize: 14,
           fontWeight: isUnavailable ? "initial" : 700,
-          backgroundColor: isBetween || isBetweenHover ? "grey.100" : "initial",
+          backgroundColor: isGrey ? "grey.100" : "initial",
+          background:
+            isGrey && isFadeToGrey
+              ? "linear-gradient(to right, #FFF,  #F5F5F5)"
+              : isGrey && isFadeFromGrey
+              ? "linear-gradient(to right,#F5F5F5 , #FFF)"
+              : undefined,
           textDecoration: isUnavailable ? "line-through" : "none",
+          pointerEvents:
+            DayComponentProps.outsideCurrentMonth ||
+            (isCheckoutOnly && isStartSelection)
+              ? "none"
+              : "initial",
           "&:hover": {
             border: "1.5px solid black",
             backgroundColor:
-              isBetween || isBetweenHover ? "grey.100" : "initial",
+              isStartDate || isEndDate
+                ? `${theme.palette.primary.main} !important`
+                : isGrey
+                ? "grey.100"
+                : "initial",
+          },
+          "&:focus": {
+            backgroundColor: `${theme.palette.primary.main} !important`,
           },
         }}
+        showDaysOutsideCurrentMonth={false}
       />
     </Box>
   );

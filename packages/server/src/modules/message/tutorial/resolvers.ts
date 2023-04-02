@@ -1,4 +1,4 @@
-import { MessagePayload } from "../../../startServer";
+// import { MessagePayload } from "../../../startServer";
 import { Resolvers } from "../../../types/types";
 // import { pipe, filter } from "@graphql-yoga/node";
 
@@ -14,10 +14,10 @@ export const resolvers: Resolvers = {
     },
   },
   Subscription: {
-    newMessageTut: {
-      subscribe: (_, { roomId }, { pubSub }) =>
-        pubSub.subscribe("newMessage", roomId),
-      resolve: (payload: MessagePayload) => payload,
-    },
+    // newMessageTut: {
+    //   subscribe: (_, { roomId }, { pubSub }) =>
+    //     pubSub.subscribe("newMessage", roomId),
+    //   resolve: (payload: MessagePayload) => payload,
+    // },
   },
 };

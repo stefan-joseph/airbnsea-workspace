@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
 type Props = {
-  children: ReactNode;
+  children?: ReactNode;
   value: string | number | null;
   placeholder?: string;
   label: string;

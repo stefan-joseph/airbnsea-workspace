@@ -24,7 +24,7 @@ exports.resolvers = {
         viewListing: (_, { listingId }) => __awaiter(void 0, void 0, void 0, function* () {
             const listing = yield Listing_1.Listing.findOneBy({ id: listingId });
             if (!listing) {
-                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)((0, errorMessages_1.formatNoListingErrorMessage)(listingId));
+                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)((0, errorMessages_1.formatNotFoundWithGivenIdErrorMessage)("listing", listingId));
             }
             return listing;
         }),

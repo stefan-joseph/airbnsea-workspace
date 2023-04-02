@@ -1,31 +1,33 @@
 import { IconButton } from "@mui/material";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { IoClose } from "react-icons/io5";
 
 export const ClearButton = ({
   isShowing,
   handleClick,
-  marginRight,
+  margin,
 }: {
   isShowing: boolean;
   handleClick: () => void;
-  marginRight?: number | string;
+  margin?: string;
 }) => {
   return (
     <>
       {isShowing && (
         <IconButton
           onClick={handleClick}
+          size="small"
           sx={{
             width: 24,
             height: 24,
-            marginRight: marginRight || null,
+            m: margin || undefined,
+            // marginRight: "-20px",
             backgroundColor: "rgba(0, 0, 0, 0.04)",
             "&:hover": {
               backgroundColor: "rgba(0, 0, 0, 0.12)",
             },
           }}
         >
-          <CloseRoundedIcon fontSize="small" />
+          <IoClose />
         </IconButton>
       )}
     </>

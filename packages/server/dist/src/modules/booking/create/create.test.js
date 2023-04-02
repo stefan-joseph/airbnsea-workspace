@@ -41,7 +41,7 @@ describe("create booking", () => {
         const testListingId = (0, uuid_1.v4)();
         const { errors } = yield client.createBooking(testListingId, testConstants_1.testBooking);
         console.log(errors);
-        expect(errors[0].message).toEqual((0, errorMessages_2.formatNoListingErrorMessage)(testListingId));
+        expect(errors[0].message).toEqual((0, errorMessages_2.formatNotFoundWithGivenIdErrorMessage)("listing", testListingId));
     }));
     test("user attempts to create booking on their own listing", () => __awaiter(void 0, void 0, void 0, function* () {
         const { errors } = yield client.createBooking(listingId, testConstants_1.testBooking);

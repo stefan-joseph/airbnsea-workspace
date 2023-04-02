@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { ApolloProvider } from "@apollo/client";
 import { RouterProvider } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
 
 // import reportWebVitals from "./reportWebVitals";

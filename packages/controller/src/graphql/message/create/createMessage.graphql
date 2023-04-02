@@ -1,3 +1,14 @@
-mutation CreateMessage($listingId: String!, $text: String!) {
-  createMessage(listingId: $listingId, text: $text)
+mutation CreateMessage($conversationId: String!, $text: String!) {
+  createMessage(conversationId: $conversationId, text: $text)
+}
+
+mutation CreateConversation($listingId: String!, $text: String!) {
+  createConversation(listingId: $listingId, text: $text) {
+    ... on ConversationId {
+      conversationId
+    }
+    ... on Redirect {
+      redirect
+    }
+  }
 }

@@ -9,7 +9,7 @@ import { formatYupError } from "../../shared/utils/formatYupError";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
 import { Listing } from "../../../entity/Listing";
 import { cannotBookOwnListing, datesUnavailable } from "./utils/errorMessages";
-import { formatNoListingErrorMessage } from "../../shared/utils/errorMessages";
+import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorMessages";
 
 export const resolvers: Resolvers = {
   Mutation: {
@@ -27,7 +27,9 @@ export const resolvers: Resolvers = {
 
       // no listing with this ID exists
       if (!listing) {
-        return formatGraphQLYogaError(formatNoListingErrorMessage(listingId));
+        return formatGraphQLYogaError(
+          formatNotFoundWithGivenIdErrorMessage("listing", listingId)
+        );
       }
 
       // user cannot book their own listing listingId !== session.userId

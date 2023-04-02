@@ -3,10 +3,10 @@ import { Field, Form, Formik } from "formik";
 import { validUserSchema } from "@airbnb-clone/common";
 import { RegisterUserMutationVariables } from "@airbnb-clone/controller";
 import { NormalizedErrorMap } from "@airbnb-clone/controller/dist/types/NormalizedErrorMap";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
-import { HomeIcon } from "../../../components/HomeIcon";
+import { AuthPageContainer } from "../components/AuthPageContainer";
 
 interface Props {
   submit: (
@@ -17,22 +17,7 @@ interface Props {
 
 export const RegisterView = ({ submit, onFinish }: Props) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <HomeIcon
-        sx={{
-          position: "absolute",
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-          fontSize: { xs: 26, md: 30 },
-        }}
-      />
+    <AuthPageContainer>
       <Formik
         initialValues={{
           email: "",
@@ -71,7 +56,7 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
                 component={TextInput2}
               />
 
-              <Button variant="contained" type="submit" fullWidth>
+              <Button variant="contained" type="submit" color="primary">
                 Sign up
               </Button>
               <Typography>
@@ -90,6 +75,6 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
           </Form>
         )}
       </Formik>
-    </Box>
+    </AuthPageContainer>
   );
 };

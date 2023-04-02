@@ -16,6 +16,9 @@ type Props = {
   bookingCalendar?: boolean;
   numOfMonthsDisplayed?: number;
   handleClose?: () => void;
+  isStartSelection: boolean;
+  setIsStartSelection: (value: boolean) => void;
+  setCalendarOpen?: (value: boolean) => void;
 };
 
 export const Calendar = ({
@@ -26,34 +29,48 @@ export const Calendar = ({
   bookingCalendar,
   numOfMonthsDisplayed,
   handleClose,
+  isStartSelection,
+  setIsStartSelection,
+  setCalendarOpen,
 }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [isStartSelection, setIsStartSelection] = useState<boolean>(
-    !start || (start && end) ? true : false
-  );
-
   const handleDateChange = (
-    value: any,
-    setCalendarOpen?: React.Dispatch<React.SetStateAction<boolean>>
+    value: any
+    // setCalendarOpen?: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
     const formattedValue = dayjs(value).format("YYYY-MM-DD");
     if (isStartSelection) {
       setFieldValue("start", formattedValue);
-      setFieldValue("end", null);
+      if (end && dayjs(end).subtract(1, "day").isBefore(value)) {
+        setFieldValue("end", null);
+      }
       if (bookingCalendar) {
         searchParams.set("start", formattedValue);
-        searchParams.delete("end");
+        if (end && dayjs(end).subtract(1, "day").isBefore(value)) {
+          searchParams.delete("end");
+        }
         setSearchParams(searchParams);
       }
       setIsStartSelection(false);
     } else if (!isStartSelection) {
-      setFieldValue("end", formattedValue);
-      if (bookingCalendar) {
-        searchParams.set("end", formattedValue);
-        setSearchParams(searchParams);
+      if (start && dayjs(value).isBefore(start)) {
+        setFieldValue("start", formattedValue);
+        if (bookingCalendar) {
+          searchParams.set("start", formattedValue);
+          setSearchParams(searchParams);
+        }
+      } else {
+        setFieldValue("end", formattedValue);
+        if (bookingCalendar) {
+          searchParams.set("end", formattedValue);
+          setSearchParams(searchParams);
+        }
+        if (!start) {
+          setIsStartSelection(true);
+        }
       }
-      setIsStartSelection(true);
+
       setCalendarOpen && setCalendarOpen(false);
     }
   };

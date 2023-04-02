@@ -138,99 +138,65 @@ class TestClient {
                 } }));
         });
     }
-    createMessage(listingId, text) {
+    createConversation(listingId, text) {
         return __awaiter(this, void 0, void 0, function* () {
             return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
                     query: `
           mutation {
-            createMessage(listingId: "${listingId}",
+            createConversation(listingId: "${listingId}", text: "${text}"){
+              ... on ConversationId {
+                conversationId
+              }
+              ... on Redirect {
+                redirect
+              }
+            }
+          }
+        `,
+                } }));
+        });
+    }
+    createMessage(conversationId, text) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
+                    query: `
+          mutation {
+            createMessage(conversationId: "${conversationId}",
             text: "${text}")
           }
         `,
                 } }));
         });
     }
-    populateGuestInbox() {
+    populateInbox(inboxType) {
         return __awaiter(this, void 0, void 0, function* () {
             return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
                     query: `
           query {
-            populateGuestInbox {
+            populateInbox(inboxType: ${inboxType}) {
               id
               text
               fromHost
               createdDate
-              userIdOfHost
               conversationId
-              interlocutor {
-                avatar
-                firstName
-                lastName
-              }
-            }
-          }
-        `,
-                } }));
-        });
-    }
-    populateHostInbox() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
-                    query: `
-          query {
-            populateHostInbox {
-              id
-              text
-              fromHost
-              createdDate
-              userIdOfGuest
-              conversationId
-              interlocutor {
-                avatar
-                firstName
-                lastName
-              }
-            }
-          }
-        `,
-                } }));
-        });
-    }
-    populateConversationWithHost(conversationId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
-                    query: `
-          query {
-            populateConversationWithHost(conversationId: "${conversationId}") {
               interlocutorId
               interlocutor {
                 avatar
                 firstName
                 lastName
               }
-              listingId
-              listing {
-                name
-                img
-              }
-              messages {
-                id
-                text
-                fromHost
-                createdDate
-              }
             }
           }
         `,
                 } }));
         });
     }
-    populateConversationWithGuest(conversationId) {
+    populateConversation(conversationId) {
         return __awaiter(this, void 0, void 0, function* () {
             return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
                     query: `
           query {
-            populateConversationWithGuest(conversationId: "${conversationId}") {
+            populateConversation(conversationId: "${conversationId}") {
               interlocutorId
               interlocutor {
                 avatar

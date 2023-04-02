@@ -11,16 +11,22 @@ import { ReactComponent as Italy } from "../assets/svg/italy.svg";
 import { ReactComponent as Vietnam } from "../assets/svg/vietnam.svg";
 import { ReactComponent as Australia } from "../assets/svg/australia.svg";
 
-export const SearchSuggestions = ({ slider }: { slider?: boolean }) => {
+export const SearchSuggestions = ({
+  handleClick,
+  slider,
+}: {
+  handleClick: (value: string) => void;
+  slider?: boolean;
+}) => {
   const { dispatch } = useContext(NavbarContext);
 
   const suggestions = [
     { name: "I'm flexible", svg: <World />, value: null },
-    { name: "Canada", svg: <Canada /> },
-    { name: "Mexico", svg: <Mexico /> },
-    { name: "Italy", svg: <Italy /> },
-    { name: "Australia", svg: <Australia /> },
-    { name: "Vietnam", svg: <Vietnam /> },
+    { svg: <Canada />, value: "Canada" },
+    { svg: <Mexico />, value: "Mexico" },
+    { svg: <Italy />, value: "Italy" },
+    { svg: <Australia />, value: "Australia" },
+    { svg: <Vietnam />, value: "Vietnam" },
   ];
   return (
     <>
@@ -38,29 +44,28 @@ export const SearchSuggestions = ({ slider }: { slider?: boolean }) => {
           height={slider ? 174 : "unset"}
         >
           <Field name="where">
-            {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
+            {({ field: { value: formValue } }: FieldProps) => (
               <Grid
                 container
                 rowSpacing={3}
                 flexWrap="wrap"
                 minWidth={slider ? 840 : "unset"}
               >
-                {suggestions.map(({ name, svg, value: value2 }) => {
+                {suggestions.map(({ name, svg, value }) => {
                   const selected =
-                    value === name ||
-                    value === value2 ||
-                    (value2 === null && !value);
+                    formValue === value || (!value && !formValue);
+
                   return (
-                    <Grid key={name} item xs={slider ? 2 : 4}>
+                    <Grid key={value || name} item xs={slider ? 2 : 4}>
                       <Box
                         component="button"
                         type="button"
                         onClick={() => {
-                          setFieldValue("where", value2 === null ? null : name);
                           dispatch({
                             type: "SET_SUB_SEARCH",
                             payload: 2,
                           });
+                          handleClick(value === null ? "" : value);
                         }}
                         border={selected ? "1.6px solid" : "1px solid"}
                         borderColor={
@@ -86,10 +91,12 @@ export const SearchSuggestions = ({ slider }: { slider?: boolean }) => {
                         paddingLeft={0.3}
                         fontSize={15}
                         fontWeight={
-                          value === name || value === value2 ? 600 : "initial"
+                          formValue === name || formValue === value
+                            ? 600
+                            : "initial"
                         }
                       >
-                        {name}
+                        {name || value}
                       </Typography>
                     </Grid>
                   );

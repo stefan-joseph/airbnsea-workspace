@@ -13,7 +13,9 @@ exports.resolvers = void 0;
 const Listing_1 = require("../../../entity/Listing");
 const Message_1 = require("../../../entity/Message");
 const constants_1 = require("../../shared/utils/constants");
+const errorMessages_1 = require("../../shared/utils/errorMessages");
 const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaError");
+const errorMessages_2 = require("./utils/errorMessages");
 exports.resolvers = {
     Conversation: {
         listing: ({ listingId }) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,31 +28,21 @@ exports.resolvers = {
         interlocutorId: () => null,
     },
     Query: {
-        populateConversationWithHost: (_, { conversationId }, { req: { session: { userId }, }, }) => __awaiter(void 0, void 0, void 0, function* () {
+        populateConversation: (_, { conversationId }, { req: { session: { userId }, }, }) => __awaiter(void 0, void 0, void 0, function* () {
             const messages = yield Message_1.Message.find({
-                where: { userIdOfGuest: userId, conversationId },
+                where: { conversationId },
                 order: { createdDate: "ASC" },
             });
             if (messages.length < 1) {
-                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("No existing conversation with this listing");
+                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)((0, errorMessages_1.formatNotFoundWithGivenIdErrorMessage)("conversation", conversationId));
             }
-            return {
-                interlocutorId: messages[0].userIdOfHost,
-                listingId: messages[0].listingId,
-                conversationId,
-                messages,
-            };
-        }),
-        populateConversationWithGuest: (_, { conversationId }, { req: { session: { userId }, }, }) => __awaiter(void 0, void 0, void 0, function* () {
-            const messages = yield Message_1.Message.find({
-                where: { userIdOfHost: userId, conversationId },
-                order: { createdDate: "ASC" },
-            });
-            if (messages.length < 1) {
-                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("No existing conversation with this listing");
+            const { userIdOfGuest, userIdOfHost } = messages[0];
+            if (userIdOfGuest !== userId && userIdOfHost !== userId) {
+                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_2.noPermissionToViewConversationErrorMessage);
             }
+            const interlocutorId = userIdOfGuest === userId ? userIdOfHost : userIdOfGuest;
             return {
-                interlocutorId: messages[0].userIdOfGuest,
+                interlocutorId,
                 listingId: messages[0].listingId,
                 conversationId,
                 messages,

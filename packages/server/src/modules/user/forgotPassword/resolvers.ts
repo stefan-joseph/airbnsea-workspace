@@ -22,9 +22,7 @@ export const resolvers: Resolvers = {
       await forgotPasswordLockAccount(user.id, redis);
 
       const url = await createForgotPasswordLink(
-        (process.env.NODE_ENV === "development"
-          ? process.env.FRONTEND_HOST_DEV
-          : process.env.FRONTEND_HOST_PROD) as string,
+        process.env.FRONTEND_HOST as string,
         user.id,
         redis
       );

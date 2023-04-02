@@ -15,7 +15,7 @@ const validate = require("uuid-validate");
 const errorMessages_1 = require("../modules/shared/utils/errorMessages");
 const isAuthenticated = (resolve, root, args, context, info) => __awaiter(void 0, void 0, void 0, function* () {
     if (!context.req.session.userId) {
-        return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(`Please log in to use this service`);
+        return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("Please log in to use this service");
     }
     return resolve(root, args, context, info);
 });
@@ -24,15 +24,15 @@ exports.authMiddleware = {
         createListing: isAuthenticated,
         deleteListing: isAuthenticated,
         createBooking: isAuthenticated,
+        createConversation: isAuthenticated,
         createMessage: isAuthenticated,
     },
     Query: {
         me: isAuthenticated,
-        populateGuestInbox: isAuthenticated,
-        populateHostInbox: isAuthenticated,
-        populateConversationWithHost: isAuthenticated,
-        populateConversationWithGuest: isAuthenticated,
+        populateInbox: isAuthenticated,
+        populateConversation: isAuthenticated,
     },
+    Subscription: { newMessage: isAuthenticated },
 };
 const isValidUuid = (resolve, root, args, context, info) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Object.keys(args).find((key) => key.includes("Id"));
@@ -44,12 +44,13 @@ const isValidUuid = (resolve, root, args, context, info) => __awaiter(void 0, vo
 exports.isValidUuid = isValidUuid;
 exports.listingIdMiddleware = {
     Mutation: {
+        createConversation: exports.isValidUuid,
         createMessage: exports.isValidUuid,
         createBooking: exports.isValidUuid,
     },
     Query: {
-        populateConversationWithHost: exports.isValidUuid,
-        populateConversationWithGuest: exports.isValidUuid,
+        populateConversation: exports.isValidUuid,
     },
+    Subscription: { newMessage: exports.isValidUuid },
 };
 //# sourceMappingURL=middleware.js.map

@@ -1,29 +1,26 @@
-import { Owner, ViewListingQuery } from "@airbnb-clone/controller";
+import { ViewListingQuery } from "@airbnb-clone/controller";
 import {
   Avatar,
   Box,
-  Button,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   IconButton,
   Skeleton,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import { OutlinedButton } from "../../../components/OutlinedButton";
+import { CreateConversation } from "../../message/components/CreateConversation";
+import { useParams } from "react-router-dom";
 
 type Props = {
   data?: ViewListingQuery["viewListing"];
 };
 
 export const SubHeader = ({ data }: Props) => {
+  const { listingId } = useParams();
   const [messageOpen, setMessageOpen] = useState(false);
 
   const [yes, setYes] = useState(false);
@@ -103,35 +100,34 @@ export const SubHeader = ({ data }: Props) => {
           <Skeleton
             variant="rounded"
             height={45}
-            sx={{ maxWidth: 400, borderRadius: 3 }}
+            sx={{
+              maxWidth: 400,
+              borderRadius: 3,
+              borderColor: "palette.primary.main",
+            }}
           />
         )}
       </Stack>
       <Dialog
         open={messageOpen}
-        PaperProps={{ sx: { position: "relative", pl: 2 } }}
+        onClose={() => setMessageOpen(false)}
+        sx={{ width: "100vw" }}
+        PaperProps={{ sx: { width: "100%" } }}
       >
-        <DialogTitle>Message the host</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Send a message to *host name*</DialogContentText>
-          <TextField minRows={3} multiline sx={{ width: 500 }}></TextField>
-        </DialogContent>
-        <DialogActions>
-          <IconButton
-            onClick={() => setMessageOpen(false)}
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: 30,
-              height: 30,
-              m: 1,
-            }}
-          >
-            <CloseRoundedIcon />
-          </IconButton>
-          <Button variant="contained">Send message</Button>
-        </DialogActions>
+        <Stack p={3} pl={5} pr={5} flex={1} gap={1}>
+          <Typography fontSize={22} fontWeight={600}>
+            Have a question? Message the host
+          </Typography>
+          <Typography color="grey.700" mb={2}>
+            Send a message to {data?.owner?.firstName}
+          </Typography>
+          {listingId && (
+            <CreateConversation
+              listingId={listingId}
+              handleClose={() => setMessageOpen(false)}
+            />
+          )}
+        </Stack>
       </Dialog>
     </>
   );

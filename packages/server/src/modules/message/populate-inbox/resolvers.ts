@@ -1,62 +1,54 @@
 import { Message } from "../../../entity/Message";
-import { Resolvers } from "../../../types/types";
+import { InboxType, Resolvers } from "../../../types/types";
 import { getTypeormConnection } from "../../../utils/getTypeormConnection";
 
-const populateInboxQueryBuilder = async () =>
-  getTypeormConnection()
-    .getRepository(Message)
-    .createQueryBuilder("m")
-    .distinctOn(["m.conversationId"])
-    .orderBy("m.conversationId")
-    .addOrderBy("m.createdDate", "DESC");
-
 export const resolvers: Resolvers = {
-  MessageWithHost: {
-    interlocutor: ({ userIdOfHost }, _, { userLoader }) =>
-      userLoader.load(userIdOfHost),
-    userIdOfHost: () => null, // don't return any userId's to client
+  InboxMessage: {
+    interlocutor: ({ interlocutorId }, _, { userLoader }) =>
+      userLoader.load(interlocutorId),
+    interlocutorId: () => null, // don't return any userId's to client
   },
-  MessageWithGuest: {
-    interlocutor: ({ userIdOfGuest }, _, { userLoader }) =>
-      userLoader.load(userIdOfGuest),
-    userIdOfGuest: () => null, // don't return any userId's to client
-  },
-
   Query: {
-    populateGuestInbox: async (
+    populateInbox: async (
       _,
-      __,
+      { inboxType },
       {
         req: {
           session: { userId },
         },
       }
     ) => {
-      const results = await (await populateInboxQueryBuilder())
-        .where("m.userIdOfGuest = :userId", { userId })
-        .getMany();
+      let query = getTypeormConnection()
+        .getRepository(Message)
+        .createQueryBuilder("m")
+        .distinctOn(["m.conversationId"])
+        .orderBy("m.conversationId")
+        .addOrderBy("m.createdDate", "DESC");
 
-      results.sort((a, b) => Number(b.createdDate) - Number(a.createdDate));
+      if (inboxType === InboxType.Guest) {
+        console.log("is guest???");
+
+        query.where("m.userIdOfGuest = :userId", { userId });
+      } else {
+        query.where("m.userIdOfHost = :userId", { userId });
+      }
+
+      const results = await query.getMany();
+
+      const modifiedResults = results
+        .sort((a, b) => Number(b.createdDate) - Number(a.createdDate))
+        .map((message) => ({
+          ...message,
+          interlocutorId:
+            inboxType === InboxType.Guest
+              ? message.userIdOfHost
+              : message.userIdOfGuest,
+        }));
       // @TODO add pagination
       // const splitResults = results.slice(0, 11);
-      return results;
-    },
+      console.log("results", modifiedResults);
 
-    populateHostInbox: async (
-      _,
-      __,
-      {
-        req: {
-          session: { userId },
-        },
-      }
-    ) => {
-      const results = await (await populateInboxQueryBuilder())
-        .where("m.userIdOfHost = :userId", { userId })
-        .getMany();
-      results.sort((a, b) => Number(b.createdDate) - Number(a.createdDate));
-      // @TODO add pagination
-      return results;
+      return modifiedResults;
     },
   },
 };

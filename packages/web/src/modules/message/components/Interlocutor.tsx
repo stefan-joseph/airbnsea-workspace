@@ -1,12 +1,12 @@
-import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
-import { MessageWithGuest, MessageWithHost } from "@airbnb-clone/controller";
+import { Avatar, Box, Stack, Typography } from "@mui/material";
+import { InboxMessage } from "@airbnb-clone/controller";
 
 import { Link, useSearchParams, useParams } from "react-router-dom";
 
 export const Interlocutor = ({
   data: { id, interlocutor, text, conversationId },
 }: {
-  data: MessageWithGuest | MessageWithHost;
+  data: InboxMessage;
 }) => {
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");

@@ -11,11 +11,7 @@ export const confirmEmail = async (req: Request, res: Response) => {
   if (userId) {
     await User.update({ id: userId as string }, { confirmed: true });
     await redis.del(id);
-    res.redirect(
-      ((process.env.NODE_ENV === "development"
-        ? process.env.FRONTEND_HOST_DEV
-        : process.env.FRONTEND_HOST_PROD) as string) + "/login"
-    );
+    res.redirect((process.env.FRONTEND_HOST as string) + "/login");
 
     // redirect after send does not work
     //@TODO need another solution

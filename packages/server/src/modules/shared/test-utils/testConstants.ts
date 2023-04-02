@@ -20,6 +20,14 @@ export const testUser2 = {
   avatar: "http://testavatar.com",
 };
 
+export const testUser3 = {
+  email: "carl@carl.com",
+  password: "asfjhbvjvbkdj",
+  firstName: "Carl",
+  lastName: "Hodgepodge",
+  avatar: "http://testavatar.com",
+};
+
 export const testListing = {
   vesselType: VesselType.Sailboat,
   street: "123 test street",

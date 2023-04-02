@@ -39,26 +39,26 @@ export const Who = ({
     );
 
   return (
-    <DummyFabButton
-      active={(index as number) + 1 === subSearch}
-      searchButtonRef={searchButtonRef}
-      handleMouseOver={(e) => {
-        if (
-          dividerRefs?.current &&
-          !searchButtonRef?.current?.contains(e?.target as HTMLElement)
-        ) {
-          dividerRefs.current[3].style.opacity = "0";
-        } else dividerRefs.current[3].style.opacity = "1";
-      }}
-      handleMouseLeave={() => {
-        if (dividerRefs?.current) {
-          dividerRefs.current[3].style.opacity = "1";
-        }
-      }}
-    >
-      <>
-        <Field name="guests">
-          {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
+    <Field name="guests">
+      {({ field: { value }, form: { setFieldValue } }: FieldProps) => (
+        <>
+          <DummyFabButton
+            active={(index as number) + 1 === subSearch}
+            searchButtonRef={searchButtonRef}
+            handleMouseOver={(e) => {
+              if (
+                dividerRefs?.current &&
+                !searchButtonRef?.current?.contains(e?.target as HTMLElement)
+              ) {
+                dividerRefs.current[3].style.opacity = "0";
+              } else dividerRefs.current[3].style.opacity = "1";
+            }}
+            handleMouseLeave={() => {
+              if (dividerRefs?.current) {
+                dividerRefs.current[3].style.opacity = "1";
+              }
+            }}
+          >
             <>
               <ExpandedSubSearch
                 value={value ? `${value} guest${value > 1 ? "s" : ""}` : null}
@@ -68,29 +68,30 @@ export const Who = ({
               >
                 <ClearButton
                   isShowing={(index as number) + 1 === subSearch && !!value}
-                  handleClick={() => setFieldValue("guests", 0)}
+                  handleClick={() => setFieldValue("guests", null)}
                 />
               </ExpandedSubSearch>
-              {searchBarRef && (
-                <PopperMenu
-                  open={subSearch === (index as number) + 1}
-                  anchorEl={searchBarRef}
-                  width={280}
-                  marginTop={1}
-                >
-                  <Box p={2}>
-                    <GuestsSelect value={value} setFieldValue={setFieldValue} />
-                  </Box>
-                </PopperMenu>
-              )}
+
+              {children &&
+                cloneElement(children, {
+                  searchButtonRef,
+                })}
             </>
+          </DummyFabButton>
+          {searchBarRef && (
+            <PopperMenu
+              open={subSearch === (index as number) + 1}
+              anchorEl={searchBarRef}
+              width={280}
+              marginTop={1}
+            >
+              <Box p={2}>
+                <GuestsSelect value={value} setFieldValue={setFieldValue} />
+              </Box>
+            </PopperMenu>
           )}
-        </Field>
-        {children &&
-          cloneElement(children, {
-            searchButtonRef,
-          })}
-      </>
-    </DummyFabButton>
+        </>
+      )}
+    </Field>
   );
 };
