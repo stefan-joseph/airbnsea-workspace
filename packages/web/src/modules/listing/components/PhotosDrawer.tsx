@@ -38,7 +38,7 @@ export const PhotosDrawer = ({ photos, setPhotosOpen, photosOpen }: Props) => (
               src={`${img}?w=248&fit=crop&auto=format`}
               srcSet={`${img}?w=248&fit=crop&auto=format&dpr=2 2x`}
               alt={`listing image ${i}`}
-              loading="lazy"
+              // loading="lazy"
             />
           </ImageListItem>
         ))}

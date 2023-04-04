@@ -48,8 +48,14 @@ export const Listing: React.FC<{
         sx={{ color: "initial", pb: 2, cursor: "pointer" }}
       >
         <Box borderRadius={4} overflow="hidden" position="relative">
-          {data?.photos && (
+          {data?.photos ? (
             <PhotoCarousel photos={data.photos} showArrowButtons={isHovering} />
+          ) : (
+            <Skeleton
+              variant="rounded"
+              height="100%"
+              sx={{ aspectRatio: "1/1" }}
+            />
           )}
         </Box>
         <Box sx={{ p: 0.4, pt: 1 }}>

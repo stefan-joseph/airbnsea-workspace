@@ -38,7 +38,7 @@ export const PhotosWideScreen: React.FC<{ photos: string[] | undefined }> = ({
               <img
                 {...srcset(img, 200, i > 0 ? 1 : 2, i > 0 ? 1 : 2)}
                 alt={`listing photo ${i + 1}`}
-                loading="lazy"
+                // loading="lazy"
               />
             ) : (
               <Skeleton variant="rectangular" height="100%" />

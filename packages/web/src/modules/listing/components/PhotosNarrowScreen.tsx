@@ -14,7 +14,8 @@ export const PhotosNarrowScreen: React.FC<{ photos: string[] | undefined }> = ({
     <Box sx={{ position: "relative" }}>
       {photos && yes ? (
         <>
-          <img
+          <Box
+            component={"img"}
             src={photos[0]}
             alt="listing photo 1"
             style={{ width: "100%" }}
