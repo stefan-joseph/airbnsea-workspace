@@ -1,16 +1,17 @@
 import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 
-import { SelectDates } from "./components/SelectDates";
-import { SelectGuests } from "./components/SelectGuests";
-import { formBorderColor } from "../../constants/constants";
+import { SelectDates } from "./SelectDates";
+import { SelectGuests } from "./SelectGuests";
+import { formBorderColor } from "../../../constants/constants";
 import { BookingButton } from "./BookingButton";
-import { BookingProps } from "./Booking";
+import { BookingProps } from "../Booking";
 import { Receipt } from "./Receipt";
-import { Rating } from "../../components/Rating";
+import { Rating } from "../../../components/Rating";
 
 export const DesktopBooking = ({
   price,
   rating,
+  maxGuests,
   calendarOpen,
   setCalendarOpen,
 }: BookingProps) => {
@@ -61,7 +62,7 @@ export const DesktopBooking = ({
           calendarOpen={calendarOpen}
           setCalendarOpen={setCalendarOpen}
         />
-        <SelectGuests />
+        <SelectGuests maxGuests={maxGuests} />
       </Box>
       {/* {error?.message && (
         <FormHelperText error>{error.message}</FormHelperText>

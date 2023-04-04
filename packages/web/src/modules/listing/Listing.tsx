@@ -97,12 +97,7 @@ export const Listing = () => {
             </Stack>
           </Stack>
         </Stack>
-
-        <ReserveBar
-          price={data?.viewListing.price}
-          rating={data?.viewListing.rating}
-        />
-
+        <ReserveBar data={data?.viewListing} />
         {data?.viewListing && (
           <PhotosDrawer
             photos={data?.viewListing.photos}

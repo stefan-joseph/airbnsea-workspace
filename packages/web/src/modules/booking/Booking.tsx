@@ -1,12 +1,11 @@
 import { bookingSchema } from "@airbnb-clone/common";
 import { useCreateBookingMutation } from "@airbnb-clone/controller";
 import { useParams, useSearchParams } from "react-router-dom";
-
 import { useState } from "react";
 import { Form, Formik } from "formik";
 
-import { DesktopBooking } from "./DesktopBooking";
-import { MobileBooking } from "./MobileBooking";
+import { DesktopBooking } from "./components/DesktopBooking";
+import { MobileBooking } from "./components/MobileBooking";
 
 interface BookingInputValues {
   start: string | null;
@@ -18,6 +17,7 @@ export type BookingProps = {
   price: number;
   rating: number;
   calendarOpen: boolean;
+  maxGuests?: number;
   setCalendarOpen: (value: boolean) => void;
 };
 
@@ -25,10 +25,12 @@ export const Booking = ({
   mobile,
   price,
   rating,
+  maxGuests,
 }: {
   mobile?: boolean;
   price: number;
   rating: number;
+  maxGuests: number;
 }) => {
   const [searchParams] = useSearchParams();
   const start = searchParams.get("start");
@@ -48,7 +50,7 @@ export const Booking = ({
         {
           start,
           end,
-          guests: guests && +guests >= 1 && +guests <= 16 ? +guests : 1,
+          guests: guests && +guests >= 1 && +guests <= maxGuests ? +guests : 1,
         } as BookingInputValues
       }
       validationSchema={bookingSchema}
@@ -80,6 +82,7 @@ export const Booking = ({
             <DesktopBooking
               price={price}
               rating={rating}
+              maxGuests={maxGuests}
               calendarOpen={calendarOpen}
               setCalendarOpen={setCalendarOpen}
             />

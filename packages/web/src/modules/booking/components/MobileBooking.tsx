@@ -10,11 +10,11 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import { BookingButton } from "./BookingButton";
 import { Field, FieldProps } from "formik";
-import { BookingProps } from "./Booking";
-import { Calendar } from "../../components/calendar/Calendar";
+import { BookingProps } from "../Booking";
+import { Calendar } from "../../../components/calendar/Calendar";
 import { PriceAndRatingStack } from "./PriceAndRatingStack";
-import { searchBarBorderColor } from "../../constants/constants";
-import { getDayDifference } from "../../utils/getDayDifference";
+import { searchBarBorderColor } from "../../../constants/constants";
+import { getDayDifference } from "../../../utils/getDayDifference";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 

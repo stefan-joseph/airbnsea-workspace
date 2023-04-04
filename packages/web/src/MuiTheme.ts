@@ -4,16 +4,8 @@ import { mainBlackColor } from "./constants/constants";
 export const theme = createTheme({
   palette: {
     primary: {
-      // light: will be calculated from palette.primary.main,
-      // main: "#0277bd", // blue
-      // main: "#01579b", // dark blue
-      // main: "#0f766e", // green
-      // main: "#0d9488", // lighter green
-      // main: "#0e7490", // cyan
-      main: "#0891b2", //lighter cyan
-
-      // dark: will be calculated from palette.primary.main,
-      // contrastText: will be calculated to contrast with palette.primary.main
+      main: "#0891b2",
+      dark: "#0e7490",
     },
     secondary: {
       main: mainBlackColor,

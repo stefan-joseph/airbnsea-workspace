@@ -2,7 +2,7 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 import { Field, FieldProps } from "formik";
 import React from "react";
 
-import { getDayDifference } from "../../utils/getDayDifference";
+import { getDayDifference } from "../../../utils/getDayDifference";
 
 export const Receipt = ({ price }: { price: number }) => {
   const calculateCosts = (start: string, end: string, price: number) => {

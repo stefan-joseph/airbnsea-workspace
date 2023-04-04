@@ -1,4 +1,4 @@
-import { Box, Divider } from "@mui/material";
+import { Box, Button, Divider, Stack } from "@mui/material";
 import { Field, FieldProps } from "formik";
 import { useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import { PopperMenu } from "../../../components/PopperMenu";
 import { formBorderColor } from "../../../constants/constants";
 import { DateTextField } from "./DateTextField";
 import { Calendar } from "../../../components/calendar/Calendar";
+import { BookingHeader } from "../../../components/calendar/components/BookingHeader";
 
 type Props = {
   calendarOpen: boolean;
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const start = searchParams.get("start");
   const end = searchParams.get("end");
 
@@ -66,16 +67,58 @@ export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
         {/* for 'start' and 'end' */}
         <Field>
           {({ form: { setFieldValue, values } }: FieldProps) => (
-            <Calendar
-              start={values.start}
-              end={values.end}
-              setFieldValue={setFieldValue}
-              bookingCalendar
-              handleClose={() => setCalendarOpen(false)}
-              isStartSelection={isStartSelection}
-              setIsStartSelection={setIsStartSelection}
-              setCalendarOpen={setCalendarOpen}
-            />
+            <>
+              <BookingHeader
+                start={start}
+                end={end}
+                isStartSelection={isStartSelection}
+                setIsStartSelection={setIsStartSelection}
+              />
+              <Calendar
+                start={values.start}
+                end={values.end}
+                setFieldValue={setFieldValue}
+                bookingCalendar
+                isStartSelection={isStartSelection}
+                setIsStartSelection={setIsStartSelection}
+                setCalendarOpen={setCalendarOpen}
+              />
+
+              <Stack
+                direction="row"
+                justifyContent="end"
+                gap={2}
+                sx={{ mt: -2, pb: 2, pr: 2 }}
+              >
+                <Button
+                  onClick={() => {
+                    setFieldValue("start", null);
+                    setFieldValue("end", null);
+                    searchParams.delete("start");
+                    searchParams.delete("end");
+                    setSearchParams(searchParams);
+                    setIsStartSelection(true);
+                  }}
+                  sx={{ fontSize: 14 }}
+                >
+                  Clear dates
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setCalendarOpen(false)}
+                  size="small"
+                  sx={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    p: 0,
+                    pl: 1,
+                    pr: 1,
+                  }}
+                >
+                  Close
+                </Button>
+              </Stack>
+            </>
           )}
         </Field>
       </PopperMenu>

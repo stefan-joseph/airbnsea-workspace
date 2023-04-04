@@ -1,24 +1,17 @@
+import { ViewListingQuery } from "@airbnb-clone/controller";
 import { Box, Skeleton, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useState } from "react";
-import { searchBarBorderColor } from "../../../constants/constants";
 
+import { searchBarBorderColor } from "../../../constants/constants";
 import { Booking } from "../../booking/Booking";
 
 type Props = {
-  price: number | undefined;
-  rating: number | undefined;
+  data?: ViewListingQuery["viewListing"];
 };
-export const ReserveBar = ({ price, rating }: Props) => {
+export const ReserveBar = ({ data }: Props) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down("md"));
-
-  const [yes, setYes] = useState(false);
-
-  setTimeout(() => {
-    setYes(true);
-  }, 2000);
 
   return (
     <>
@@ -41,8 +34,13 @@ export const ReserveBar = ({ price, rating }: Props) => {
             borderTopColor: searchBarBorderColor,
           }}
         >
-          {price && rating && yes ? (
-            <Booking mobile price={price} rating={rating} />
+          {data ? (
+            <Booking
+              mobile
+              price={data.price}
+              rating={data.rating}
+              maxGuests={data.guests}
+            />
           ) : (
             <>
               <Stack justifyContent="space-between">

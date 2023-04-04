@@ -1,7 +1,7 @@
 import {
   Box,
+  Button,
   Divider,
-  IconButton,
   InputAdornment,
   Stack,
   TextField,
@@ -11,14 +11,13 @@ import { useSearchParams } from "react-router-dom";
 import { useRef, useState } from "react";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
+
 import { Field, FieldProps } from "formik";
 import { PopperMenu } from "../../../components/PopperMenu";
 import { formBorderColor } from "../../../constants/constants";
 import { NumberSelect } from "../../../components/fields/NumberSelect";
 
-export const SelectGuests = () => {
+export const SelectGuests = ({ maxGuests }: { maxGuests?: number }) => {
   const popperAnchorEl = useRef<HTMLButtonElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -87,28 +86,40 @@ export const SelectGuests = () => {
               anchorEl={popperAnchorEl}
               open={!!guestsOpen}
               handleClose={() => setGuestsOpen(false)}
-              width={310}
+              width={312}
             >
-              <NumberSelect
-                name="Guests"
-                value={value}
-                handleRemove={() => {
-                  if (value > 1) {
-                    searchParams.set("guests", `${value - 1}`);
-                    setSearchParams(searchParams);
-                    setFieldValue("guests", +value - 1);
-                  }
-                }}
-                handleAdd={() => {
-                  if (value < 16) {
-                    searchParams.set("guests", `${value + 1}`);
-                    setSearchParams(searchParams);
-                    setFieldValue("guests", value + 1);
-                  }
-                }}
-                disableRemove={value <= 1}
-                disableAdd={value >= 16}
-              />
+              <Stack padding={2}>
+                <NumberSelect
+                  name="Guests"
+                  value={value}
+                  handleRemove={() => {
+                    if (value > 1) {
+                      searchParams.set("guests", `${value - 1}`);
+                      setSearchParams(searchParams);
+                      setFieldValue("guests", +value - 1);
+                    }
+                  }}
+                  handleAdd={() => {
+                    if (value <= (maxGuests || 16)) {
+                      searchParams.set("guests", `${value + 1}`);
+                      setSearchParams(searchParams);
+                      setFieldValue("guests", value + 1);
+                    }
+                  }}
+                  disableRemove={value <= 1}
+                  disableAdd={value >= (maxGuests || 16)}
+                />
+                <Typography fontSize={12} color="grey.800" mt={2} mb={1}>
+                  This vessel has a maximum capacity of {maxGuests} guest
+                  {maxGuests !== 1 ? "s" : ""}.
+                </Typography>
+                <Button
+                  onClick={() => setGuestsOpen(false)}
+                  sx={{ ml: "auto", p: 0.6 }}
+                >
+                  Close
+                </Button>
+              </Stack>
             </PopperMenu>
           </>
         )}

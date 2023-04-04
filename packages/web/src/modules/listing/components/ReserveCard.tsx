@@ -1,18 +1,11 @@
-import {
-  ButtonBase,
-  Card,
-  CardContent,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, Skeleton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { ViewListingQuery } from "@airbnb-clone/controller";
+import { useState } from "react";
 
 import { borderRadius, searchBarHeight } from "../../../constants/constants";
 import { Booking } from "../../booking/Booking";
-import { ViewListingQuery } from "@airbnb-clone/controller";
-import { useState } from "react";
 
 type Props = {
   data?: ViewListingQuery["viewListing"];
@@ -45,7 +38,13 @@ export const ReserveCard = ({ data }: Props) => {
             }}
           >
             <CardContent>
-              {data && <Booking price={data.price} rating={data.rating} />}
+              {data && (
+                <Booking
+                  price={data.price}
+                  rating={data.rating}
+                  maxGuests={data.guests}
+                />
+              )}
             </CardContent>
           </Card>
         ) : (

@@ -1,12 +1,9 @@
 import { FormikHelpers } from "formik";
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { DesktopCalendar } from "./components/DesktopCalendar";
 import { MobileCalendar } from "./components/MobileCalendar";
-import { Button, Stack } from "@mui/material";
-import { BookingHeader } from "./components/BookingHeader";
 
 type Props = {
   start: string | null;
@@ -15,7 +12,6 @@ type Props = {
   mobile?: boolean;
   bookingCalendar?: boolean;
   numOfMonthsDisplayed?: number;
-  handleClose?: () => void;
   isStartSelection: boolean;
   setIsStartSelection: (value: boolean) => void;
   setCalendarOpen?: (value: boolean) => void;
@@ -28,17 +24,13 @@ export const Calendar = ({
   mobile,
   bookingCalendar,
   numOfMonthsDisplayed,
-  handleClose,
   isStartSelection,
   setIsStartSelection,
   setCalendarOpen,
 }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleDateChange = (
-    value: any
-    // setCalendarOpen?: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
+  const handleDateChange = (value: any) => {
     const formattedValue = dayjs(value).format("YYYY-MM-DD");
     if (isStartSelection) {
       setFieldValue("start", formattedValue);
@@ -91,49 +83,14 @@ export const Calendar = ({
   }
 
   return (
-    <>
-      {bookingCalendar && (
-        <BookingHeader
-          start={start}
-          end={end}
-          isStartSelection={isStartSelection}
-          setIsStartSelection={setIsStartSelection}
-        />
-      )}
-      <DesktopCalendar
-        start={start}
-        end={end}
-        isStartSelection={isStartSelection}
-        // setIsStartSelection={setIsStartSelection}
-        handleChange={(value) => {
-          handleDateChange(value);
-        }}
-        bookingCalendar={bookingCalendar}
-      />
-      {bookingCalendar && (
-        <Stack
-          direction="row"
-          justifyContent="end"
-          gap={3}
-          sx={{ mt: -2, pb: 2, pr: 2 }}
-        >
-          <Button
-            onClick={() => {
-              setFieldValue("start", null);
-              setFieldValue("end", null);
-              searchParams.delete("start");
-              searchParams.delete("end");
-              setSearchParams(searchParams);
-              setIsStartSelection(true);
-            }}
-          >
-            Clear dates
-          </Button>
-          <Button variant="contained" onClick={handleClose}>
-            Close
-          </Button>
-        </Stack>
-      )}
-    </>
+    <DesktopCalendar
+      start={start}
+      end={end}
+      isStartSelection={isStartSelection}
+      handleChange={(value) => {
+        handleDateChange(value);
+      }}
+      bookingCalendar={bookingCalendar}
+    />
   );
 };
