@@ -16,8 +16,10 @@ type Props = {
   handleClose?: (e: any) => void;
   placement?: PopperPlacementType;
   width?: number | string | null;
+  padding?: number | string;
   marginTop?: number | string;
   disableAnimation?: boolean;
+  elevation?: number;
 };
 
 export const PopperMenu = ({
@@ -27,8 +29,11 @@ export const PopperMenu = ({
   handleClose,
   placement,
   width,
+  padding,
+
   marginTop,
   disableAnimation,
+  elevation,
 }: Props) => {
   return (
     <Popper
@@ -57,7 +62,7 @@ export const PopperMenu = ({
         },
       ]}
     >
-      {({ TransitionProps, placement }) => (
+      {({ TransitionProps }) => (
         <Grow
           {...TransitionProps}
           style={{
@@ -66,11 +71,12 @@ export const PopperMenu = ({
           timeout={disableAnimation ? 0 : undefined}
         >
           <Paper
-            elevation={4}
+            elevation={elevation || 4}
             sx={{
               borderRadius,
               overflow: "hidden",
-              marginTop: marginTop ? marginTop : "unset",
+              p: padding,
+              marginTop: marginTop,
               width: width || "100%",
             }}
           >

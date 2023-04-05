@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 import { User } from "../../../entity/User";
 import { Listing } from "../../../entity/Listing";
 import { Message } from "../../../entity/Message";
+import { Booking } from "../../../entity/Booking";
+import { dateFormat } from "@airbnb-clone/common";
 
 export default class InitialSeeder implements Seeder {
   public async run(
@@ -15,10 +17,12 @@ export default class InitialSeeder implements Seeder {
   ): Promise<any> {
     const listingsRepository = dataSource.getRepository(Listing);
     const messagesRepository = dataSource.getRepository(Message);
+    const bookingsRepository = dataSource.getRepository(Booking);
 
     const userFactory = factoryManager.get(User);
     const listingFactory = factoryManager.get(Listing);
     const messageFactory = factoryManager.get(Message);
+    const bookingFactory = factoryManager.get(Booking);
 
     const users = await userFactory.saveMany(10);
 
@@ -92,6 +96,34 @@ export default class InitialSeeder implements Seeder {
       });
 
       await messagesRepository.save(message3);
+
+      const date = dayjs(Date.now()).add(1, "month").format(dateFormat);
+      // format: '[2021-05-15 14:00, 2021-05-16 22:00)'
+      const booking1 = await bookingFactory.make({
+        range: `[${date}, ${dayjs(date)
+          .add(Math.floor(Math.random() * 10) + 1, "day")
+          .format(dateFormat)}]`,
+        user: guestUser,
+        userId: guestUser.id,
+        listing,
+        listingId: listing.id,
+      });
+
+      await bookingsRepository.save(booking1);
+
+      const date2 = dayjs(date).add(1, "month").format(dateFormat);
+
+      const booking2 = await bookingFactory.make({
+        range: `[${date2}, ${dayjs(date2)
+          .add(Math.floor(Math.random() * 10) + 1, "day")
+          .format(dateFormat)}]`,
+        user: guestUser,
+        userId: guestUser.id,
+        listing,
+        listingId: listing.id,
+      });
+
+      await bookingsRepository.save(booking2);
     });
   }
 }

@@ -11,7 +11,7 @@ type Props = {
   setFieldValue: FormikHelpers<any>["setFieldValue"];
   mobile?: boolean;
   bookingCalendar?: boolean;
-  numOfMonthsDisplayed?: number;
+
   isStartSelection: boolean;
   setIsStartSelection: (value: boolean) => void;
   setCalendarOpen?: (value: boolean) => void;
@@ -23,7 +23,6 @@ export const Calendar = ({
   setFieldValue,
   mobile,
   bookingCalendar,
-  numOfMonthsDisplayed,
   isStartSelection,
   setIsStartSelection,
   setCalendarOpen,
@@ -70,7 +69,7 @@ export const Calendar = ({
   if (mobile) {
     return (
       <MobileCalendar
-        numOfMonthsDisplayed={numOfMonthsDisplayed || 4}
+        bookingCalendar={bookingCalendar}
         start={start}
         end={end}
         isStartSelection={isStartSelection}

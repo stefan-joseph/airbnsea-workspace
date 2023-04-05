@@ -35,8 +35,6 @@ export const RenderDay = ({
   isFadeToGrey,
   isFadeFromGrey,
 }: Props) => {
-  console.log(DayComponentProps);
-
   return (
     <Box
       sx={{
@@ -97,13 +95,18 @@ export const RenderDay = ({
             border: "1.5px solid black",
             backgroundColor:
               isStartDate || isEndDate
-                ? `${theme.palette.primary.main} !important`
+                ? `${theme.palette.info.main} !important`
                 : isGrey
                 ? "grey.100"
                 : "initial",
           },
           "&:focus": {
-            backgroundColor: `${theme.palette.primary.main} !important`,
+            backgroundColor: `${
+              isGrey ? theme.palette.grey["100"] : theme.palette.common.white
+            } !important`,
+          },
+          "&.Mui-selected": {
+            backgroundColor: `${theme.palette.info.main} !important`,
           },
         }}
         showDaysOutsideCurrentMonth={false}

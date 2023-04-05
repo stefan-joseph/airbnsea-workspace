@@ -1,12 +1,15 @@
 import { dateFormat } from "@airbnb-clone/common";
 import { GetListingUnavailabilityQuery } from "@airbnb-clone/controller";
-import { Box, Skeleton, TextField, Tooltip } from "@mui/material";
 import {
-  PickersDay,
-  PickersDayProps,
-  StaticDatePickerProps,
-} from "@mui/x-date-pickers";
+  styled,
+  TextField,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
+} from "@mui/material";
+import { PickersDayProps, StaticDatePickerProps } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { grey } from "@mui/material/colors";
 
 import { getNextUnavailableDate } from "../../../utils/getNextUnavailableDate";
 import { RenderDay } from "../components/RenderDay";
@@ -87,16 +90,9 @@ export const renderDay: (props: Props) => JSX.Element = ({
   }
 
   if (loading) {
-    return (
-      <Box
-        key={dayjs(day).format(dateFormat)}
-        sx={{ display: "flex", justifyContent: "center" }}
-      >
-        <Skeleton variant="circular" width={"88%"} height={"94%"}>
-          <PickersDay {...DayComponentProps} disableMargin={false} />
-        </Skeleton>
-      </Box>
-    );
+    // don't show dates while loading
+    // loading spinner will be present
+    return <div key={dayjs(day).format(dateFormat)}></div>;
   }
 
   if (data?.getListingUnavailability) {
@@ -136,22 +132,45 @@ export const renderDay: (props: Props) => JSX.Element = ({
     );
 
     if (isCheckoutOnly) {
+      const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+        <Tooltip {...props} arrow classes={{ popper: className }} />
+      ))(({ theme }) => ({
+        [`& .${tooltipClasses.arrow}`]: {
+          "&:before": {
+            border: "1px solid #E6E8ED",
+            color: theme.palette.common.white,
+          },
+        },
+        [`& .${tooltipClasses.tooltip}`]: {
+          backgroundColor: theme.palette.common.white,
+          color: grey["800"],
+          boxShadow: theme.shadows[8],
+          fontSize: 14,
+          border: "1px solid #E6E8ED",
+          padding: 8,
+        },
+      }));
+
       return (
-        <Tooltip
+        <LightTooltip
           title="Checkout only"
           arrow
           placement="top-start"
           enterDelay={500}
           leaveDelay={200}
+          // disable tooltip when user is selecting checkout date
+          // disableHoverListener={!isStartSelection}
         >
           <span>{RenderDayComponent}</span>
-        </Tooltip>
+        </LightTooltip>
       );
     }
 
     return RenderDayComponent;
   }
-  return <div key={dayjs(day).format(dateFormat)}>Q</div>;
+  // if availability of listing is not received
+  // error message will show
+  return <div key={dayjs(day).format(dateFormat)}></div>;
 };
 
 export const requiredCalendarProps: (

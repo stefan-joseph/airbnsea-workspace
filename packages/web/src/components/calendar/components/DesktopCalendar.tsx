@@ -1,15 +1,6 @@
-import {
-  Box,
-  Button,
-  Skeleton,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import {
   LocalizationProvider,
-  PickersDay,
   StaticDatePicker,
   StaticDatePickerProps,
 } from "@mui/x-date-pickers";
@@ -17,30 +8,17 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
-import { dateFormat } from "@airbnb-clone/common";
-import {
-  GetListingUnavailabilityQuery,
-  useGetListingUnavailabilityLazyQuery,
-} from "@airbnb-clone/controller";
+import { useGetListingUnavailabilityLazyQuery } from "@airbnb-clone/controller";
 
-import { getNextUnavailableDate } from "../../../utils/getNextUnavailableDate";
-import { DateTextField } from "../../../modules/booking/components/DateTextField";
-import { formBorderColor } from "../../../constants/constants";
-import { RenderDay } from "./RenderDay";
-import {
-  renderDay,
-  requiredCalendarProps,
-  universalCalendarProps,
-} from "../utils/utils";
+import { requiredCalendarProps, universalCalendarProps } from "../utils/utils";
+import { ErrorMessage } from "./ErrorMessage";
+import { Loader } from "../../Loader";
 
 type Props = {
   start: string | null;
   end: string | null;
   isStartSelection: boolean;
-  // setIsStartSelection: (value: boolean) => void;
   handleChange: (value: any) => void;
-  // handleClose?: () => void;
-  // handleClear?: () => void;
   recallUnavailabiltyQuery?: any;
   bookingCalendar?: boolean;
 };
@@ -49,10 +27,7 @@ export const DesktopCalendar = ({
   start,
   end,
   isStartSelection,
-  // setIsStartSelection,
   handleChange,
-  // handleClose,
-  // handleClear,
   bookingCalendar,
   recallUnavailabiltyQuery,
 }: Props) => {
@@ -80,6 +55,18 @@ export const DesktopCalendar = ({
     if (bookingCalendar) getListingUnavailability();
   }, [recallUnavailabiltyQuery]);
 
+  const universalProps = universalCalendarProps(
+    start,
+    end,
+    !!bookingCalendar,
+    dateHovered,
+    setDateHovered,
+    isStartSelection,
+    loading,
+    data,
+    handleChange
+  );
+
   const desktopCalendarProps: StaticDatePickerProps<any, any> = {
     ...requiredCalendarProps(handleChange),
     onMonthChange: (month) => {
@@ -95,19 +82,20 @@ export const DesktopCalendar = ({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack direction="row" position="relative">
+        {error && <ErrorMessage />}
+        {loading && (
+          <Box
+            position="absolute"
+            top="50%"
+            left="50%"
+            sx={{ transform: "translateX(-50%)" }}
+          >
+            <Loader color="info" />
+          </Box>
+        )}
         <StaticDatePicker
           {...requiredCalendarProps}
-          {...universalCalendarProps(
-            start,
-            end,
-            !!bookingCalendar,
-            dateHovered,
-            setDateHovered,
-            isStartSelection,
-            loading,
-            data,
-            handleChange
-          )}
+          {...universalProps}
           {...desktopCalendarProps}
           defaultCalendarMonth={adapter.date(dayjs(currentMonth))}
           componentsProps={{
@@ -117,21 +105,20 @@ export const DesktopCalendar = ({
             rightArrowButton: {
               sx: { position: "absolute", right: 22, top: 14 },
             },
+            // paperContent: {
+            //   sx: {
+            //     "& .MuiPickersDay-root": {
+            //       "&.Mui-selected": {
+            //         backgroundColor: "red",
+            //       },
+            //     },
+            //   },
+            // },
           }}
         />
         <StaticDatePicker
           {...requiredCalendarProps}
-          {...universalCalendarProps(
-            start,
-            end,
-            !!bookingCalendar,
-            dateHovered,
-            setDateHovered,
-            isStartSelection,
-            loading,
-            data,
-            handleChange
-          )}
+          {...universalProps}
           {...desktopCalendarProps}
           defaultCalendarMonth={adapter.date(
             dayjs(currentMonth).add(1, "month")

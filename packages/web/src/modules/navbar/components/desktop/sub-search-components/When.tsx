@@ -14,12 +14,7 @@ import { formatDateRange } from "../../../../../utils/formatDateRange";
 import { Calendar } from "../../../../../components/calendar/Calendar";
 import { useSearchParams } from "react-router-dom";
 
-export const When = ({
-  // values,
-  index,
-  searchBarRef,
-  dividerRefs,
-}: SubSearchProps) => {
+export const When = ({ index, searchBarRef, dividerRefs }: SubSearchProps) => {
   const [searchParams] = useSearchParams();
   const start = searchParams.get("start");
   const end = searchParams.get("end");
@@ -139,6 +134,7 @@ export const When = ({
           open={(index as number) + 1 === subSearch}
           anchorEl={searchBarRef}
           marginTop={1}
+          padding={3}
         >
           {/* for 'start' and 'end' */}
           <Field>

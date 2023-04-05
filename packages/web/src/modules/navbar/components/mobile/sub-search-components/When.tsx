@@ -4,7 +4,6 @@ import { useContext, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { Calendar } from "../../../../../components/calendar/Calendar";
-import { OutlinedButton } from "../../../../../components/OutlinedButton";
 import { formatDateRange } from "../../../../../utils/formatDateRange";
 import { NavbarContext } from "../../../Navbar";
 import { CollapsedSubSearch } from "../components/CollapsedSubSearch";
@@ -23,8 +22,6 @@ export const When = () => {
   const [isStartSelection, setIsStartSelection] = useState<boolean>(
     !start || (start && end) ? true : false
   );
-
-  const [monthsDisplayed, setMonthsDisplayed] = useState(4);
 
   if (subSearch === 1) return null;
 
@@ -64,17 +61,9 @@ export const When = () => {
                 end={values.end}
                 setFieldValue={setFieldValue}
                 mobile
-                numOfMonthsDisplayed={monthsDisplayed}
                 isStartSelection={isStartSelection}
                 setIsStartSelection={setIsStartSelection}
               />
-
-              <Box padding={2}>
-                <OutlinedButton
-                  text={"Load more dates"}
-                  handleClick={() => setMonthsDisplayed(monthsDisplayed + 4)}
-                />
-              </Box>
             </Box>
             <Divider />
             <Stack direction="row" justifyContent="space-between" padding={2}>

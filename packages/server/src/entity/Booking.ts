@@ -14,14 +14,9 @@ export class Booking extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  // format: '[2021-05-15 14:00, 2021-05-16 22:00)'
   @Column("daterange")
   range: string;
-  // '[2021-05-15 14:00, 2021-05-16 22:00)'
-  // @Column("date")
-  // start: string
-
-  // @Column("date")
-  // end: string
 
   @Column("uuid")
   listingId: string;

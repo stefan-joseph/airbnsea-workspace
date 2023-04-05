@@ -62,7 +62,9 @@ export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
         open={calendarOpen}
         anchorEl={popperAnchorEl}
         handleClose={() => setCalendarOpen(false)}
+        padding={4}
         marginTop={-9}
+        elevation={16}
       >
         {/* for 'start' and 'end' */}
         <Field>
@@ -88,7 +90,7 @@ export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
                 direction="row"
                 justifyContent="end"
                 gap={2}
-                sx={{ mt: -2, pb: 2, pr: 2 }}
+                sx={{ mt: -2, pr: 4, pb: 2 }}
               >
                 <Button
                   onClick={() => {

@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { formBorderColor } from "../../../constants/constants";
 import { DateTextField } from "../../../modules/booking/components/DateTextField";
+import dayjs from "dayjs";
 
 type Props = {
   start: string | null;
@@ -16,11 +17,21 @@ export const BookingHeader = ({
   setIsStartSelection,
 }: Props) => {
   return (
-    <Stack direction="row" justifyContent="space-between" padding={2}>
+    <Stack direction="row" justifyContent="space-between" p={3} pl={4} pr={4}>
       <Stack>
-        <Typography fontSize={22}>Select dates</Typography>
+        <Typography fontSize={22} fontWeight={500}>
+          {start && end
+            ? `${dayjs(end).diff(start, "day")} night stay`
+            : "Select dates"}
+        </Typography>
         <Typography fontSize={14} color={"grey.500"}>
-          {"Add your travel dates for exact pricing"}
+          {start && end
+            ? `${dayjs(start).format("MMM. DD, YYYY")} - ${dayjs(end).format(
+                "MMM. DD, YYYY"
+              )}`
+            : start
+            ? "Minimum stay: 1 night"
+            : "Add your travel dates for exact pricing"}
         </Typography>
       </Stack>
       <Box

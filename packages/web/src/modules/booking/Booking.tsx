@@ -68,7 +68,7 @@ export const Booking = ({
               guests: +guests,
             },
           },
-        }).catch((error) => console.log(error));
+        });
       }}
     >
       {() => (

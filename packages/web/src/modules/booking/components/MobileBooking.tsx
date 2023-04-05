@@ -94,7 +94,7 @@ export const MobileBooking = ({
                           : ""
                       }`}
                 </Typography>
-                <Box overflow="scroll">
+                <Box overflow="scroll" mb="auto" height="100%">
                   <Calendar
                     mobile
                     bookingCalendar

@@ -11,6 +11,7 @@ import { Listing } from "../modules/listing/Listing";
 import { CreateListing } from "../modules/user/create-listing/CreateListing";
 import { Search } from "../modules/search/Search";
 import { Message } from "../modules/message/Message";
+import { BookingConfirmationPage } from "../modules/booking/components/ComfirmationPage";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ export const router = createBrowserRouter([
   {
     path: "/listing/:listingId/view",
     element: <Listing />,
+  },
+  {
+    path: "/book/:listingId",
+    element: (
+      <ProtectedRoute redirect="/login">
+        <BookingConfirmationPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/message/*",
