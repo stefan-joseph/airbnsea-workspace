@@ -9,7 +9,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { Conversation } from "@airbnb-clone/controller";
 
 import { Loader } from "../../../components/Loader";
@@ -26,6 +31,9 @@ export const ConversationContainer = ({
   data?: Conversation | undefined;
 }) => {
   const navigate = useNavigate();
+
+  const location = useLocation();
+  console.log(location);
 
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
@@ -58,7 +66,13 @@ export const ConversationContainer = ({
           <Button
             variant="outlined"
             sx={{ marginLeft: "auto" }}
-            onClick={() => navigate(`/listing/${data?.listingId}/view`)}
+            onClick={() => {
+              console.log("!", location.pathname + location.search);
+
+              navigate(`/listing/${data?.listingId}/view`, {
+                state: { from: `${location.pathname + location.search}` },
+              });
+            }}
           >
             Details
           </Button>
@@ -71,7 +85,10 @@ export const ConversationContainer = ({
         <>
           {!matches && data?.listing && (
             <>
-              <Link to={`/listing/${data?.listingId}/view`}>
+              <Link
+                to={`/listing/${data?.listingId}/view`}
+                state={{ from: `${location.pathname + location.search}` }}
+              >
                 <Stack direction="row" alignItems="center" padding={2}>
                   <Avatar
                     alt={data?.listing?.name || "listing"}

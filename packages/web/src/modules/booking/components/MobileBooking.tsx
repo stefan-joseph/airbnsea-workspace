@@ -17,6 +17,7 @@ import { searchBarBorderColor } from "../../../constants/constants";
 import { getDayDifference } from "../../../utils/getDayDifference";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import { BookingHeader } from "../../../components/calendar/components/BookingHeader";
 
 export const MobileBooking = ({
   price,
@@ -24,7 +25,7 @@ export const MobileBooking = ({
   calendarOpen,
   setCalendarOpen,
 }: BookingProps) => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const start = searchParams.get("start");
   const end = searchParams.get("end");
 
@@ -34,6 +35,7 @@ export const MobileBooking = ({
 
   return (
     <Field>
+      {/* for start & end */}
       {({ form: { values, setFieldValue } }: FieldProps) => (
         <>
           <Stack direction="row" justifyContent="space-between" gap={2}>
@@ -76,6 +78,10 @@ export const MobileBooking = ({
                     onClick={() => {
                       setFieldValue("start", null);
                       setFieldValue("end", null);
+                      searchParams.delete("start");
+                      searchParams.delete("end");
+                      setSearchParams(searchParams);
+                      setIsStartSelection(true);
                     }}
                     size="medium"
                     sx={{ fontSize: 14 }}
@@ -83,7 +89,14 @@ export const MobileBooking = ({
                     Clear dates
                   </Button>
                 </Stack>
-                <Typography fontSize={22} fontWeight={600} pl={3.4}>
+                <BookingHeader
+                  mobile
+                  start={values.start}
+                  end={values.end}
+                  isStartSelection={isStartSelection}
+                  setIsStartSelection={setIsStartSelection}
+                />
+                {/* <Typography fontSize={22} fontWeight={600} pl={3.4}>
                   {!values.start
                     ? "Select check-in date"
                     : !values.end
@@ -93,7 +106,7 @@ export const MobileBooking = ({
                           ? "s"
                           : ""
                       }`}
-                </Typography>
+                </Typography> */}
                 <Box overflow="scroll" mb="auto" height="100%">
                   <Calendar
                     mobile

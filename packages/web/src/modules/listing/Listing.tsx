@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useViewListingQuery } from "@airbnb-clone/controller";
 import { Stack, Typography, Divider, Box, IconButton } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,9 @@ import { ShareSaveButtons } from "./components/ShareSaveButtons";
 
 export const Listing = () => {
   const navigate = useNavigate();
+
+  const { state } = useLocation();
+
   const { listingId } = useParams();
 
   const [photosOpen, setPhotosOpen] = useState(false);
@@ -49,7 +52,10 @@ export const Listing = () => {
           <Navbar />
         ) : (
           <Stack direction="row" justifyContent="space-between" padding={2}>
-            <IconButton onClick={() => navigate(-1)} color="info">
+            <IconButton
+              onClick={() => navigate(state?.from || "/")}
+              color="info"
+            >
               <ArrowBackIosNewRoundedIcon fontSize="small" />
             </IconButton>
             <Box>

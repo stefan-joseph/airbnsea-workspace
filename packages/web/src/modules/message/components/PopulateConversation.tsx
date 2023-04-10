@@ -34,10 +34,7 @@ export const PopulateConversation = () => {
       variables: { conversationId: conversationId },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
-        console.log("HELLo!!!!!");
         const { newMessage } = subscriptionData.data as any;
-        console.log(newMessage);
-
         return {
           ...prev,
           populateConversation: {

@@ -1,18 +1,12 @@
 import { dateFormat } from "@airbnb-clone/common";
 import { GetListingUnavailabilityQuery } from "@airbnb-clone/controller";
-import {
-  styled,
-  TextField,
-  Tooltip,
-  tooltipClasses,
-  TooltipProps,
-} from "@mui/material";
+import { TextField } from "@mui/material";
 import { PickersDayProps, StaticDatePickerProps } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { grey } from "@mui/material/colors";
 
 import { getNextUnavailableDate } from "../../../utils/getNextUnavailableDate";
 import { RenderDay } from "../components/RenderDay";
+import { LightTooltip } from "../components/LightTooltip";
 
 type Props = {
   day: any;
@@ -45,26 +39,19 @@ export const renderDay: (props: Props) => JSX.Element = ({
 
   const endOrDateHovered = end || dateHovered;
 
-  const conditionalEdgeCases =
-    (!dayjs(day).add(1, "day").isAfter(day, "month") &&
-      !DayComponentProps.outsideCurrentMonth) ||
-    (dayjs(day).add(1, "day").isAfter(day, "month") &&
-      !DayComponentProps.outsideCurrentMonth) ||
-    (DayComponentProps.outsideCurrentMonth &&
-      dayjs(day).subtract(1, "day").isBefore(day, "month"));
-
   const isGrey =
-    (dayjs(day).isAfter(start) || dayjs(day).isSame(start)) &&
-    (dayjs(day).isBefore(endOrDateHovered) ||
-      (dayjs(day).isSame(endOrDateHovered) && conditionalEdgeCases));
+    dayjs(day).add(1, "day").isAfter(start) &&
+    dayjs(day).subtract(1, "day").isBefore(endOrDateHovered);
 
   const isFadeToGrey =
     DayComponentProps.outsideCurrentMonth &&
-    dayjs(day).add(1, "day").isAfter(day, "month");
+    dayjs(day).add(1, "day").isAfter(day, "month") &&
+    !dayjs(day).add(1, "day").isAfter(endOrDateHovered);
 
   const isFadeFromGrey =
     DayComponentProps.outsideCurrentMonth &&
-    dayjs(day).subtract(1, "day").isBefore(day, "month");
+    dayjs(day).subtract(1, "day").isBefore(day, "month") &&
+    !dayjs(day).isSame(start);
 
   if (!bookingCalendar) {
     const isUnavailable = Boolean(dayjs(day).isBefore(new Date(), "day"));
@@ -132,34 +119,16 @@ export const renderDay: (props: Props) => JSX.Element = ({
     );
 
     if (isCheckoutOnly) {
-      const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-        <Tooltip {...props} arrow classes={{ popper: className }} />
-      ))(({ theme }) => ({
-        [`& .${tooltipClasses.arrow}`]: {
-          "&:before": {
-            border: "1px solid #E6E8ED",
-            color: theme.palette.common.white,
-          },
-        },
-        [`& .${tooltipClasses.tooltip}`]: {
-          backgroundColor: theme.palette.common.white,
-          color: grey["800"],
-          boxShadow: theme.shadows[8],
-          fontSize: 14,
-          border: "1px solid #E6E8ED",
-          padding: 8,
-        },
-      }));
-
       return (
         <LightTooltip
+          key={dayjs(day).format(dateFormat)}
           title="Checkout only"
           arrow
           placement="top-start"
           enterDelay={500}
           leaveDelay={200}
           // disable tooltip when user is selecting checkout date
-          // disableHoverListener={!isStartSelection}
+          disableHoverListener={!isStartSelection}
         >
           <span>{RenderDayComponent}</span>
         </LightTooltip>

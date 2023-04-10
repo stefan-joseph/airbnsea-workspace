@@ -1,5 +1,5 @@
 import { FormikHelpers } from "formik";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { DesktopCalendar } from "./components/DesktopCalendar";
@@ -27,6 +27,8 @@ export const Calendar = ({
   setIsStartSelection,
   setCalendarOpen,
 }: Props) => {
+  const { state } = useLocation();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleDateChange = (value: any) => {
@@ -41,7 +43,9 @@ export const Calendar = ({
         if (end && dayjs(end).subtract(1, "day").isBefore(value)) {
           searchParams.delete("end");
         }
-        setSearchParams(searchParams);
+        setSearchParams(searchParams, {
+          state: { from: state.from },
+        });
       }
       setIsStartSelection(false);
     } else if (!isStartSelection) {
@@ -49,13 +53,17 @@ export const Calendar = ({
         setFieldValue("start", formattedValue);
         if (bookingCalendar) {
           searchParams.set("start", formattedValue);
-          setSearchParams(searchParams);
+          setSearchParams(searchParams, {
+            state: { from: state.from },
+          });
         }
       } else {
         setFieldValue("end", formattedValue);
         if (bookingCalendar) {
           searchParams.set("end", formattedValue);
-          setSearchParams(searchParams);
+          setSearchParams(searchParams, {
+            state: { from: state.from },
+          });
         }
         if (!start) {
           setIsStartSelection(true);

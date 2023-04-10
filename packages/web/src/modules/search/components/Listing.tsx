@@ -1,7 +1,7 @@
 import { Box, Grid, Skeleton, Typography } from "@mui/material";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import { SearchListingResult } from "@airbnb-clone/controller";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { PhotoCarousel } from "./PhotoCarousel";
 import { useState } from "react";
@@ -11,6 +11,7 @@ export const Listing: React.FC<{
   mapShowing: boolean;
 }> = ({ data, mapShowing }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [searchParams] = useSearchParams();
   const where = searchParams.get("where");
@@ -29,7 +30,9 @@ export const Listing: React.FC<{
     const guests = searchParams.get("guests");
     url = url + `guests=${guests || 1}`;
 
-    navigate(url);
+    navigate(url, {
+      state: { from: `${location.pathname + location.search}` },
+    });
   };
 
   return (

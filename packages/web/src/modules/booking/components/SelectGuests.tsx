@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useRef, useState } from "react";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
@@ -19,6 +19,8 @@ import { NumberSelect } from "../../../components/fields/NumberSelect";
 
 export const SelectGuests = ({ maxGuests }: { maxGuests?: number }) => {
   const popperAnchorEl = useRef<HTMLButtonElement>(null);
+
+  const { state } = useLocation();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -95,14 +97,18 @@ export const SelectGuests = ({ maxGuests }: { maxGuests?: number }) => {
                   handleRemove={() => {
                     if (value > 1) {
                       searchParams.set("guests", `${value - 1}`);
-                      setSearchParams(searchParams);
+                      setSearchParams(searchParams, {
+                        state: { from: state.from },
+                      });
                       setFieldValue("guests", +value - 1);
                     }
                   }}
                   handleAdd={() => {
                     if (value <= (maxGuests || 16)) {
                       searchParams.set("guests", `${value + 1}`);
-                      setSearchParams(searchParams);
+                      setSearchParams(searchParams, {
+                        state: { from: state.from },
+                      });
                       setFieldValue("guests", value + 1);
                     }
                   }}

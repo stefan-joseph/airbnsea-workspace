@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Stack } from "@mui/material";
 import { Field, FieldProps } from "formik";
 import { useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 import { PopperMenu } from "../../../components/PopperMenu";
 import { formBorderColor } from "../../../constants/constants";
@@ -15,6 +15,7 @@ type Props = {
 };
 
 export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
+  const { state } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const start = searchParams.get("start");
   const end = searchParams.get("end");
@@ -62,7 +63,7 @@ export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
         open={calendarOpen}
         anchorEl={popperAnchorEl}
         handleClose={() => setCalendarOpen(false)}
-        padding={4}
+        padding={1}
         marginTop={-9}
         elevation={16}
       >
@@ -98,7 +99,9 @@ export const SelectDates = ({ calendarOpen, setCalendarOpen }: Props) => {
                     setFieldValue("end", null);
                     searchParams.delete("start");
                     searchParams.delete("end");
-                    setSearchParams(searchParams);
+                    setSearchParams(searchParams, {
+                      state: { from: state.from },
+                    });
                     setIsStartSelection(true);
                   }}
                   sx={{ fontSize: 14 }}
