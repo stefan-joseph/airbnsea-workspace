@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik";
 import { useContext } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { searchSchema } from "@airbnb-clone/common";
 
@@ -19,6 +19,7 @@ export const SearchBarForm = ({
 }: {
   children: JSX.Element | JSX.Element[];
 }) => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const where = searchParams.get("where");
   const start = searchParams.get("start");
@@ -37,7 +38,6 @@ export const SearchBarForm = ({
       }}
       validationSchema={searchSchema}
       onSubmit={async (values: SearchValues) => {
-        console.log("values", values);
         if (values.start && !values.end) {
           values.end = dayjs(values.start).add(1, "day").format(dateFormat);
         }
@@ -48,17 +48,21 @@ export const SearchBarForm = ({
             .format(dateFormat);
         }
 
-        Object.keys(values).forEach((v) => {
-          if (
-            values[v as keyof SearchValues] == null ||
-            values[v as keyof SearchValues] === 0
-          )
-            delete values[v as keyof SearchValues];
-        });
+        const formatSearchParams = (values: SearchValues) => {
+          console.log("!!!!", values);
+          const { where, start, end, guests } = values;
+          let searchParams = "";
+          for (const [key, value] of Object.entries(values)) {
+            if (value) {
+              searchParams = searchParams + `${key}=${value}&`;
+            }
+          }
+          searchParams = searchParams.slice(0, -1);
+          return searchParams;
+        };
 
-        console.log("values", values);
+        navigate(`/?${formatSearchParams(values)}`);
 
-        setSearchParams({ ...(values as { [key: string]: any }) });
         dispatch({
           type: "SET_SUB_SEARCH",
           payload: 0,

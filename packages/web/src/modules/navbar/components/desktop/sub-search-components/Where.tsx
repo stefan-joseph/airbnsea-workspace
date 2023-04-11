@@ -1,6 +1,6 @@
 import { Field, FieldProps } from "formik";
 import { useContext, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 import GoogleRestart from "../../../../../components/fields/GoogleRestart";
 import { searchBarTransitionTime } from "../../../../../constants/constants";
@@ -12,6 +12,7 @@ import { ExpandedSubSearch } from "../components/ExpandedSubSearch";
 import { SubSearchProps } from "./types";
 
 export const Where = ({ index, dividerRefs, searchBarRef }: SubSearchProps) => {
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const where = searchParams.get("where");
 

@@ -39,23 +39,28 @@ export const SearchButton = ({
         justifyContent: "center",
         m: 0.6,
         ml: 1.4,
-        animation: `${
-          searchBarTransitionTime / 1.5
-        }ms ${searchBarTimingFunction} 0s ${
-          subSearch === 0 ? "reverse" : ""
-        } expandSearch`,
-        "@keyframes expandSearch": {
-          "0%": {
-            width: "32px",
-            height: "32px",
-            fontSize: "0px",
-          },
-          "100%": {
-            width: "120px",
-            height: "50px",
-            fontSize: "14px",
-          },
-        },
+        //@TODO why is transition property not working here??
+        // transition: "width 2s ease",
+        // transitionProperty: "width, height",
+        // transitionDuration: "1s",
+        // transitionTimingFunction: searchBarTimingFunction,
+        // animation: `${
+        //   searchBarTransitionTime / 1.5
+        // }ms ${searchBarTimingFunction} 0s ${
+        //   subSearch === 0 ? "reverse" : ""
+        // } expandSearch`,
+        // "@keyframes expandSearch": {
+        //   "0%": {
+        //     width: "32px",
+        //     height: "32px",
+        //     fontSize: "0px",
+        //   },
+        //   "100%": {
+        //     width: "120px",
+        //     height: "50px",
+        //     fontSize: "14px",
+        //   },
+        // },
 
         "&:hover": {
           backgroundColor: subSearch === 0 ? "primary.main" : null,

@@ -1,12 +1,11 @@
-import { Pagination, PaginationItem, useMediaQuery } from "@mui/material";
-
-import { Results } from "./components/Results";
-
+import { Pagination, PaginationItem } from "@mui/material";
 import { useSearchListingsLazyQuery } from "@airbnb-clone/controller";
 import { useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 
+import { Results } from "./components/Results";
 import { AppContainer } from "../../components/AppContainer";
+import { RequestErrorMessage } from "../../components/RequestErrorMessage";
 
 interface Search {
   input: { beds: number | undefined; guests: number | undefined };
@@ -24,8 +23,6 @@ export const Search = () => {
   const end = searchParams.get("end");
   const limit = searchParams.get("limit") || 12;
   const page = searchParams.get("page");
-
-  const matches = useMediaQuery("(min-width:750px)");
 
   const [searchListings, { data, error, fetchMore }] =
     useSearchListingsLazyQuery();
@@ -56,8 +53,10 @@ export const Search = () => {
     : undefined;
 
   return (
-    <AppContainer>
-      {!error ? (
+    <AppContainer error={!!error}>
+      {error ? (
+        <RequestErrorMessage />
+      ) : (
         <Results data={data?.searchListings}>
           {pageCount && pageCount > 1 ? (
             <Pagination
@@ -73,7 +72,7 @@ export const Search = () => {
                 display: "center",
                 justifyContent: "center",
                 mt: 7,
-                mb: where ? 12 : 5,
+                mb: 10,
                 fontWeight: 600,
                 "& .Mui-selected": {
                   cursor: "default",
@@ -83,8 +82,6 @@ export const Search = () => {
             />
           ) : undefined}
         </Results>
-      ) : (
-        <div>There was an error. Please try your search request again.</div>
       )}
     </AppContainer>
   );

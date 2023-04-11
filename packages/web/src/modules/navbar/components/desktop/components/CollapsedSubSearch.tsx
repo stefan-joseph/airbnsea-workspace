@@ -18,7 +18,7 @@ export const CollapsedSubSearch = ({
       alignItems="center"
       flex={1}
       width="30%"
-      sx={{ height: "100%" }}
+      height="100%"
     >
       <Typography
         fontSize={14}

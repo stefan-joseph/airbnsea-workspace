@@ -18,6 +18,8 @@ import { SubHeader } from "./components/SubHeader";
 import { PhotosNarrowScreen } from "./components/PhotosNarrowScreen";
 import { PhotosDrawer } from "./components/PhotosDrawer";
 import { ShareSaveButtons } from "./components/ShareSaveButtons";
+import { SiteMap } from "../../components/SiteMap";
+import { theme } from "../../MuiTheme";
 
 export const Listing = () => {
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ export const Listing = () => {
   });
 
   const matches = useMediaQuery(desktopMinWidth);
+  const matchesReserveBar = useMediaQuery(theme.breakpoints.down("md"));
 
   const [yes, setYes] = useState(false);
 
@@ -45,7 +48,7 @@ export const Listing = () => {
       <Box
         sx={{
           mt: matches ? `${searchBarHeight}px` : undefined,
-          mb: { xs: 12 },
+          mb: matchesReserveBar ? 12 : 0,
         }}
       >
         {matches ? (
@@ -72,6 +75,7 @@ export const Listing = () => {
           alignItems="center"
           sx={{
             pt: 3,
+            pb: 3,
             ml: { xs: 3, md: 6 },
             mr: { xs: 3, md: 6 },
           }}
@@ -103,6 +107,7 @@ export const Listing = () => {
             </Stack>
           </Stack>
         </Stack>
+        {!matchesReserveBar && <SiteMap />}
         <ReserveBar data={data?.viewListing} />
         {data?.viewListing && (
           <PhotosDrawer
