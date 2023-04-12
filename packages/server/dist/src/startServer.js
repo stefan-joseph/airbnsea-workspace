@@ -20,7 +20,6 @@ const ioredis_1 = __importDefault(require("ioredis"));
 const cloudinary = require("cloudinary");
 const express = require("express");
 const graphql_middleware_1 = require("graphql-middleware");
-const cors = require("cors");
 const expressSession = require("express-session");
 const RedisStore = require("connect-redis")(expressSession);
 const confirmEmail_1 = require("./routes/confirmEmail");
@@ -73,11 +72,6 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         }),
     });
     app.use("/graphql", yoga);
-    const corsOptions = {
-        credentials: true,
-        origin: "*",
-    };
-    app.use(cors(corsOptions));
     cloudinary.v2.config({
         cloud_name: process.env.CLOUDINARY_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,

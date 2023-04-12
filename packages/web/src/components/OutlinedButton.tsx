@@ -17,10 +17,7 @@ export const OutlinedButton = ({
 }: Props) => {
   return (
     <Button
-      onClick={() => {
-        console.log(disabled);
-        handleClick();
-      }}
+      onClick={handleClick}
       variant="outlined"
       fullWidth
       type={type || "button"}

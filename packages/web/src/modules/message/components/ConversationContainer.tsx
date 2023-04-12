@@ -33,7 +33,6 @@ export const ConversationContainer = ({
   const navigate = useNavigate();
 
   const location = useLocation();
-  console.log(location);
 
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");

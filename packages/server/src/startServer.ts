@@ -10,7 +10,7 @@ import Redis from "ioredis";
 import cloudinary = require("cloudinary");
 import express = require("express");
 import { applyMiddleware } from "graphql-middleware";
-const cors = require("cors");
+// const cors = require("cors");
 import expressSession = require("express-session");
 const RedisStore = require("connect-redis")(expressSession);
 
@@ -103,15 +103,16 @@ export const startServer = async () => {
   });
   app.use("/graphql", yoga);
 
-  const corsOptions = {
-    credentials: true,
-    // origin:
-    //   process.env.NODE_ENV === "test"
-    //     ? "*"
-    //     :process.env.FRONTEND_HOST
-    origin: "*",
-  };
-  app.use(cors(corsOptions));
+  // const corsOptions = {
+  //   credentials: true,
+  //   // origin:
+  //   //   process.env.NODE_ENV === "test"
+  //   //     ? "*"
+  //   //     :process.env.FRONTEND_HOST
+  //   origin: "*",
+
+  // };
+  // app.use(cors(corsOptions));
 
   // const limiter = rateLimit({
   //   windowMs: 15 * 60 * 1000, // 15 minutes

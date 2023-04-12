@@ -1,5 +1,5 @@
-import { ReactElement, useCallback, useState } from "react";
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import { useCallback, useState } from "react";
+import { Wrapper } from "@googlemaps/react-wrapper";
 import { SearchListingsQuery, SearchLocation } from "@airbnb-clone/controller";
 import { Box, useMediaQuery } from "@mui/material";
 
@@ -74,8 +74,6 @@ export const Map = ({ initialCenter, listings }: MapProps) => {
 
     // if click event is on map zoom buttons then do not close
     if (element.classList.contains("gm-control-active")) return;
-
-    console.log(element.dataset.openlisting);
 
     // @ts-ignore touch events already handled by google API
     if (mouseDownPosition?.x == e.x && mouseDownPosition?.y == e.y) {

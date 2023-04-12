@@ -49,7 +49,6 @@ export const SearchBarForm = ({
         }
 
         const formatSearchParams = (values: SearchValues) => {
-          console.log("!!!!", values);
           const { where, start, end, guests } = values;
           let searchParams = "";
           for (const [key, value] of Object.entries(values)) {
