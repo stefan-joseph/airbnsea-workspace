@@ -18,12 +18,6 @@ type Props = {
 export const Header = ({ data }: Props) => {
   const matches = useMediaQuery(desktopMinWidth);
 
-  const [yes, setYes] = useState(false);
-
-  setTimeout(() => {
-    setYes(true);
-  }, 2000);
-
   return (
     <Stack spacing={0.5}>
       <Typography
@@ -33,7 +27,7 @@ export const Header = ({ data }: Props) => {
         letterSpacing={0.2}
         sx={{ textTransform: "capitalize" }}
       >
-        {data && yes ? (
+        {data ? (
           data.name
         ) : (
           <Skeleton width="100%" height="100%" sx={{ maxWidth: 500 }} />
@@ -41,7 +35,7 @@ export const Header = ({ data }: Props) => {
       </Typography>
 
       <Stack direction="row" justifyContent="space-between">
-        {data && yes ? (
+        {data ? (
           <Stack
             direction="row"
             spacing={1}

@@ -35,12 +35,7 @@ export const ReserveBar = ({ data }: Props) => {
           }}
         >
           {data ? (
-            <Booking
-              mobile
-              price={data.price}
-              rating={data.rating}
-              maxGuests={data.guests}
-            />
+            <Booking listingData={data} mobile />
           ) : (
             <>
               <Stack justifyContent="space-between">

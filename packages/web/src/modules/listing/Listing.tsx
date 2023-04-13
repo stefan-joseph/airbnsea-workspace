@@ -37,12 +37,6 @@ export const Listing = () => {
   const matches = useMediaQuery(desktopMinWidth);
   const matchesReserveBar = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [yes, setYes] = useState(false);
-
-  setTimeout(() => {
-    setYes(true);
-  }, 2000);
-
   if (data?.viewListing || loading) {
     return (
       <Box
@@ -54,7 +48,7 @@ export const Listing = () => {
         {matches ? (
           <Navbar />
         ) : (
-          <Stack direction="row" justifyContent="space-between" padding={2}>
+          <Stack direction="row" justifyContent="space-between" padding={1.75}>
             <IconButton
               onClick={() => navigate(state?.from || "/")}
               color="info"
@@ -95,7 +89,7 @@ export const Listing = () => {
             <Stack direction="row" spacing={4} sx={{ pt: 3 }}>
               <Stack spacing={4} divider={<Divider />} sx={{ flex: 2 }}>
                 <SubHeader data={data?.viewListing} />
-                {data?.viewListing && yes && (
+                {data?.viewListing && (
                   <>
                     <Amenities amenities={data?.viewListing.amenities} />
                     <Typography>{data?.viewListing.description}</Typography>

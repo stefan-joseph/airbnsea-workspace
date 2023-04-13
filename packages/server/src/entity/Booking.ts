@@ -18,6 +18,21 @@ export class Booking extends BaseEntity {
   @Column("daterange")
   range: string;
 
+  @Column("int")
+  guests: number;
+
+  @Column("int")
+  pricePerNight: number;
+
+  @Column("int")
+  serviceFee: number;
+
+  @Column("int")
+  taxes: number;
+
+  @Column("int")
+  total: number;
+
   @Column("uuid")
   listingId: string;
 

@@ -1,5 +1,8 @@
 import { bookingSchema } from "@airbnb-clone/common";
-import { useCreateBookingMutation } from "@airbnb-clone/controller";
+import {
+  useCreateBookingMutation,
+  ViewListingQuery,
+} from "@airbnb-clone/controller";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { Form, Formik } from "formik";
@@ -10,27 +13,22 @@ import { MobileBooking } from "./components/MobileBooking";
 interface BookingInputValues {
   start: string | null;
   end: string | null;
-  guests: number | string;
+  guests: number;
 }
 
 export type BookingProps = {
-  price: number;
-  rating: number;
+  listingData: ViewListingQuery["viewListing"];
   calendarOpen: boolean;
-  maxGuests?: number;
   setCalendarOpen: (value: boolean) => void;
+  loading: boolean;
 };
 
 export const Booking = ({
+  listingData,
   mobile,
-  price,
-  rating,
-  maxGuests,
 }: {
+  listingData: ViewListingQuery["viewListing"];
   mobile?: boolean;
-  price: number;
-  rating: number;
-  maxGuests: number;
 }) => {
   const [searchParams] = useSearchParams();
   const start = searchParams.get("start");
@@ -43,6 +41,8 @@ export const Booking = ({
 
   const [createBookingMutation, { data, error, loading }] =
     useCreateBookingMutation();
+
+  const { guests: maxGuests, price, rating } = listingData;
 
   return (
     <Formik
@@ -80,18 +80,17 @@ export const Booking = ({
         >
           {!mobile ? (
             <DesktopBooking
-              price={price}
-              rating={rating}
-              maxGuests={maxGuests}
+              listingData={listingData}
               calendarOpen={calendarOpen}
               setCalendarOpen={setCalendarOpen}
+              loading={loading}
             />
           ) : (
             <MobileBooking
-              price={price}
-              rating={rating}
+              listingData={listingData}
               calendarOpen={calendarOpen}
               setCalendarOpen={setCalendarOpen}
+              loading={loading}
             />
           )}
         </Form>

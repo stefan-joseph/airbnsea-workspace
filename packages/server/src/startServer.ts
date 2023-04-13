@@ -10,7 +10,7 @@ import Redis from "ioredis";
 import cloudinary = require("cloudinary");
 import express = require("express");
 import { applyMiddleware } from "graphql-middleware";
-// const cors = require("cors");
+const cors = require("cors");
 import expressSession = require("express-session");
 const RedisStore = require("connect-redis")(expressSession);
 
@@ -52,21 +52,15 @@ export const startServer = async () => {
   const publishClient =
     process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test"
       ? new Redis()
-      : new Redis(
-          "redis://default:af5ac0df2e664a568c4052560f4f68e5@fly-airbnsea-redis.upstash.io",
-          {
-            family: 6,
-          }
-        );
+      : new Redis(process.env.REDIS_URL as string, {
+          family: 6,
+        });
   const subscribeClient =
     process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test"
       ? new Redis()
-      : new Redis(
-          "redis://default:af5ac0df2e664a568c4052560f4f68e5@fly-airbnsea-redis.upstash.io",
-          {
-            family: 6,
-          }
-        );
+      : new Redis(process.env.REDIS_URL as string, {
+          family: 6,
+        });
 
   const eventTarget = createRedisEventTarget({
     publishClient,
@@ -103,16 +97,15 @@ export const startServer = async () => {
   });
   app.use("/graphql", yoga);
 
-  // const corsOptions = {
-  //   credentials: true,
-  //   // origin:
-  //   //   process.env.NODE_ENV === "test"
-  //   //     ? "*"
-  //   //     :process.env.FRONTEND_HOST
-  //   origin: "*",
-
-  // };
-  // app.use(cors(corsOptions));
+  const corsOptions = {
+    credentials: true,
+    // origin:
+    //   process.env.NODE_ENV === "test"
+    //     ? "*"
+    //     :process.env.FRONTEND_HOST
+    origin: "*",
+  };
+  app.use(cors(corsOptions));
 
   // const limiter = rateLimit({
   //   windowMs: 15 * 60 * 1000, // 15 minutes

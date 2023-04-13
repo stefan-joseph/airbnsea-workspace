@@ -8,7 +8,11 @@ import { User } from "../../../entity/User";
 import { Listing } from "../../../entity/Listing";
 import { Message } from "../../../entity/Message";
 import { Booking } from "../../../entity/Booking";
-import { dateFormat } from "@airbnb-clone/common";
+import {
+  calculateBookingCosts,
+  dateFormat,
+  getDayDifference,
+} from "@airbnb-clone/common";
 
 export default class InitialSeeder implements Seeder {
   public async run(
@@ -97,12 +101,24 @@ export default class InitialSeeder implements Seeder {
 
       await messagesRepository.save(message3);
 
-      const date = dayjs(Date.now()).add(1, "month").format(dateFormat);
-      // format: '[2021-05-15 14:00, 2021-05-16 22:00)'
+      const start = dayjs(Date.now()).add(1, "month").format(dateFormat);
+
+      const end = dayjs(start)
+        .add(Math.floor(Math.random() * 10) + 1, "day")
+        .format(dateFormat);
+
+      const { serviceFee, taxes, total } = calculateBookingCosts(
+        listing.price,
+        getDayDifference(start, end)
+      );
+
       const booking1 = await bookingFactory.make({
-        range: `[${date}, ${dayjs(date)
-          .add(Math.floor(Math.random() * 10) + 1, "day")
-          .format(dateFormat)}]`,
+        range: `[${start}, ${end}]`,
+        guests: Math.floor(Math.random() * listing.guests) + 1,
+        pricePerNight: listing.price,
+        serviceFee,
+        taxes,
+        total,
         user: guestUser,
         userId: guestUser.id,
         listing,
@@ -111,12 +127,25 @@ export default class InitialSeeder implements Seeder {
 
       await bookingsRepository.save(booking1);
 
-      const date2 = dayjs(date).add(1, "month").format(dateFormat);
+      const start2 = dayjs(start).add(1, "month").format(dateFormat);
+
+      const end2 = dayjs(start2)
+        .add(Math.floor(Math.random() * 10) + 1, "day")
+        .format(dateFormat);
+
+      const {
+        serviceFee: serviceFee2,
+        taxes: taxes2,
+        total: total2,
+      } = calculateBookingCosts(listing.price, getDayDifference(start, end));
 
       const booking2 = await bookingFactory.make({
-        range: `[${date2}, ${dayjs(date2)
-          .add(Math.floor(Math.random() * 10) + 1, "day")
-          .format(dateFormat)}]`,
+        range: `[${start2}, ${end2}]`,
+        guests: Math.floor(Math.random() * listing.guests) + 1,
+        pricePerNight: listing.price,
+        serviceFee: serviceFee2,
+        taxes: taxes2,
+        total: total2,
         user: guestUser,
         userId: guestUser.id,
         listing,

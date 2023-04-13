@@ -7,6 +7,11 @@ exports.BookingFactory = (0, typeorm_extension_1.setSeederFactory)(Booking_1.Boo
     const booking = new Booking_1.Booking();
     console.log(faker);
     booking.range;
+    booking.guests;
+    booking.pricePerNight;
+    booking.serviceFee;
+    booking.taxes;
+    booking.total;
     booking.userId;
     booking.listingId;
     return booking;

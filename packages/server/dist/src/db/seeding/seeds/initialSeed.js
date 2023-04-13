@@ -83,22 +83,36 @@ class InitialSeeder {
                     createdDate: new Date(dayjs(Date.now()).subtract(1, "day").subtract(17, "minute").format()),
                 });
                 yield messagesRepository.save(message3);
-                const date = dayjs(Date.now()).add(1, "month").format(common_1.dateFormat);
+                const start = dayjs(Date.now()).add(1, "month").format(common_1.dateFormat);
+                const end = dayjs(start)
+                    .add(Math.floor(Math.random() * 10) + 1, "day")
+                    .format(common_1.dateFormat);
+                const { serviceFee, taxes, total } = (0, common_1.calculateBookingCosts)(listing.price, (0, common_1.getDayDifference)(start, end));
                 const booking1 = yield bookingFactory.make({
-                    range: `[${date}, ${dayjs(date)
-                        .add(Math.floor(Math.random() * 10) + 1, "day")
-                        .format(common_1.dateFormat)}]`,
+                    range: `[${start}, ${end}]`,
+                    guests: Math.floor(Math.random() * listing.guests) + 1,
+                    pricePerNight: listing.price,
+                    serviceFee,
+                    taxes,
+                    total,
                     user: guestUser,
                     userId: guestUser.id,
                     listing,
                     listingId: listing.id,
                 });
                 yield bookingsRepository.save(booking1);
-                const date2 = dayjs(date).add(1, "month").format(common_1.dateFormat);
+                const start2 = dayjs(start).add(1, "month").format(common_1.dateFormat);
+                const end2 = dayjs(start2)
+                    .add(Math.floor(Math.random() * 10) + 1, "day")
+                    .format(common_1.dateFormat);
+                const { serviceFee: serviceFee2, taxes: taxes2, total: total2, } = (0, common_1.calculateBookingCosts)(listing.price, (0, common_1.getDayDifference)(start, end));
                 const booking2 = yield bookingFactory.make({
-                    range: `[${date2}, ${dayjs(date2)
-                        .add(Math.floor(Math.random() * 10) + 1, "day")
-                        .format(common_1.dateFormat)}]`,
+                    range: `[${start2}, ${end2}]`,
+                    guests: Math.floor(Math.random() * listing.guests) + 1,
+                    pricePerNight: listing.price,
+                    serviceFee: serviceFee2,
+                    taxes: taxes2,
+                    total: total2,
                     user: guestUser,
                     userId: guestUser.id,
                     listing,

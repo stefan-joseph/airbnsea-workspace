@@ -7,7 +7,7 @@ exports.redis = void 0;
 const ioredis_1 = __importDefault(require("ioredis"));
 exports.redis = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test"
     ? new ioredis_1.default()
-    : new ioredis_1.default("redis://default:af5ac0df2e664a568c4052560f4f68e5@fly-airbnsea-redis.upstash.io", {
+    : new ioredis_1.default(process.env.REDIS_URL, {
         family: 6,
     });
 //# sourceMappingURL=redis.js.map

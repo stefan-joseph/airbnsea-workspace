@@ -8,6 +8,11 @@ export const BookingFactory = setSeederFactory(Booking, (faker: Faker) => {
   console.log(faker);
 
   booking.range;
+  booking.guests;
+  booking.pricePerNight;
+  booking.serviceFee;
+  booking.taxes;
+  booking.total;
   booking.userId;
   booking.listingId;
 

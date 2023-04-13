@@ -18,6 +18,8 @@ __exportStar(require("./yupSchemas/user"), exports);
 __exportStar(require("./yupSchemas/booking"), exports);
 __exportStar(require("./yupSchemas/message"), exports);
 __exportStar(require("./yupSchemas/search"), exports);
-__exportStar(require("./vesselTypes"), exports);
+__exportStar(require("./utils/vesselTypes"), exports);
+__exportStar(require("./utils/calculateBookingCosts"), exports);
+__exportStar(require("./utils/getDayDifference"), exports);
 __exportStar(require("./constants/constants"), exports);
 //# sourceMappingURL=index.js.map

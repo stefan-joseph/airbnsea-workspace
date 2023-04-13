@@ -1,9 +1,12 @@
-import { bookingSchema } from "@airbnb-clone/common";
+import {
+  bookingSchema,
+  getDayDifference,
+  calculateBookingCosts,
+} from "@airbnb-clone/common";
 import { ValidationError } from "yup";
 
 import { Booking } from "../../../entity/Booking";
 import { Resolvers } from "../../../types/types";
-
 import { getTypeormConnection } from "../../../utils/getTypeormConnection";
 import { formatYupError } from "../../shared/utils/formatYupError";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
@@ -14,7 +17,7 @@ import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorM
 export const resolvers: Resolvers = {
   Mutation: {
     createBooking: async (_, { listingId, input }, { req: { session } }) => {
-      const { start, end } = input;
+      const { start, end, guests } = input;
 
       // yup validation
       try {
@@ -49,17 +52,32 @@ export const resolvers: Resolvers = {
         return formatGraphQLYogaError(datesUnavailable);
       }
 
+      const { serviceFee, taxes, total } = calculateBookingCosts(
+        listing.price,
+        getDayDifference(start, end)
+      );
+
       const booking = await Booking.create({
         range: `[${start}, ${end})`,
+        guests,
+        pricePerNight: listing.price,
+        serviceFee,
+        taxes,
+        total,
         listingId,
         userId: session.userId,
       }).save();
+
       console.log(booking);
+
       if (!booking) {
         return formatGraphQLYogaError(
           "The booking could not be created at this time. Please try again."
         );
       }
+
+      // return entire booking object
+      // need to extract start and end dates
 
       return booking.id;
     },

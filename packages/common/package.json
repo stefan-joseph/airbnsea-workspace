@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "cross-env": "5.0.5",
-    "dayjs": "^1.11.7",
     "yup": "^0.32.11"
   },
   "devDependencies": {

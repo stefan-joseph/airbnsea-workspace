@@ -15,16 +15,10 @@ export const ReserveCard = ({ data }: Props) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
 
-  const [yes, setYes] = useState(false);
-
-  setTimeout(() => {
-    setYes(true);
-  }, 2000);
-
   return (
     <>
       {matches &&
-        (data && yes ? (
+        (data ? (
           <Card
             raised
             sx={{
@@ -37,15 +31,7 @@ export const ReserveCard = ({ data }: Props) => {
               padding: 1,
             }}
           >
-            <CardContent>
-              {data && (
-                <Booking
-                  price={data.price}
-                  rating={data.rating}
-                  maxGuests={data.guests}
-                />
-              )}
-            </CardContent>
+            <CardContent>{data && <Booking listingData={data} />}</CardContent>
           </Card>
         ) : (
           <Skeleton

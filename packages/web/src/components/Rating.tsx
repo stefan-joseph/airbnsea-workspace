@@ -1,10 +1,18 @@
 import { Typography } from "@mui/material";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
+import { IoStar } from "react-icons/io5";
+import { HiStar } from "react-icons/hi";
 
-export const Rating = ({ rating }: { rating: number }) => {
+export const Rating = ({
+  rating,
+  fontSize,
+}: {
+  rating: number;
+  fontSize?: number;
+}) => {
   return (
-    <Typography sx={{ display: "flex" }}>
-      <StarRateRoundedIcon fontSize="small" /> {rating}
+    <Typography fontSize={fontSize} fontWeight={600} sx={{ display: "flex" }}>
+      <HiStar fontSize="1.2em" /> {rating}
     </Typography>
   );
 };

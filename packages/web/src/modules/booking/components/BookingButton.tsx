@@ -2,9 +2,11 @@ import { Button, CircularProgress } from "@mui/material";
 import { Field, FieldProps } from "formik";
 
 export const BookingButton = ({
+  handleClick,
   setCalendarOpen,
   fullWidth,
 }: {
+  handleClick: () => void;
   setCalendarOpen: (value: boolean) => void;
   fullWidth?: boolean;
 }) => {
@@ -17,8 +19,11 @@ export const BookingButton = ({
           disabled={isSubmitting}
           type={isValid ? "submit" : undefined}
           onClick={() => {
-            if (values.start && values.end) return;
-            setCalendarOpen(true);
+            if (values.start && values.end) {
+              handleClick();
+            } else {
+              setCalendarOpen(true);
+            }
           }}
           fullWidth={fullWidth}
         >

@@ -22,8 +22,6 @@ export const AppContainer = ({
   const matches = useMediaQuery(desktopMinWidth);
   return (
     <Box
-      // border="1px solid red"
-      minHeight="100vh"
       sx={{
         display: "flex",
         flexDirection: "column",

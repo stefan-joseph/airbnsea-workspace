@@ -21,7 +21,7 @@ const errorMessages_2 = require("../../shared/utils/errorMessages");
 exports.resolvers = {
     Mutation: {
         createBooking: (_, { listingId, input }, { req: { session } }) => __awaiter(void 0, void 0, void 0, function* () {
-            const { start, end } = input;
+            const { start, end, guests } = input;
             try {
                 yield common_1.bookingSchema.validate(input);
             }
@@ -44,8 +44,14 @@ exports.resolvers = {
             if (alreadyBooking.length > 0) {
                 return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.datesUnavailable);
             }
+            const { serviceFee, taxes, total } = (0, common_1.calculateBookingCosts)(listing.price, (0, common_1.getDayDifference)(start, end));
             const booking = yield Booking_1.Booking.create({
                 range: `[${start}, ${end})`,
+                guests,
+                pricePerNight: listing.price,
+                serviceFee,
+                taxes,
+                total,
                 listingId,
                 userId: session.userId,
             }).save();

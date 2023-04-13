@@ -20,6 +20,7 @@ const ioredis_1 = __importDefault(require("ioredis"));
 const cloudinary = require("cloudinary");
 const express = require("express");
 const graphql_middleware_1 = require("graphql-middleware");
+const cors = require("cors");
 const expressSession = require("express-session");
 const RedisStore = require("connect-redis")(expressSession);
 const confirmEmail_1 = require("./routes/confirmEmail");
@@ -48,12 +49,12 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     const schemaWithMiddleware = (0, graphql_middleware_1.applyMiddleware)(schema, middleware_1.authMiddleware, middleware_1.listingIdMiddleware);
     const publishClient = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test"
         ? new ioredis_1.default()
-        : new ioredis_1.default("redis://default:af5ac0df2e664a568c4052560f4f68e5@fly-airbnsea-redis.upstash.io", {
+        : new ioredis_1.default(process.env.REDIS_URL, {
             family: 6,
         });
     const subscribeClient = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test"
         ? new ioredis_1.default()
-        : new ioredis_1.default("redis://default:af5ac0df2e664a568c4052560f4f68e5@fly-airbnsea-redis.upstash.io", {
+        : new ioredis_1.default(process.env.REDIS_URL, {
             family: 6,
         });
     const eventTarget = (0, redis_event_target_1.createRedisEventTarget)({
@@ -72,6 +73,11 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         }),
     });
     app.use("/graphql", yoga);
+    const corsOptions = {
+        credentials: true,
+        origin: "*",
+    };
+    app.use(cors(corsOptions));
     cloudinary.v2.config({
         cloud_name: process.env.CLOUDINARY_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,

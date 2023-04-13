@@ -24,6 +24,26 @@ __decorate([
     __metadata("design:type", String)
 ], Booking.prototype, "range", void 0);
 __decorate([
+    (0, typeorm_1.Column)("int"),
+    __metadata("design:type", Number)
+], Booking.prototype, "guests", void 0);
+__decorate([
+    (0, typeorm_1.Column)("int"),
+    __metadata("design:type", Number)
+], Booking.prototype, "pricePerNight", void 0);
+__decorate([
+    (0, typeorm_1.Column)("int"),
+    __metadata("design:type", Number)
+], Booking.prototype, "serviceFee", void 0);
+__decorate([
+    (0, typeorm_1.Column)("int"),
+    __metadata("design:type", Number)
+], Booking.prototype, "taxes", void 0);
+__decorate([
+    (0, typeorm_1.Column)("int"),
+    __metadata("design:type", Number)
+], Booking.prototype, "total", void 0);
+__decorate([
     (0, typeorm_1.Column)("uuid"),
     __metadata("design:type", String)
 ], Booking.prototype, "listingId", void 0);

@@ -3,17 +3,16 @@ import {
   Avatar,
   Box,
   Dialog,
-  IconButton,
   Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import { OutlinedButton } from "../../../components/OutlinedButton";
 import { CreateConversation } from "../../message/components/CreateConversation";
 import { useParams } from "react-router-dom";
+import { borderRadius } from "../../../constants/constants";
 
 type Props = {
   data?: ViewListingQuery["viewListing"];
@@ -23,11 +22,11 @@ export const SubHeader = ({ data }: Props) => {
   const { listingId } = useParams();
   const [messageOpen, setMessageOpen] = useState(false);
 
-  const [yes, setYes] = useState(false);
+  // const [yes, setYes] = useState(false);
 
-  setTimeout(() => {
-    setYes(true);
-  }, 2000);
+  // setTimeout(() => {
+  //   setYes(true);
+  // }, 2000);
 
   return (
     <>
@@ -40,7 +39,7 @@ export const SubHeader = ({ data }: Props) => {
               fontWeight={400}
               letterSpacing={0.2}
             >
-              {data && yes ? (
+              {data ? (
                 <>
                   <Box component="span" style={{ textTransform: "capitalize" }}>
                     {data.vesselType}{" "}
@@ -51,7 +50,7 @@ export const SubHeader = ({ data }: Props) => {
                 <Skeleton width="100%" sx={{ maxWidth: 500 }} />
               )}
             </Typography>
-            {data && yes ? (
+            {data ? (
               <Stack
                 direction="row"
                 spacing={1}
@@ -76,7 +75,7 @@ export const SubHeader = ({ data }: Props) => {
             )}
           </Stack>
 
-          {data && yes ? (
+          {data ? (
             <Avatar
               src={data.owner?.avatar}
               sx={{ width: 56, height: 56, ml: 2 }}
@@ -90,7 +89,7 @@ export const SubHeader = ({ data }: Props) => {
             />
           )}
         </Stack>
-        {data && yes ? (
+        {data ? (
           <OutlinedButton
             text={"Contact host"}
             handleClick={() => setMessageOpen(true)}
@@ -112,7 +111,7 @@ export const SubHeader = ({ data }: Props) => {
         open={messageOpen}
         onClose={() => setMessageOpen(false)}
         sx={{ width: "100vw" }}
-        PaperProps={{ sx: { width: "100%" } }}
+        PaperProps={{ sx: { width: "100%", borderRadius: borderRadius } }}
       >
         <Stack p={3} pl={5} pr={5} flex={1} gap={1}>
           <Typography fontSize={22} fontWeight={600}>

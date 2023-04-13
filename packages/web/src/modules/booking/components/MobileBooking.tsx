@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Drawer,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Drawer, IconButton, Stack } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import { BookingButton } from "./BookingButton";
@@ -14,14 +7,12 @@ import { BookingProps } from "../Booking";
 import { Calendar } from "../../../components/calendar/Calendar";
 import { PriceAndRatingStack } from "./PriceAndRatingStack";
 import { searchBarBorderColor } from "../../../constants/constants";
-import { getDayDifference } from "../../../utils/getDayDifference";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { BookingHeader } from "../../../components/calendar/components/BookingHeader";
 
 export const MobileBooking = ({
-  price,
-  rating,
+  listingData,
   calendarOpen,
   setCalendarOpen,
 }: BookingProps) => {
@@ -32,6 +23,8 @@ export const MobileBooking = ({
   const [isStartSelection, setIsStartSelection] = useState<boolean>(
     !start || (start && end) ? true : false
   );
+
+  const { price, rating } = listingData;
 
   return (
     <Field>
@@ -46,7 +39,10 @@ export const MobileBooking = ({
               end={values.end}
               handleClick={() => setCalendarOpen(true)}
             />
-            <BookingButton setCalendarOpen={setCalendarOpen} />
+            <BookingButton
+              handleClick={() => undefined}
+              setCalendarOpen={setCalendarOpen}
+            />
           </Stack>
           <Drawer
             open={calendarOpen}

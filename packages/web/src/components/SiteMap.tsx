@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { appSidePadding, searchBarBorderColor } from "../constants/constants";
 import { theme } from "../MuiTheme";
 import { IoLogoGithub } from "react-icons/io";
@@ -14,11 +14,14 @@ export const SiteMap = () => {
       justifyContent="space-between"
       borderTop="1px solid"
       borderColor={searchBarBorderColor}
-      pt={1.6}
-      pb={1.7}
+      pt={1.4}
+      pb={1.5}
       pr={appSidePadding}
       pl={appSidePadding}
-      position={location.pathname === "/" && !where ? "fixed" : "initial"}
+      position={
+        // location.pathname === "/" &&
+        !where ? "fixed" : "initial"
+      }
       bottom={0}
       width="100%"
       sx={{ backgroundColor: theme.palette.common.white }}
