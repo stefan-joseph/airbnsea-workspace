@@ -37,8 +37,6 @@ describe("view listing", () => {
     }));
     test("user successfully views listing", () => __awaiter(void 0, void 0, void 0, function* () {
         const { data } = yield client.viewListing(listingId);
-        console.log("data", data);
-        console.log("photos", photos);
         const photosWithFullUrl = photos.map((photo) => constants_1.imageUrl + photo);
         expect(data.viewListing).toEqual(Object.assign(Object.assign({ id: listingId }, testConstants_1.testListing), { photos: photosWithFullUrl, userId: null, owner: {
                 firstName: testConstants_1.testUser1.firstName,

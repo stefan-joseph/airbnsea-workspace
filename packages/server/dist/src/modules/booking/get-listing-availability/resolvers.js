@@ -17,13 +17,10 @@ exports.resolvers = {
     Query: {
         getListingUnavailability: (_, { listingId }) => __awaiter(void 0, void 0, void 0, function* () {
             const bookings = yield Booking_1.Booking.find({ where: { listingId } });
-            console.log(bookings);
             let unavailableDates = [];
             bookings.map((b) => {
                 const dates = b.range.split(/[\[,\s)]/);
-                console.log(dates[1], dates[2]);
                 const diff = dayjs(dates[2]).diff(dates[1], "day");
-                console.log("diff", diff);
                 Array(diff)
                     .fill("")
                     .map((_, i) => {

@@ -1,8 +1,8 @@
-import { useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import { useMeQuery } from "@airbnb-clone/controller";
 
 export const ProtectedRoute = ({ children, redirect }: any) => {
-  const { data, loading, error } = useMeQuery();
+  const { data, loading } = useMeQuery();
 
   const location = useLocation();
 

@@ -1,5 +1,6 @@
 import { bookingSchema } from "@airbnb-clone/common";
 import {
+  CreateBookingMutation,
   useCreateBookingMutation,
   ViewListingQuery,
 } from "@airbnb-clone/controller";
@@ -9,6 +10,7 @@ import { Form, Formik } from "formik";
 
 import { DesktopBooking } from "./components/DesktopBooking";
 import { MobileBooking } from "./components/MobileBooking";
+import { MutationResult } from "@apollo/client";
 
 interface BookingInputValues {
   start: string | null;
@@ -20,7 +22,7 @@ export type BookingProps = {
   listingData: ViewListingQuery["viewListing"];
   calendarOpen: boolean;
   setCalendarOpen: (value: boolean) => void;
-  loading: boolean;
+  result: MutationResult<CreateBookingMutation>;
 };
 
 export const Booking = ({
@@ -39,10 +41,9 @@ export const Booking = ({
 
   const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
 
-  const [createBookingMutation, { data, error, loading }] =
-    useCreateBookingMutation();
+  const [createBookingMutation, result] = useCreateBookingMutation();
 
-  const { guests: maxGuests, price, rating } = listingData;
+  const { guests: maxGuests } = listingData;
 
   return (
     <Formik
@@ -54,6 +55,8 @@ export const Booking = ({
         } as BookingInputValues
       }
       validationSchema={bookingSchema}
+      validateOnMount
+      validateOnChange
       onSubmit={async (values) => {
         console.log(values);
         const { start, end, guests } = values;
@@ -83,14 +86,14 @@ export const Booking = ({
               listingData={listingData}
               calendarOpen={calendarOpen}
               setCalendarOpen={setCalendarOpen}
-              loading={loading}
+              result={result}
             />
           ) : (
             <MobileBooking
               listingData={listingData}
               calendarOpen={calendarOpen}
               setCalendarOpen={setCalendarOpen}
-              loading={loading}
+              result={result}
             />
           )}
         </Form>

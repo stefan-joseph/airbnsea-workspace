@@ -18,7 +18,17 @@ const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaEr
 const Listing_1 = require("../../../entity/Listing");
 const errorMessages_1 = require("./utils/errorMessages");
 const errorMessages_2 = require("../../shared/utils/errorMessages");
+const constants_1 = require("../../shared/utils/constants");
 exports.resolvers = {
+    Booking: {
+        listing: ({ listingId }) => __awaiter(void 0, void 0, void 0, function* () {
+            const listing = yield Listing_1.Listing.findOneBy({ id: listingId });
+            if (!listing)
+                return null;
+            const { name, photos, rating, vesselType } = listing;
+            return { name, img: constants_1.imageUrl + photos[0], rating, vesselType };
+        }),
+    },
     Mutation: {
         createBooking: (_, { listingId, input }, { req: { session } }) => __awaiter(void 0, void 0, void 0, function* () {
             const { start, end, guests } = input;
@@ -55,11 +65,15 @@ exports.resolvers = {
                 listingId,
                 userId: session.userId,
             }).save();
-            console.log(booking);
             if (!booking) {
-                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("The booking could not be created at this time. Please try again.");
+                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("The booking could not be created at this time.");
             }
-            return booking.id;
+            const extractDates = (range) => {
+                const chunks = range.split(/\[|, |\)/);
+                return { start: chunks[1], end: chunks[2] };
+            };
+            const dates = extractDates(booking.range);
+            return Object.assign(Object.assign({}, booking), dates);
         }),
     },
 };

@@ -43,8 +43,6 @@ describe("view listing", () => {
 
   test("user successfully views listing", async () => {
     const { data } = await client.viewListing(listingId);
-    console.log("data", data);
-    console.log("photos", photos);
 
     const photosWithFullUrl = photos.map((photo) => imageUrl + photo);
 

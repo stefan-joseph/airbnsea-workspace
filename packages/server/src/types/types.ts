@@ -29,8 +29,14 @@ export type Address = {
 export type Booking = {
   __typename?: 'Booking';
   end: Scalars['String'];
+  guests: Scalars['Int'];
+  listing?: Maybe<ListingInfo>;
   listingId: Scalars['ID'];
+  pricePerNight: Scalars['Int'];
+  serviceFee: Scalars['Int'];
   start: Scalars['String'];
+  taxes: Scalars['Int'];
+  total: Scalars['Int'];
 };
 
 export type BookingInput = {
@@ -137,6 +143,8 @@ export type ListingInfo = {
   __typename?: 'ListingInfo';
   img?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  rating?: Maybe<Scalars['Float']>;
+  vesselType?: Maybe<VesselType>;
 };
 
 export type LoginResponse = {
@@ -151,17 +159,11 @@ export type Me = {
   firstName?: Maybe<Scalars['String']>;
 };
 
-export type MessageTut = {
-  __typename?: 'MessageTut';
-  body?: Maybe<Scalars['String']>;
-  from?: Maybe<Scalars['String']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   addFruit: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
-  createBooking: Scalars['ID'];
+  createBooking: Booking;
   createConversation: CreateConversationResponse;
   createListing: Scalars['ID'];
   createMessage: Scalars['ID'];
@@ -170,7 +172,6 @@ export type Mutation = {
   logout?: Maybe<Scalars['Boolean']>;
   register?: Maybe<Array<Error>>;
   resetPassword?: Maybe<Array<Error>>;
-  send: MessageTut;
   sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
   updateListing?: Maybe<Scalars['ID']>;
 };
@@ -232,11 +233,6 @@ export type MutationResetPasswordArgs = {
 };
 
 
-export type MutationSendArgs = {
-  input: SendMessageInput;
-};
-
-
 export type MutationSendForgotPasswordEmailArgs = {
   email: Scalars['String'];
 };
@@ -269,7 +265,6 @@ export type Query = {
   populateConversation: Conversation;
   populateForm: Draft;
   populateInbox: Array<InboxMessage>;
-  room: Array<MessageTut>;
   searchListings: SearchListingsResponse;
   viewListing: Listing;
   viewUserBookings: Array<Booking>;
@@ -294,11 +289,6 @@ export type QueryPopulateFormArgs = {
 
 export type QueryPopulateInboxArgs = {
   inboxType: InboxType;
-};
-
-
-export type QueryRoomArgs = {
-  id: Scalars['ID'];
 };
 
 
@@ -362,12 +352,6 @@ export type SearchLocation = {
   lng: Scalars['Float'];
 };
 
-export type SendMessageInput = {
-  body: Scalars['String'];
-  from: Scalars['String'];
-  roomId: Scalars['ID'];
-};
-
 export enum Status {
   Active = 'active',
   Inactive = 'inactive'
@@ -376,18 +360,12 @@ export enum Status {
 export type Subscription = {
   __typename?: 'Subscription';
   newMessage: ConversationMessage;
-  newMessageTut: MessageTut;
   updateInbox: InboxMessage;
 };
 
 
 export type SubscriptionNewMessageArgs = {
   conversationId: Scalars['String'];
-};
-
-
-export type SubscriptionNewMessageTutArgs = {
-  roomId: Scalars['ID'];
 };
 
 export type UpdateListingFields = {
@@ -504,7 +482,6 @@ export type ResolversTypes = {
   ListingInfo: ResolverTypeWrapper<ListingInfo>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Me: ResolverTypeWrapper<Me>;
-  MessageTut: ResolverTypeWrapper<MessageTut>;
   Mutation: ResolverTypeWrapper<{}>;
   Owner: ResolverTypeWrapper<Owner>;
   PhotoUpdate: PhotoUpdate;
@@ -515,7 +492,6 @@ export type ResolversTypes = {
   SearchListingsInput: SearchListingsInput;
   SearchListingsResponse: ResolverTypeWrapper<SearchListingsResponse>;
   SearchLocation: ResolverTypeWrapper<SearchLocation>;
-  SendMessageInput: SendMessageInput;
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']>;
   Subscription: ResolverTypeWrapper<{}>;
@@ -548,7 +524,6 @@ export type ResolversParentTypes = {
   ListingInfo: ListingInfo;
   LoginResponse: LoginResponse;
   Me: Me;
-  MessageTut: MessageTut;
   Mutation: {};
   Owner: Owner;
   PhotoUpdate: PhotoUpdate;
@@ -559,7 +534,6 @@ export type ResolversParentTypes = {
   SearchListingsInput: SearchListingsInput;
   SearchListingsResponse: SearchListingsResponse;
   SearchLocation: SearchLocation;
-  SendMessageInput: SendMessageInput;
   String: Scalars['String'];
   Subscription: {};
   UpdateListingFields: UpdateListingFields;
@@ -569,8 +543,14 @@ export type ResolversParentTypes = {
 
 export type BookingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Booking'] = ResolversParentTypes['Booking']> = {
   end?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  guests?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  listing?: Resolver<Maybe<ResolversTypes['ListingInfo']>, ParentType, ContextType>;
   listingId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  pricePerNight?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  serviceFee?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   start?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  taxes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -680,6 +660,8 @@ export type ListingResolvers<ContextType = any, ParentType extends ResolversPare
 export type ListingInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListingInfo'] = ResolversParentTypes['ListingInfo']> = {
   img?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  rating?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  vesselType?: Resolver<Maybe<ResolversTypes['VesselType']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -695,16 +677,10 @@ export type MeResolvers<ContextType = any, ParentType extends ResolversParentTyp
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageTutResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageTut'] = ResolversParentTypes['MessageTut']> = {
-  body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  from?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addFruit?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddFruitArgs, 'fruit'>>;
   confirmEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationConfirmEmailArgs, 'id'>>;
-  createBooking?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input' | 'listingId'>>;
+  createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input' | 'listingId'>>;
   createConversation?: Resolver<ResolversTypes['CreateConversationResponse'], ParentType, ContextType, RequireFields<MutationCreateConversationArgs, 'listingId' | 'text'>>;
   createListing?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateListingArgs, 'input'>>;
   createMessage?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'conversationId' | 'text'>>;
@@ -713,7 +689,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   register?: Resolver<Maybe<Array<ResolversTypes['Error']>>, ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'password'>>;
   resetPassword?: Resolver<Maybe<Array<ResolversTypes['Error']>>, ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'key' | 'newPassword'>>;
-  send?: Resolver<ResolversTypes['MessageTut'], ParentType, ContextType, RequireFields<MutationSendArgs, 'input'>>;
   sendForgotPasswordEmail?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendForgotPasswordEmailArgs, 'email'>>;
   updateListing?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationUpdateListingArgs, 'fields' | 'listingId'>>;
 };
@@ -733,7 +708,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   populateConversation?: Resolver<ResolversTypes['Conversation'], ParentType, ContextType, RequireFields<QueryPopulateConversationArgs, 'conversationId'>>;
   populateForm?: Resolver<ResolversTypes['Draft'], ParentType, ContextType, RequireFields<QueryPopulateFormArgs, 'fields' | 'listingId'>>;
   populateInbox?: Resolver<Array<ResolversTypes['InboxMessage']>, ParentType, ContextType, RequireFields<QueryPopulateInboxArgs, 'inboxType'>>;
-  room?: Resolver<Array<ResolversTypes['MessageTut']>, ParentType, ContextType, RequireFields<QueryRoomArgs, 'id'>>;
   searchListings?: Resolver<ResolversTypes['SearchListingsResponse'], ParentType, ContextType, RequireFields<QuerySearchListingsArgs, 'limit' | 'offset'>>;
   viewListing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<QueryViewListingArgs, 'listingId'>>;
   viewUserBookings?: Resolver<Array<ResolversTypes['Booking']>, ParentType, ContextType>;
@@ -782,7 +756,6 @@ export type SearchLocationResolvers<ContextType = any, ParentType extends Resolv
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   newMessage?: SubscriptionResolver<ResolversTypes['ConversationMessage'], "newMessage", ParentType, ContextType, RequireFields<SubscriptionNewMessageArgs, 'conversationId'>>;
-  newMessageTut?: SubscriptionResolver<ResolversTypes['MessageTut'], "newMessageTut", ParentType, ContextType, RequireFields<SubscriptionNewMessageTutArgs, 'roomId'>>;
   updateInbox?: SubscriptionResolver<ResolversTypes['InboxMessage'], "updateInbox", ParentType, ContextType>;
 };
 
@@ -809,7 +782,6 @@ export type Resolvers<ContextType = any> = {
   ListingInfo?: ListingInfoResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Me?: MeResolvers<ContextType>;
-  MessageTut?: MessageTutResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Owner?: OwnerResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

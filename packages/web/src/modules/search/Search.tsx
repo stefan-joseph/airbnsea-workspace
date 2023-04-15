@@ -55,7 +55,7 @@ export const Search = () => {
   return (
     <AppContainer error={!!error}>
       {error ? (
-        <RequestErrorMessage />
+        <RequestErrorMessage margin={2} />
       ) : (
         <Results data={data?.searchListings}>
           {pageCount && pageCount > 1 ? (

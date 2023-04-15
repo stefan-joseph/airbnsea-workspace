@@ -142,7 +142,21 @@ function useGetRandomUserCredentailsLazyQuery(baseOptions) {
 exports.useGetRandomUserCredentailsLazyQuery = useGetRandomUserCredentailsLazyQuery;
 exports.CreateBookingDocument = (0, client_1.gql) `
     mutation CreateBooking($listingId: String!, $input: BookingInput!) {
-  createBooking(listingId: $listingId, input: $input)
+  createBooking(listingId: $listingId, input: $input) {
+    start
+    end
+    guests
+    pricePerNight
+    serviceFee
+    taxes
+    total
+    listing {
+      vesselType
+      name
+      img
+      rating
+    }
+  }
 }
     `;
 function useCreateBookingMutation(baseOptions) {

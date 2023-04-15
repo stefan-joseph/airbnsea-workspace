@@ -3,6 +3,7 @@ import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import dayjs from "dayjs";
 
 import { Field, FieldProps } from "formik";
+import { Rating } from "../../../components/Rating";
 
 type Props = {
   price: number;
@@ -45,19 +46,7 @@ export const PriceAndRatingStack = ({
             )}`}
           </ButtonBase>
         ) : (
-          //@TODO make reusable rating component
-          <Stack direction="row" alignItems="center">
-            <StarRateRoundedIcon
-              fontSize="inherit"
-              sx={{ mt: -0.6, mr: 0.2 }}
-            />
-            <Typography
-              fontSize={13}
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              {rating}
-            </Typography>
-          </Stack>
+          <>{rating && <Rating rating={rating} fontSize={13} />}</>
         )}
       </Box>
     </Stack>

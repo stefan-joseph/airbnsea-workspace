@@ -132,7 +132,21 @@ class TestClient {
                     query: `
           mutation {
             createBooking(listingId: "${listingId}",
-            input: {start: "${input.start}", end: "${input.end}", guests: ${input.guests}})
+            input: {start: "${input.start}", end: "${input.end}", guests: ${input.guests}}){
+              start
+              end
+              guests
+              pricePerNight
+              serviceFee
+              taxes
+              total
+              listing {
+                vesselType
+                name
+                img
+                rating
+              }
+            }
           }
         `,
                 } }));

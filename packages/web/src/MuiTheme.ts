@@ -64,7 +64,8 @@ export const theme = createTheme({
           textTransform: "none",
           fontSize: 16,
           borderRadius: 8,
-          letterSpacing: 0.1,
+          letterSpacing: 0.5,
+          fontWeight: 500,
           "&:disabled": {
             color: "#FFF",
           },

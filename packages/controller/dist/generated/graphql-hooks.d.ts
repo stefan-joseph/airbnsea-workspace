@@ -33,8 +33,14 @@ export declare type Address = {
 export declare type Booking = {
     __typename?: 'Booking';
     end: Scalars['String'];
+    guests: Scalars['Int'];
+    listing?: Maybe<ListingInfo>;
     listingId: Scalars['ID'];
+    pricePerNight: Scalars['Int'];
+    serviceFee: Scalars['Int'];
     start: Scalars['String'];
+    taxes: Scalars['Int'];
+    total: Scalars['Int'];
 };
 export declare type BookingInput = {
     end: Scalars['String'];
@@ -130,6 +136,8 @@ export declare type ListingInfo = {
     __typename?: 'ListingInfo';
     img?: Maybe<Scalars['String']>;
     name?: Maybe<Scalars['String']>;
+    rating?: Maybe<Scalars['Int']>;
+    vesselType?: Maybe<VesselType>;
 };
 export declare type LoginResponse = {
     __typename?: 'LoginResponse';
@@ -141,16 +149,11 @@ export declare type Me = {
     avatar?: Maybe<Scalars['String']>;
     firstName?: Maybe<Scalars['String']>;
 };
-export declare type MessageTut = {
-    __typename?: 'MessageTut';
-    body?: Maybe<Scalars['String']>;
-    from?: Maybe<Scalars['String']>;
-};
 export declare type Mutation = {
     __typename?: 'Mutation';
     addFruit: Scalars['Boolean'];
     confirmEmail: Scalars['Boolean'];
-    createBooking: Scalars['ID'];
+    createBooking: Booking;
     createConversation: CreateConversationResponse;
     createListing: Scalars['ID'];
     createMessage: Scalars['ID'];
@@ -159,7 +162,6 @@ export declare type Mutation = {
     logout?: Maybe<Scalars['Boolean']>;
     register?: Maybe<Array<Error>>;
     resetPassword?: Maybe<Array<Error>>;
-    send: MessageTut;
     sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
     updateListing?: Maybe<Scalars['ID']>;
 };
@@ -199,9 +201,6 @@ export declare type MutationResetPasswordArgs = {
     key: Scalars['String'];
     newPassword: Scalars['String'];
 };
-export declare type MutationSendArgs = {
-    input: SendMessageInput;
-};
 export declare type MutationSendForgotPasswordEmailArgs = {
     email: Scalars['String'];
 };
@@ -229,7 +228,6 @@ export declare type Query = {
     populateConversation: Conversation;
     populateForm: Draft;
     populateInbox: Array<InboxMessage>;
-    room: Array<MessageTut>;
     searchListings: SearchListingsResponse;
     viewListing: Listing;
     viewUserBookings: Array<Booking>;
@@ -246,9 +244,6 @@ export declare type QueryPopulateFormArgs = {
 };
 export declare type QueryPopulateInboxArgs = {
     inboxType: InboxType;
-};
-export declare type QueryRoomArgs = {
-    id: Scalars['ID'];
 };
 export declare type QuerySearchListingsArgs = {
     input?: InputMaybe<SearchListingsInput>;
@@ -301,11 +296,6 @@ export declare type SearchLocation = {
     lat: Scalars['Float'];
     lng: Scalars['Float'];
 };
-export declare type SendMessageInput = {
-    body: Scalars['String'];
-    from: Scalars['String'];
-    roomId: Scalars['ID'];
-};
 export declare enum Status {
     Active = "active",
     Inactive = "inactive"
@@ -313,14 +303,10 @@ export declare enum Status {
 export declare type Subscription = {
     __typename?: 'Subscription';
     newMessage: ConversationMessage;
-    newMessageTut: MessageTut;
     updateInbox: InboxMessage;
 };
 export declare type SubscriptionNewMessageArgs = {
     conversationId: Scalars['String'];
-};
-export declare type SubscriptionNewMessageTutArgs = {
-    roomId: Scalars['ID'];
 };
 export declare type UpdateListingFields = {
     address?: InputMaybe<Address>;
@@ -423,7 +409,23 @@ export declare type CreateBookingMutationVariables = Exact<{
 }>;
 export declare type CreateBookingMutation = {
     __typename?: 'Mutation';
-    createBooking: string;
+    createBooking: {
+        __typename?: 'Booking';
+        start: string;
+        end: string;
+        guests: number;
+        pricePerNight: number;
+        serviceFee: number;
+        taxes: number;
+        total: number;
+        listing?: {
+            __typename?: 'ListingInfo';
+            vesselType?: VesselType | null;
+            name?: string | null;
+            img?: string | null;
+            rating?: number | null;
+        } | null;
+    };
 };
 export declare type GetListingUnavailabilityQueryVariables = Exact<{
     listingId: Scalars['ID'];

@@ -98,7 +98,7 @@ export const SelectGuests = ({ maxGuests }: { maxGuests?: number }) => {
                     if (value > 1) {
                       searchParams.set("guests", `${value - 1}`);
                       setSearchParams(searchParams, {
-                        state: { from: state.from },
+                        state: { from: state?.from },
                       });
                       setFieldValue("guests", +value - 1);
                     }
@@ -107,7 +107,7 @@ export const SelectGuests = ({ maxGuests }: { maxGuests?: number }) => {
                     if (value <= (maxGuests || 16)) {
                       searchParams.set("guests", `${value + 1}`);
                       setSearchParams(searchParams, {
-                        state: { from: state.from },
+                        state: { from: state?.from },
                       });
                       setFieldValue("guests", value + 1);
                     }

@@ -1,5 +1,7 @@
 import { Button, CircularProgress } from "@mui/material";
+import { useMeQuery } from "@airbnb-clone/controller";
 import { Field, FieldProps } from "formik";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const BookingButton = ({
   handleClick,
@@ -10,6 +12,12 @@ export const BookingButton = ({
   setCalendarOpen: (value: boolean) => void;
   fullWidth?: boolean;
 }) => {
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const { data, loading, error } = useMeQuery();
+
   return (
     <Field>
       {({ form: { values, isValid, isSubmitting } }: FieldProps) => (
@@ -17,22 +25,33 @@ export const BookingButton = ({
           variant="contained"
           color="primary"
           disabled={isSubmitting}
-          type={isValid ? "submit" : undefined}
-          onClick={() => {
-            if (values.start && values.end) {
-              handleClick();
-            } else {
+          type={isValid || !error ? "submit" : undefined}
+          onClick={async () => {
+            if (!values.start || !values.end || !isValid) {
               setCalendarOpen(true);
+            } else {
+              if (error) {
+                navigate("/login", {
+                  state: {
+                    redirect: location.pathname + location.search,
+                    message: "Please log in to make a reservation.",
+                  },
+                });
+              } else if (data) {
+                handleClick();
+              }
             }
           }}
           fullWidth={fullWidth}
         >
-          {isSubmitting ? (
+          {loading ? (
             <CircularProgress size={30} sx={{ color: "#FFF" }} />
-          ) : values.start && values.end ? (
-            "Reserve"
-          ) : (
+          ) : !values.start || !values.end ? (
             "Check availability"
+          ) : !isValid ? (
+            "Change dates"
+          ) : (
+            "Reserve"
           )}
         </Button>
       )}

@@ -18,6 +18,7 @@ const testConstants_1 = require("../../shared/test-utils/testConstants");
 const errorMessages_1 = require("./utils/errorMessages");
 const uuid_1 = require("uuid");
 const errorMessages_2 = require("../../shared/utils/errorMessages");
+const constants_1 = require("../../shared/utils/constants");
 let userId1;
 let listingId;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -40,7 +41,6 @@ describe("create booking", () => {
         yield client.login(testConstants_1.testUser1.email, testConstants_1.testUser1.password);
         const testListingId = (0, uuid_1.v4)();
         const { errors } = yield client.createBooking(testListingId, testConstants_1.testBooking);
-        console.log(errors);
         expect(errors[0].message).toEqual((0, errorMessages_2.formatNotFoundWithGivenIdErrorMessage)("listing", testListingId));
     }));
     test("user attempts to create booking on their own listing", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -54,7 +54,22 @@ describe("create booking", () => {
     }));
     test("user successfully creates booking", () => __awaiter(void 0, void 0, void 0, function* () {
         const { data } = yield client.createBooking(listingId, testConstants_1.testBooking);
-        expect(typeof data.createBooking).toEqual("string");
+        const { start, end, guests, pricePerNight, serviceFee, taxes, total, listing, } = data.createBooking;
+        expect(start).toEqual(testConstants_1.testBooking.start);
+        expect(end).toEqual(testConstants_1.testBooking.end);
+        expect(guests).toEqual(testConstants_1.testBooking.guests);
+        expect(pricePerNight).toEqual(testConstants_1.testListing.price);
+        const costs = (0, common_1.calculateBookingCosts)(testConstants_1.testListing.price, (0, common_1.getDayDifference)(start, end));
+        expect(serviceFee).toEqual(costs.serviceFee);
+        expect(taxes).toEqual(costs.taxes);
+        expect(total).toEqual(costs.total);
+        const { vesselType, name, photos, rating } = testConstants_1.testListing;
+        expect(listing).toEqual({
+            vesselType,
+            name,
+            img: constants_1.imageUrl + photos[0],
+            rating,
+        });
     }));
     test("user attempts to create booking overlapping another booking", () => __awaiter(void 0, void 0, void 0, function* () {
         const { errors } = yield client.createBooking(listingId, testConstants_1.testBookingOverlap);

@@ -1,9 +1,21 @@
 type Mutation {
-  createBooking(listingId: String!, input: BookingInput!): ID!
+  createBooking(listingId: String!, input: BookingInput!): Booking!
 }
 
 input BookingInput {
   start: String!
   end: String!
   guests: Int!
+}
+
+type Booking {
+  start: String!
+  end: String!
+  guests: Int!
+  pricePerNight: Int!
+  serviceFee: Int!
+  taxes: Int!
+  total: Int!
+  listingId: ID!
+  listing: ListingInfo
 }

@@ -13,8 +13,17 @@ import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaErro
 import { Listing } from "../../../entity/Listing";
 import { cannotBookOwnListing, datesUnavailable } from "./utils/errorMessages";
 import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorMessages";
+import { imageUrl } from "../../shared/utils/constants";
 
 export const resolvers: Resolvers = {
+  Booking: {
+    listing: async ({ listingId }) => {
+      const listing = await Listing.findOneBy({ id: listingId });
+      if (!listing) return null;
+      const { name, photos, rating, vesselType } = listing;
+      return { name, img: imageUrl + photos[0], rating, vesselType };
+    },
+  },
   Mutation: {
     createBooking: async (_, { listingId, input }, { req: { session } }) => {
       const { start, end, guests } = input;
@@ -68,18 +77,23 @@ export const resolvers: Resolvers = {
         userId: session.userId,
       }).save();
 
-      console.log(booking);
-
       if (!booking) {
         return formatGraphQLYogaError(
-          "The booking could not be created at this time. Please try again."
+          "The booking could not be created at this time."
         );
       }
 
-      // return entire booking object
-      // need to extract start and end dates
+      const extractDates: (range: string) => { start: string; end: string } = (
+        range
+      ) => {
+        const chunks = range.split(/\[|, |\)/);
 
-      return booking.id;
+        return { start: chunks[1], end: chunks[2] };
+      };
+
+      const dates = extractDates(booking.range);
+
+      return { ...booking, ...dates };
     },
   },
 };

@@ -1,4 +1,8 @@
-import { invalidDate } from "@airbnb-clone/common";
+import {
+  calculateBookingCosts,
+  getDayDifference,
+  invalidDate,
+} from "@airbnb-clone/common";
 import { Listing } from "../../../entity/Listing";
 import { User } from "../../../entity/User";
 import { createTypeormConnection } from "../../../utils/createTypeormConnection";
@@ -14,6 +18,7 @@ import {
 import { cannotBookOwnListing, datesUnavailable } from "./utils/errorMessages";
 import { v4 as uuidv4 } from "uuid";
 import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorMessages";
+import { imageUrl } from "../../shared/utils/constants";
 
 let userId1: string;
 let listingId: string;
@@ -54,7 +59,6 @@ describe("create booking", () => {
     await client.login(testUser1.email, testUser1.password);
     const testListingId = uuidv4();
     const { errors } = await client.createBooking(testListingId, testBooking);
-    console.log(errors);
 
     expect(errors[0].message).toEqual(
       formatNotFoundWithGivenIdErrorMessage("listing", testListingId)
@@ -74,7 +78,38 @@ describe("create booking", () => {
 
   test("user successfully creates booking", async () => {
     const { data } = await client.createBooking(listingId, testBooking);
-    expect(typeof data.createBooking).toEqual("string");
+    const {
+      start,
+      end,
+      guests,
+      pricePerNight,
+      serviceFee,
+      taxes,
+      total,
+      listing,
+    } = data.createBooking;
+    expect(start).toEqual(testBooking.start);
+    expect(end).toEqual(testBooking.end);
+    expect(guests).toEqual(testBooking.guests);
+    expect(pricePerNight).toEqual(testListing.price);
+
+    const costs = calculateBookingCosts(
+      testListing.price,
+      getDayDifference(start, end)
+    );
+
+    expect(serviceFee).toEqual(costs.serviceFee);
+    expect(taxes).toEqual(costs.taxes);
+    expect(total).toEqual(costs.total);
+
+    const { vesselType, name, photos, rating } = testListing;
+
+    expect(listing).toEqual({
+      vesselType,
+      name,
+      img: imageUrl + photos[0],
+      rating,
+    });
   });
 
   test("user attempts to create booking overlapping another booking", async () => {

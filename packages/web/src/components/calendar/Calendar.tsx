@@ -44,7 +44,7 @@ export const Calendar = ({
           searchParams.delete("end");
         }
         setSearchParams(searchParams, {
-          state: { from: state.from },
+          state: { from: state?.from },
         });
       }
       setIsStartSelection(false);

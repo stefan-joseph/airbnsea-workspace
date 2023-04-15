@@ -30,8 +30,14 @@ export type Address = {
 export type Booking = {
   __typename?: 'Booking';
   end: Scalars['String'];
+  guests: Scalars['Int'];
+  listing?: Maybe<ListingInfo>;
   listingId: Scalars['ID'];
+  pricePerNight: Scalars['Int'];
+  serviceFee: Scalars['Int'];
   start: Scalars['String'];
+  taxes: Scalars['Int'];
+  total: Scalars['Int'];
 };
 
 export type BookingInput = {
@@ -138,6 +144,8 @@ export type ListingInfo = {
   __typename?: 'ListingInfo';
   img?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  rating?: Maybe<Scalars['Int']>;
+  vesselType?: Maybe<VesselType>;
 };
 
 export type LoginResponse = {
@@ -152,17 +160,11 @@ export type Me = {
   firstName?: Maybe<Scalars['String']>;
 };
 
-export type MessageTut = {
-  __typename?: 'MessageTut';
-  body?: Maybe<Scalars['String']>;
-  from?: Maybe<Scalars['String']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   addFruit: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
-  createBooking: Scalars['ID'];
+  createBooking: Booking;
   createConversation: CreateConversationResponse;
   createListing: Scalars['ID'];
   createMessage: Scalars['ID'];
@@ -171,7 +173,6 @@ export type Mutation = {
   logout?: Maybe<Scalars['Boolean']>;
   register?: Maybe<Array<Error>>;
   resetPassword?: Maybe<Array<Error>>;
-  send: MessageTut;
   sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
   updateListing?: Maybe<Scalars['ID']>;
 };
@@ -233,11 +234,6 @@ export type MutationResetPasswordArgs = {
 };
 
 
-export type MutationSendArgs = {
-  input: SendMessageInput;
-};
-
-
 export type MutationSendForgotPasswordEmailArgs = {
   email: Scalars['String'];
 };
@@ -270,7 +266,6 @@ export type Query = {
   populateConversation: Conversation;
   populateForm: Draft;
   populateInbox: Array<InboxMessage>;
-  room: Array<MessageTut>;
   searchListings: SearchListingsResponse;
   viewListing: Listing;
   viewUserBookings: Array<Booking>;
@@ -295,11 +290,6 @@ export type QueryPopulateFormArgs = {
 
 export type QueryPopulateInboxArgs = {
   inboxType: InboxType;
-};
-
-
-export type QueryRoomArgs = {
-  id: Scalars['ID'];
 };
 
 
@@ -363,12 +353,6 @@ export type SearchLocation = {
   lng: Scalars['Float'];
 };
 
-export type SendMessageInput = {
-  body: Scalars['String'];
-  from: Scalars['String'];
-  roomId: Scalars['ID'];
-};
-
 export enum Status {
   Active = 'active',
   Inactive = 'inactive'
@@ -377,18 +361,12 @@ export enum Status {
 export type Subscription = {
   __typename?: 'Subscription';
   newMessage: ConversationMessage;
-  newMessageTut: MessageTut;
   updateInbox: InboxMessage;
 };
 
 
 export type SubscriptionNewMessageArgs = {
   conversationId: Scalars['String'];
-};
-
-
-export type SubscriptionNewMessageTutArgs = {
-  roomId: Scalars['ID'];
 };
 
 export type UpdateListingFields = {
@@ -466,7 +444,7 @@ export type CreateBookingMutationVariables = Exact<{
 }>;
 
 
-export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: string };
+export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: { __typename?: 'Booking', start: string, end: string, guests: number, pricePerNight: number, serviceFee: number, taxes: number, total: number, listing?: { __typename?: 'ListingInfo', vesselType?: VesselType | null, name?: string | null, img?: string | null, rating?: number | null } | null } };
 
 export type GetListingUnavailabilityQueryVariables = Exact<{
   listingId: Scalars['ID'];
@@ -790,7 +768,21 @@ export type GetRandomUserCredentailsLazyQueryHookResult = ReturnType<typeof useG
 export type GetRandomUserCredentailsQueryResult = Apollo.QueryResult<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>;
 export const CreateBookingDocument = gql`
     mutation CreateBooking($listingId: String!, $input: BookingInput!) {
-  createBooking(listingId: $listingId, input: $input)
+  createBooking(listingId: $listingId, input: $input) {
+    start
+    end
+    guests
+    pricePerNight
+    serviceFee
+    taxes
+    total
+    listing {
+      vesselType
+      name
+      img
+      rating
+    }
+  }
 }
     `;
 export type CreateBookingMutationFn = Apollo.MutationFunction<CreateBookingMutation, CreateBookingMutationVariables>;

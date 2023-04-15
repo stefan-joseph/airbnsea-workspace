@@ -1,10 +1,10 @@
-import { Box, Grid, Skeleton, Typography } from "@mui/material";
-import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
+import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import { SearchListingResult } from "@airbnb-clone/controller";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { PhotoCarousel } from "./PhotoCarousel";
 import { useState } from "react";
+import { Rating } from "../../../components/Rating";
 
 export const Listing: React.FC<{
   data: SearchListingResult | undefined;
@@ -61,10 +61,9 @@ export const Listing: React.FC<{
             />
           )}
         </Box>
-        <Box sx={{ p: 0.4, pt: 1 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box p={0.4} pt={1}>
+          <Stack direction="row" justifyContent="space-between">
             <Typography
-              gutterBottom
               fontWeight={600}
               sx={{
                 overflow: "hidden",
@@ -80,27 +79,12 @@ export const Listing: React.FC<{
                 <Skeleton width={"100%"} sx={{ fontSize: "16px" }} />
               )}
             </Typography>
-            <Typography
-              fontSize={15}
-              fontWeight={600}
-              gutterBottom
-              sx={{
-                display: "flex",
-                alignItems: "center",
-
-                width: data ? "20%" : "20%",
-              }}
-            >
-              {data ? (
-                <>
-                  <StarRateRoundedIcon fontSize="small" sx={{ mt: -0.6 }} />
-                  {data?.rating}
-                </>
-              ) : (
-                <Skeleton width={"100%"} sx={{ fontSize: "16px" }} />
-              )}
-            </Typography>
-          </Box>
+            {data?.rating ? (
+              <Rating rating={data.rating} fontSize={15} />
+            ) : (
+              <Skeleton width={"10%"} sx={{ fontSize: "16px" }} />
+            )}
+          </Stack>
           {where && (
             <Typography
               fontWeight={200}
@@ -110,7 +94,7 @@ export const Listing: React.FC<{
                 Math.round(data.distance) === 0 ? (
                   "Less than 1 km away"
                 ) : (
-                  `${Math.round(data.distance)} km away`
+                  `${Math.round(data.distance).toLocaleString()} km away`
                 )
               ) : (
                 <Skeleton width={"50%"} sx={{ fontSize: "16px" }} />

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
 import { loginSchema } from "@airbnb-clone/common";
 import { LoginUserMutationVariables } from "@airbnb-clone/controller";
@@ -17,6 +17,8 @@ interface Props {
 }
 
 export const LoginView = ({ onFinish, submit }: Props) => {
+  const location = useLocation();
+
   const [getRandomUserCredentails, { data, loading }] =
     useGetRandomUserCredentailsLazyQuery();
 
@@ -37,7 +39,7 @@ export const LoginView = ({ onFinish, submit }: Props) => {
           else onFinish();
         }}
       >
-        {({ setSubmitting, setFieldValue, setErrors }) => (
+        {({ setFieldValue }) => (
           <Form>
             <Stack
               sx={{
@@ -48,9 +50,6 @@ export const LoginView = ({ onFinish, submit }: Props) => {
               <Button
                 onClick={async () => {
                   const { data, error } = await getRandomUserCredentails();
-
-                  console.log(data);
-                  console.log(error?.message);
 
                   if (data?.getRandomUserCredentails) {
                     setFieldValue(
@@ -68,6 +67,11 @@ export const LoginView = ({ onFinish, submit }: Props) => {
               >
                 Test User
               </Button>
+              {location.state?.message && (
+                <Typography fontWeight={600}>
+                  {location.state.message}
+                </Typography>
+              )}
               {loading ? (
                 <Skeleton variant="rounded" height={34} />
               ) : (

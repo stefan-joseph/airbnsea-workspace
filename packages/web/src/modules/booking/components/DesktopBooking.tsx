@@ -1,8 +1,8 @@
 import {
   Box,
+  Button,
   ButtonBase,
   Dialog,
-  Divider,
   Stack,
   Typography,
 } from "@mui/material";
@@ -14,25 +14,35 @@ import { BookingButton } from "./BookingButton";
 import { BookingProps } from "../Booking";
 import { Receipt } from "./Receipt";
 import { Rating } from "../../../components/Rating";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "../../../components/Loader";
+import { CompletionOfBooking } from "./CompletionOfBooking";
+import { useLocation, useNavigate } from "react-router-dom";
+import { RequestErrorMessage } from "../../../components/RequestErrorMessage";
 
 export const DesktopBooking = ({
   listingData,
   calendarOpen,
   setCalendarOpen,
-  loading,
+  result,
 }: BookingProps) => {
-  const [openBookingResponse, setOpenBookingResponse] = useState(false);
+  const navigate = useNavigate();
 
-  const {
-    price,
-    rating,
-    guests: maxGuests,
-    photos,
-    vesselType,
-    name,
-  } = listingData;
+  const location = useLocation();
+
+  const [openBookingResponse, setOpenBookingResponse] =
+    useState<boolean>(false);
+
+  const { data, error, loading } = result;
+
+  const [delay, setDelay] = useState(true);
+
+  useEffect(() => {
+    if (!loading) return;
+    setTimeout(() => setDelay(false), 2000);
+  }, [loading]);
+
+  const { price, rating, guests: maxGuests } = listingData;
 
   return (
     <>
@@ -105,82 +115,58 @@ export const DesktopBooking = ({
       <Receipt price={price} />
       <Dialog
         open={openBookingResponse}
-        onClose={() => !loading && setOpenBookingResponse(false)}
+        onClose={() => {
+          if (loading) return;
+          if (data?.createBooking) {
+            navigate(location.pathname);
+            window.location.reload();
+          } else {
+            setOpenBookingResponse(false);
+          }
+        }}
         PaperProps={{
           sx: {
             width: "100%",
-            minHeight: 300,
+            // minHeight: 300,
+            p: 4,
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            gap: 4,
             borderRadius: borderRadius,
           },
         }}
       >
-        {loading ? (
-          <Stack gap={2}>
+        {loading || delay ? (
+          <>
             <Loader />
-            <Typography fontWeight={600} fontSize={18} color="grey.700">
+            <Typography
+              fontWeight={600}
+              fontSize={18}
+              color="grey.700"
+              textAlign="center"
+            >
               Please wait while we place your reservation...
             </Typography>
-          </Stack>
+          </>
+        ) : data?.createBooking ? (
+          <CompletionOfBooking
+            data={data.createBooking}
+            handleClose={() => setOpenBookingResponse(false)}
+          />
         ) : (
-          <Stack width="100%" p={4} gap={3} divider={<Divider />}>
-            <Stack gap={4}>
-              <Stack textAlign="center">
-                <Typography fontWeight={600} fontSize={18}>
-                  Success!
-                </Typography>
-                <Typography>Your reservation is complete.</Typography>
-                <Typography>Confirmation #: skjdnfjkdsfnkj</Typography>
-              </Stack>
-              <Stack direction="row" gap={2}>
-                <Box
-                  component={"img"}
-                  src={photos[0]}
-                  alt="main listing photo"
-                  width={126}
-                  height={96} // 106
-                  borderRadius={2}
-                  sx={{ objectFit: "cover" }}
-                ></Box>
-                <Stack>
-                  <Typography
-                    fontSize={12}
-                    color="grey.600"
-                    textTransform="capitalize"
-                  >
-                    {vesselType}
-                  </Typography>
-                  <Typography fontSize={14} textTransform="capitalize">
-                    {name}
-                  </Typography>
-                  <Stack direction="row" gap={0.4} mt="auto">
-                    <Rating rating={rating} fontSize={12} />
-                    <Typography fontSize={12} color="grey.600">
-                      ({7})
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Stack>
-            </Stack>
-            <Stack gap={2}>
-              <Typography fontSize={22} fontWeight={600}>
-                Your trip
-              </Typography>
-              <Stack gap={0.4}>
-                <Typography fontWeight={600}>Dates</Typography>
-                <Typography>Apr. 16 - 21</Typography>
-              </Stack>
-              <Stack gap={0.4}>
-                <Typography fontWeight={600}>Guests</Typography>
-                <Typography>1 guest</Typography>
-              </Stack>
-            </Stack>
-            <Stack>
-              <Receipt price={price} />
-            </Stack>
-          </Stack>
+          <>
+            <RequestErrorMessage
+              header={error?.message}
+              body="Please refresh the page or try again."
+            />
+            <Box ml="auto" mt="auto" mb={-2}>
+              <Button
+                size="small"
+                onClick={() => setOpenBookingResponse(false)}
+              >
+                Close
+              </Button>
+            </Box>
+          </>
         )}
       </Dialog>
     </>

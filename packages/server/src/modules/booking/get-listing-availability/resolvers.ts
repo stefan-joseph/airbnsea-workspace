@@ -9,14 +9,12 @@ export const resolvers: Resolvers = {
   Query: {
     getListingUnavailability: async (_, { listingId }) => {
       const bookings = await Booking.find({ where: { listingId } });
-      console.log(bookings);
+
       let unavailableDates: string[] = [];
 
       bookings.map((b) => {
         const dates = b.range.split(/[\[,\s)]/);
-        console.log(dates[1], dates[2]);
         const diff = dayjs(dates[2]).diff(dates[1], "day");
-        console.log("diff", diff);
 
         Array(diff)
           .fill("")

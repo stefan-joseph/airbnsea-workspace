@@ -12,7 +12,8 @@ export const Rating = ({
 }) => {
   return (
     <Typography fontSize={fontSize} fontWeight={600} sx={{ display: "flex" }}>
-      <HiStar fontSize="1.2em" /> {rating}
+      <HiStar fontSize="1.2em" />{" "}
+      {rating.toString().split(".")[1]?.length > 1 ? rating : rating.toFixed(1)}
     </Typography>
   );
 };

@@ -1,6 +1,4 @@
 type Query {
-  # populateConversationWithHost(conversationId: String!): Conversation!
-  # populateConversationWithGuest(conversationId: String!): Conversation!
   populateConversation(conversationId: String!): Conversation!
 }
 
@@ -19,9 +17,4 @@ type ConversationMessage {
   text: String!
   fromHost: Boolean!
   createdDate: Date!
-}
-
-type ListingInfo {
-  name: String
-  img: String
 }

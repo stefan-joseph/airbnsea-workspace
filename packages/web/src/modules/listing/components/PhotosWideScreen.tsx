@@ -4,11 +4,11 @@ import { useState } from "react";
 export const PhotosWideScreen: React.FC<{ photos: string[] | undefined }> = ({
   photos,
 }) => {
-  const [yes, setYes] = useState(false);
+  const [delay, setDelay] = useState(false);
 
   setTimeout(() => {
-    setYes(true);
-  }, 2000);
+    setDelay(true);
+  }, 1000);
 
   function srcset(image: string, size: number, rows = 1, cols = 1) {
     return {
@@ -34,7 +34,7 @@ export const PhotosWideScreen: React.FC<{ photos: string[] | undefined }> = ({
             rows={i > 0 ? 1 : 2}
             sx={{ overflow: "hidden" }}
           >
-            {photos && yes ? (
+            {photos && delay ? (
               <img
                 {...srcset(img, 200, i > 0 ? 1 : 2, i > 0 ? 1 : 2)}
                 alt={`listing photo ${i + 1}`}
@@ -46,7 +46,7 @@ export const PhotosWideScreen: React.FC<{ photos: string[] | undefined }> = ({
           </ImageListItem>
         );
       })}
-      {photos && yes && (
+      {photos && delay && (
         <Button
           variant="outlined"
           startIcon={<AppsIcon />}

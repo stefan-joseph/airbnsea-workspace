@@ -17,7 +17,6 @@ export const resolvers: Resolvers = {
       userLoader.load(interlocutorId),
     interlocutorId: () => null, // don't return any userId's to client
   },
-
   Query: {
     populateConversation: async (
       _,

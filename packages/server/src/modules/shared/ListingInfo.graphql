@@ -1,0 +1,6 @@
+type ListingInfo {
+  vesselType: VesselType
+  name: String
+  img: String
+  rating: Float
+}
