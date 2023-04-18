@@ -3,6 +3,7 @@ import dayjs = require("dayjs");
 import { dateFormat } from "../constants/constants";
 
 export const invalidDate = "Invalid date";
+export const datesInPast = "Booking dates must not be in the past";
 export const invalidLengthOfStay = "Must stay a minimum of 1 night";
 export const minGuests = "At least 1 guest is required";
 export const maxGuests = "Limited to 16 guests";
@@ -15,11 +16,22 @@ export const dateValidation = yup
   )
   .test(
     "is_before_current_date",
-    invalidDate,
+    datesInPast,
     (value) =>
       dayjs(value).isAfter(new Date(), "day") ||
       dayjs(value).isSame(new Date(), "day")
   );
+
+export const endDateValidation = dateValidation.test(
+  "is_after_start",
+  invalidLengthOfStay,
+  function (value) {
+    const result = dayjs(value).isAfter(this.parent.start);
+    console.log("result", result);
+
+    return result;
+  }
+);
 
 export const guestsValidation = yup
   .number()
@@ -29,12 +41,6 @@ export const guestsValidation = yup
 
 export const bookingSchema = yup.object().shape({
   start: dateValidation,
-  end: dateValidation.test(
-    "is_after_start",
-    invalidLengthOfStay,
-    function (value) {
-      return dayjs(value).isAfter(this.parent.start);
-    }
-  ),
+  end: endDateValidation,
   guests: guestsValidation,
 });

@@ -7,10 +7,12 @@ export const RequestErrorMessage = ({
   header,
   body,
   margin,
+  addBoxShadow,
 }: {
   header?: string;
   body?: string;
   margin?: number;
+  addBoxShadow?: boolean;
 }) => {
   return (
     <Stack
@@ -21,7 +23,7 @@ export const RequestErrorMessage = ({
       borderRadius={2}
       border="1px solid"
       borderColor={`${theme.palette.error.main} ${theme.palette.grey[300]} ${theme.palette.grey[300]}`}
-      // boxShadow={theme.shadows[3]}
+      boxShadow={addBoxShadow ? theme.shadows[3] : undefined}
       sx={{ borderWidth: "8px 1px 1px" }}
     >
       <Box>

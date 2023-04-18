@@ -46,7 +46,7 @@ export const Interlocutor = ({
             </Typography>
             <Typography fontSize={14}>{text}</Typography>
             <Typography fontSize={12} color="grey.700" fontWeight={300}>
-              Unavailable
+              Inquiry
             </Typography>
           </Box>
         </Stack>

@@ -287,8 +287,13 @@ exports.useCreateMessageMutation = useCreateMessageMutation;
 exports.CreateConversationDocument = (0, client_1.gql) `
     mutation CreateConversation($listingId: String!, $text: String!) {
   createConversation(listingId: $listingId, text: $text) {
-    ... on ConversationId {
+    ... on ConversationSuccess {
       conversationId
+      userIdOfRecipient
+      recipient {
+        firstName
+        avatar
+      }
     }
     ... on Redirect {
       redirect

@@ -1,24 +1,21 @@
 import { Box, Chip, Skeleton } from "@mui/material";
-import { useState } from "react";
+
+import { useLoadingDelay } from "../../../components/hooks/useLoadingDelay";
 
 export const PhotosNarrowScreen: React.FC<{ photos: string[] | undefined }> = ({
   photos,
 }) => {
-  const [yes, setYes] = useState(false);
-
-  setTimeout(() => {
-    setYes(true);
-  }, 2000);
+  const { delay } = useLoadingDelay(!!photos, 1000);
 
   return (
     <Box sx={{ position: "relative" }}>
-      {photos && yes ? (
+      {photos && !delay ? (
         <>
           <Box
             component={"img"}
             src={photos[0]}
             alt="listing photo 1"
-            style={{ width: "100%" }}
+            style={{ width: "100%", aspectRatio: "3 / 2", objectFit: "cover" }}
           />
           <Chip
             label={`1 / ${photos.length}`}

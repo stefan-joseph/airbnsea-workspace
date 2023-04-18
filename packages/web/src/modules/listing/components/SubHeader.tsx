@@ -1,18 +1,10 @@
 import { ViewListingQuery } from "@airbnb-clone/controller";
-import {
-  Avatar,
-  Box,
-  Dialog,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Skeleton, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 
 import { OutlinedButton } from "../../../components/OutlinedButton";
 import { CreateConversation } from "../../message/components/CreateConversation";
 import { useParams } from "react-router-dom";
-import { borderRadius } from "../../../constants/constants";
 
 type Props = {
   data?: ViewListingQuery["viewListing"];
@@ -21,12 +13,6 @@ type Props = {
 export const SubHeader = ({ data }: Props) => {
   const { listingId } = useParams();
   const [messageOpen, setMessageOpen] = useState(false);
-
-  // const [yes, setYes] = useState(false);
-
-  // setTimeout(() => {
-  //   setYes(true);
-  // }, 2000);
 
   return (
     <>
@@ -107,27 +93,15 @@ export const SubHeader = ({ data }: Props) => {
           />
         )}
       </Stack>
-      <Dialog
-        open={messageOpen}
-        onClose={() => setMessageOpen(false)}
-        sx={{ width: "100vw" }}
-        PaperProps={{ sx: { width: "100%", borderRadius: borderRadius } }}
-      >
-        <Stack p={3} pl={5} pr={5} flex={1} gap={1}>
-          <Typography fontSize={22} fontWeight={600}>
-            Have a question? Message the host
-          </Typography>
-          <Typography color="grey.700" mb={2}>
-            Send a message to {data?.owner?.firstName}
-          </Typography>
-          {listingId && (
-            <CreateConversation
-              listingId={listingId}
-              handleClose={() => setMessageOpen(false)}
-            />
-          )}
-        </Stack>
-      </Dialog>
+      {listingId && data?.owner && (
+        <CreateConversation
+          messageOpen={messageOpen}
+          setMessageOpen={setMessageOpen}
+          listingId={listingId}
+          recipientName={data.owner.firstName}
+          handleClose={() => setMessageOpen(false)}
+        />
+      )}
     </>
   );
 };

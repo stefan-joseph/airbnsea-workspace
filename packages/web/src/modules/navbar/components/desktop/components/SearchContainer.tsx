@@ -39,12 +39,12 @@ export const SearchContainer = ({
         top: 14.5,
         left: "50%",
         boxShadow: !subSearch
-          ? "0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)"
+          ? "0 1px 2px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 5%)"
           : undefined,
         transform: "translateX(-50%)",
         transition: `all ${searchBarTransitionTime}ms ${searchBarTimingFunction} 0s`,
         "&:hover": {
-          boxShadow: !subSearch ? raiseOnHoverBoxShadow : undefined,
+          boxShadow: !subSearch ? " 0 2px 4px rgba(0,0,0,0.18);" : undefined,
         },
       }}
     >

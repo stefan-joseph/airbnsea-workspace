@@ -31,9 +31,9 @@ export const UserMenu = () => {
           borderColor: "grey.300",
           pl: 1.3,
           pr: 1.3,
-          boxShadow: isOpen ? raiseOnHoverBoxShadow : "unset",
+          boxShadow: isOpen ? "0 2px 4px rgba(0,0,0,0.18)" : "unset",
           "&:hover": {
-            boxShadow: raiseOnHoverBoxShadow,
+            boxShadow: "0 2px 4px rgba(0,0,0,0.18)",
             backgroundColor: "unset",
           },
         }}
@@ -59,7 +59,8 @@ export const UserMenu = () => {
         open={isOpen}
         anchorEl={buttonRef}
         handleClose={() => setIsOpen(false)}
-        marginTop={0.5}
+        marginTop={1}
+        boxShadow="0 2px 16px rgba(0,0,0,0.12)"
       >
         {avatar ? (
           <MenuList sx={{ width: 200 }}>

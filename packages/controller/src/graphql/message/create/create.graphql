@@ -4,8 +4,13 @@ mutation CreateMessage($conversationId: String!, $text: String!) {
 
 mutation CreateConversation($listingId: String!, $text: String!) {
   createConversation(listingId: $listingId, text: $text) {
-    ... on ConversationId {
+    ... on ConversationSuccess {
       conversationId
+      userIdOfRecipient
+      recipient {
+        firstName
+        avatar
+      }
     }
     ... on Redirect {
       redirect

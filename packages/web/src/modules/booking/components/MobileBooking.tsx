@@ -15,11 +15,12 @@ import { Calendar } from "../../../components/calendar/Calendar";
 import { PriceAndRatingStack } from "./PriceAndRatingStack";
 import { searchBarBorderColor } from "../../../constants/constants";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BookingHeader } from "../../../components/calendar/components/BookingHeader";
 import { Loader } from "../../../components/Loader";
 import { CompletionOfBooking } from "./CompletionOfBooking";
 import { RequestErrorMessage } from "../../../components/RequestErrorMessage";
+import { useLoadingDelay } from "../../../components/hooks/useLoadingDelay";
 
 export const MobileBooking = ({
   listingData,
@@ -40,12 +41,7 @@ export const MobileBooking = ({
 
   const { data, error, loading } = result;
 
-  const [delay, setDelay] = useState(true);
-
-  useEffect(() => {
-    if (!loading) return;
-    setTimeout(() => setDelay(false), 2000);
-  }, [loading]);
+  const { delay, setDelay } = useLoadingDelay(loading);
 
   const { price, rating } = listingData;
 
@@ -53,7 +49,7 @@ export const MobileBooking = ({
     <>
       <Field>
         {/* for start & end */}
-        {({ form: { values, setFieldValue } }: FieldProps) => (
+        {({ form: { values, setFieldValue, isValid } }: FieldProps) => (
           <>
             <Stack direction="row" justifyContent="space-between" gap={2}>
               <PriceAndRatingStack

@@ -20,14 +20,14 @@ export const BookingButton = ({
 
   return (
     <Field>
-      {({ form: { values, isValid, isSubmitting } }: FieldProps) => (
+      {({ form: { values, isSubmitting } }: FieldProps) => (
         <Button
           variant="contained"
           color="primary"
           disabled={isSubmitting}
-          type={isValid || !error ? "submit" : undefined}
+          type={!error ? "submit" : undefined}
           onClick={async () => {
-            if (!values.start || !values.end || !isValid) {
+            if (!values.start || !values.end) {
               setCalendarOpen(true);
             } else {
               if (error) {
@@ -48,8 +48,6 @@ export const BookingButton = ({
             <CircularProgress size={30} sx={{ color: "#FFF" }} />
           ) : !values.start || !values.end ? (
             "Check availability"
-          ) : !isValid ? (
-            "Change dates"
           ) : (
             "Reserve"
           )}

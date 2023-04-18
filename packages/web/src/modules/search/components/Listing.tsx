@@ -80,7 +80,11 @@ export const Listing: React.FC<{
               )}
             </Typography>
             {data?.rating ? (
-              <Rating rating={data.rating} fontSize={15} />
+              <Rating
+                rating={data.rating}
+                fontSize={15}
+                // starSize={"1em"}
+              />
             ) : (
               <Skeleton width={"10%"} sx={{ fontSize: "16px" }} />
             )}

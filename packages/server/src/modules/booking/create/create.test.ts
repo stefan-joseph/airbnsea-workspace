@@ -1,6 +1,7 @@
 import {
   calculateBookingCosts,
   getDayDifference,
+  datesInPast,
   invalidDate,
 } from "@airbnb-clone/common";
 import { Listing } from "../../../entity/Listing";
@@ -73,6 +74,15 @@ describe("create booking", () => {
   test("user attempts to create booking in past", async () => {
     await client.login(testUser2.email, testUser2.password);
     const { errors } = await client.createBooking(listingId, testBookingInPast);
+    expect(errors[0].message).toEqual(datesInPast);
+  });
+
+  test("user attempts to create booking with bad dates format", async () => {
+    const { errors } = await client.createBooking(listingId, {
+      start: "fdbdfb",
+      end: "bfdbfd",
+      guests: 1,
+    });
     expect(errors[0].message).toEqual(invalidDate);
   });
 

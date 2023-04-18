@@ -14,11 +14,11 @@ import { BookingButton } from "./BookingButton";
 import { BookingProps } from "../Booking";
 import { Receipt } from "./Receipt";
 import { Rating } from "../../../components/Rating";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Loader } from "../../../components/Loader";
 import { CompletionOfBooking } from "./CompletionOfBooking";
-import { useLocation, useNavigate } from "react-router-dom";
 import { RequestErrorMessage } from "../../../components/RequestErrorMessage";
+import { useLoadingDelay } from "../../../components/hooks/useLoadingDelay";
 
 export const DesktopBooking = ({
   listingData,
@@ -26,21 +26,12 @@ export const DesktopBooking = ({
   setCalendarOpen,
   result,
 }: BookingProps) => {
-  const navigate = useNavigate();
-
-  const location = useLocation();
-
   const [openBookingResponse, setOpenBookingResponse] =
     useState<boolean>(false);
 
   const { data, error, loading } = result;
 
-  const [delay, setDelay] = useState(true);
-
-  useEffect(() => {
-    if (!loading) return;
-    setTimeout(() => setDelay(false), 2000);
-  }, [loading]);
+  const { delay } = useLoadingDelay(loading);
 
   const { price, rating, guests: maxGuests } = listingData;
 
@@ -67,12 +58,14 @@ export const DesktopBooking = ({
           </Box>
         </Typography>
         <Stack direction="row" spacing={1} divider={<Typography>·</Typography>}>
-          <Rating rating={rating} />
+          <Rating rating={rating} fontSize={14} />
           <ButtonBase
             sx={{
               whiteSpace: "nowrap",
               textDecoration: "underline",
               fontSize: 14,
+              fontWeight: 600,
+              color: "grey.700",
             }}
           >
             7 reviews
@@ -93,41 +86,25 @@ export const DesktopBooking = ({
         />
         <SelectGuests maxGuests={maxGuests} />
       </Box>
-      {/* {error?.message && (
-        <FormHelperText error>{error.message}</FormHelperText>
-      )} */}
       <BookingButton
         handleClick={() => setOpenBookingResponse(true)}
         setCalendarOpen={setCalendarOpen}
         fullWidth
       />
-      {/* {data?.createBooking && (
-        <FormHelperText
-          sx={{
-            fontSize: 16,
-            color: "success.main",
-          }}
-        >
-          Your booking is complete!
-        </FormHelperText>
-      )} */}
-
       <Receipt price={price} />
       <Dialog
         open={openBookingResponse}
         onClose={() => {
           if (loading) return;
           if (data?.createBooking) {
-            navigate(location.pathname);
             window.location.reload();
-          } else {
-            setOpenBookingResponse(false);
           }
+          setOpenBookingResponse(false);
         }}
         PaperProps={{
           sx: {
             width: "100%",
-            // minHeight: 300,
+
             p: 4,
             display: "flex",
             gap: 4,

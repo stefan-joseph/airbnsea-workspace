@@ -99,7 +99,9 @@ export const ConversationContainer = ({
                     <Typography fontWeight={600}>
                       {data?.listing?.name}
                     </Typography>
-                    <Typography fontSize={14}>Unavailable</Typography>
+                    <Typography fontSize={14} color="grey.700">
+                      Inquiry
+                    </Typography>
                   </Stack>
                   <Button variant="outlined" sx={{ marginLeft: "auto" }}>
                     Details

@@ -20,7 +20,6 @@ export const ReserveCard = ({ data }: Props) => {
       {matches &&
         (data ? (
           <Card
-            raised
             sx={{
               position: "sticky",
               top: searchBarHeight + 30,
@@ -29,6 +28,9 @@ export const ReserveCard = ({ data }: Props) => {
               overflow: "unset",
               borderRadius,
               padding: 1,
+              boxShadow: "rgb(0 0 0 / 12%) 0px 6px 16px;",
+              border: "1px solid",
+              borderColor: "grey.300",
             }}
           >
             <CardContent>{data && <Booking listingData={data} />}</CardContent>

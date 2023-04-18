@@ -3,9 +3,9 @@ import { CreateBookingMutation } from "@airbnb-clone/controller";
 import dayjs from "dayjs";
 import { getDayDifference } from "@airbnb-clone/common";
 import { IoClose } from "react-icons/io5";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { Rating } from "../../../components/Rating";
-import { useLocation, useNavigate } from "react-router-dom";
 
 export const CompletionOfBooking = ({
   data,
@@ -14,10 +14,6 @@ export const CompletionOfBooking = ({
   data: CreateBookingMutation["createBooking"];
   handleClose: () => void;
 }) => {
-  const navigate = useNavigate();
-
-  const routerLocation = useLocation();
-
   const {
     listing,
     pricePerNight,
@@ -36,7 +32,6 @@ export const CompletionOfBooking = ({
         <IconButton
           onClick={() => {
             handleClose();
-            navigate(routerLocation.pathname);
             window.location.reload();
           }}
         >

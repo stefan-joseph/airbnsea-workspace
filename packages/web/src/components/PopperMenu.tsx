@@ -20,6 +20,7 @@ type Props = {
   marginTop?: number | string;
   disableAnimation?: boolean;
   elevation?: number;
+  boxShadow?: string;
 };
 
 export const PopperMenu = ({
@@ -30,10 +31,10 @@ export const PopperMenu = ({
   placement,
   width,
   padding,
-
   marginTop,
   disableAnimation,
   elevation,
+  boxShadow,
 }: Props) => {
   return (
     <Popper
@@ -78,6 +79,7 @@ export const PopperMenu = ({
               p: padding,
               marginTop: marginTop,
               width: width || "100%",
+              boxShadow,
             }}
           >
             <ClickAwayListener

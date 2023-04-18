@@ -57,11 +57,6 @@ export type Conversation = {
   messages: Array<ConversationMessage>;
 };
 
-export type ConversationId = {
-  __typename?: 'ConversationId';
-  conversationId: Scalars['ID'];
-};
-
 export type ConversationMessage = {
   __typename?: 'ConversationMessage';
   createdDate: Scalars['Date'];
@@ -70,7 +65,14 @@ export type ConversationMessage = {
   text: Scalars['String'];
 };
 
-export type CreateConversationResponse = ConversationId | Redirect;
+export type ConversationSuccess = {
+  __typename?: 'ConversationSuccess';
+  conversationId: Scalars['ID'];
+  recipient?: Maybe<User>;
+  userIdOfRecipient?: Maybe<Scalars['ID']>;
+};
+
+export type CreateConversationResponse = ConversationSuccess | Redirect;
 
 export type Draft = {
   __typename?: 'Draft';
@@ -144,7 +146,7 @@ export type ListingInfo = {
   __typename?: 'ListingInfo';
   img?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
-  rating?: Maybe<Scalars['Int']>;
+  rating?: Maybe<Scalars['Float']>;
   vesselType?: Maybe<VesselType>;
 };
 
@@ -498,7 +500,7 @@ export type CreateConversationMutationVariables = Exact<{
 }>;
 
 
-export type CreateConversationMutation = { __typename?: 'Mutation', createConversation: { __typename?: 'ConversationId', conversationId: string } | { __typename?: 'Redirect', redirect: string } };
+export type CreateConversationMutation = { __typename?: 'Mutation', createConversation: { __typename?: 'ConversationSuccess', conversationId: string, userIdOfRecipient?: string | null, recipient?: { __typename?: 'User', firstName?: string | null, avatar?: string | null } | null } | { __typename?: 'Redirect', redirect: string } };
 
 export type PopulateInboxQueryVariables = Exact<{
   inboxType: InboxType;
@@ -1056,8 +1058,13 @@ export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMess
 export const CreateConversationDocument = gql`
     mutation CreateConversation($listingId: String!, $text: String!) {
   createConversation(listingId: $listingId, text: $text) {
-    ... on ConversationId {
+    ... on ConversationSuccess {
       conversationId
+      userIdOfRecipient
+      recipient {
+        firstName
+        avatar
+      }
     }
     ... on Redirect {
       redirect

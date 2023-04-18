@@ -4,13 +4,19 @@ import {
   useCreateBookingMutation,
   ViewListingQuery,
 } from "@airbnb-clone/controller";
-import { useParams, useSearchParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useState } from "react";
 import { Form, Formik } from "formik";
 
 import { DesktopBooking } from "./components/DesktopBooking";
 import { MobileBooking } from "./components/MobileBooking";
 import { MutationResult } from "@apollo/client";
+import { log } from "console";
 
 interface BookingInputValues {
   start: string | null;
@@ -32,6 +38,10 @@ export const Booking = ({
   listingData: ViewListingQuery["viewListing"];
   mobile?: boolean;
 }) => {
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
   const [searchParams] = useSearchParams();
   const start = searchParams.get("start");
   const end = searchParams.get("end");
@@ -57,21 +67,26 @@ export const Booking = ({
       validationSchema={bookingSchema}
       validateOnMount
       validateOnChange
+      validateOnBlur
       onSubmit={async (values) => {
         console.log(values);
         const { start, end, guests } = values;
         if (!start || !end || !guests || !listingId) return;
-
-        await createBookingMutation({
-          variables: {
-            listingId,
-            input: {
-              start: start,
-              end: end,
-              guests: +guests,
+        try {
+          const { data } = await createBookingMutation({
+            variables: {
+              listingId,
+              input: {
+                start: start,
+                end: end,
+                guests: +guests,
+              },
             },
-          },
-        });
+          });
+        } catch (error) {
+          return;
+        }
+        navigate(location.pathname);
       }}
     >
       {() => (

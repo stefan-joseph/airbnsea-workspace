@@ -171,7 +171,7 @@ export class TestClient {
         query: `
           mutation {
             createConversation(listingId: "${listingId}", text: "${text}"){
-              ... on ConversationId {
+              ... on ConversationSuccess {
                 conversationId
               }
               ... on Redirect {

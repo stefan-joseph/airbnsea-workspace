@@ -19,6 +19,10 @@ const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaEr
 const formatYupError_1 = require("../../shared/utils/formatYupError");
 const errorMessages_2 = require("./utils/errorMessages");
 exports.resolvers = {
+    ConversationSuccess: {
+        recipient: ({ userIdOfRecipient }, _, { userLoader }) => __awaiter(void 0, void 0, void 0, function* () { return userLoader.load(userIdOfRecipient); }),
+        userIdOfRecipient: () => null,
+    },
     Mutation: {
         createConversation: (_, args, { req: { session: { userId }, }, pubSub, }) => __awaiter(void 0, void 0, void 0, function* () {
             const { listingId, text } = args;
@@ -57,8 +61,9 @@ exports.resolvers = {
                 }).save();
                 yield pubSub.publish("newMessage", dbMessage.conversationId, Object.assign({}, dbMessage));
                 return {
-                    __typename: "ConversationId",
+                    __typename: "ConversationSuccess",
                     conversationId: dbMessage.conversationId,
+                    userIdOfRecipient: dbMessage.userIdOfHost,
                 };
             }
         }),

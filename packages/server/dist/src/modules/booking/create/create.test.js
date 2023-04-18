@@ -50,6 +50,14 @@ describe("create booking", () => {
     test("user attempts to create booking in past", () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.login(testConstants_1.testUser2.email, testConstants_1.testUser2.password);
         const { errors } = yield client.createBooking(listingId, testConstants_1.testBookingInPast);
+        expect(errors[0].message).toEqual(common_1.datesInPast);
+    }));
+    test("user attempts to create booking with bad dates format", () => __awaiter(void 0, void 0, void 0, function* () {
+        const { errors } = yield client.createBooking(listingId, {
+            start: "fdbdfb",
+            end: "bfdbfd",
+            guests: 1,
+        });
         expect(errors[0].message).toEqual(common_1.invalidDate);
     }));
     test("user successfully creates booking", () => __awaiter(void 0, void 0, void 0, function* () {

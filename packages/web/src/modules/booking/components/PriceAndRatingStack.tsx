@@ -46,7 +46,9 @@ export const PriceAndRatingStack = ({
             )}`}
           </ButtonBase>
         ) : (
-          <>{rating && <Rating rating={rating} fontSize={13} />}</>
+          <>
+            {rating && <Rating rating={rating} fontSize={13} starSize={14} />}
+          </>
         )}
       </Box>
     </Stack>

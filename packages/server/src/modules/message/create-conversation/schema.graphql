@@ -5,10 +5,12 @@ type Mutation {
   ): CreateConversationResponse!
 }
 
-union CreateConversationResponse = ConversationId | Redirect
+union CreateConversationResponse = ConversationSuccess | Redirect
 
-type ConversationId {
+type ConversationSuccess {
   conversationId: ID!
+  userIdOfRecipient: ID
+  recipient: User
 }
 
 type Redirect {

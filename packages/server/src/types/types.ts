@@ -56,11 +56,6 @@ export type Conversation = {
   messages: Array<ConversationMessage>;
 };
 
-export type ConversationId = {
-  __typename?: 'ConversationId';
-  conversationId: Scalars['ID'];
-};
-
 export type ConversationMessage = {
   __typename?: 'ConversationMessage';
   createdDate: Scalars['Date'];
@@ -69,7 +64,14 @@ export type ConversationMessage = {
   text: Scalars['String'];
 };
 
-export type CreateConversationResponse = ConversationId | Redirect;
+export type ConversationSuccess = {
+  __typename?: 'ConversationSuccess';
+  conversationId: Scalars['ID'];
+  recipient?: Maybe<User>;
+  userIdOfRecipient?: Maybe<Scalars['ID']>;
+};
+
+export type CreateConversationResponse = ConversationSuccess | Redirect;
 
 export type Draft = {
   __typename?: 'Draft';
@@ -465,9 +467,9 @@ export type ResolversTypes = {
   BookingInput: BookingInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Conversation: ResolverTypeWrapper<Conversation>;
-  ConversationId: ResolverTypeWrapper<ConversationId>;
   ConversationMessage: ResolverTypeWrapper<ConversationMessage>;
-  CreateConversationResponse: ResolversTypes['ConversationId'] | ResolversTypes['Redirect'];
+  ConversationSuccess: ResolverTypeWrapper<ConversationSuccess>;
+  CreateConversationResponse: ResolversTypes['ConversationSuccess'] | ResolversTypes['Redirect'];
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Draft: ResolverTypeWrapper<Draft>;
   Error: ResolverTypeWrapper<Error>;
@@ -508,9 +510,9 @@ export type ResolversParentTypes = {
   BookingInput: BookingInput;
   Boolean: Scalars['Boolean'];
   Conversation: Conversation;
-  ConversationId: ConversationId;
   ConversationMessage: ConversationMessage;
-  CreateConversationResponse: ResolversParentTypes['ConversationId'] | ResolversParentTypes['Redirect'];
+  ConversationSuccess: ConversationSuccess;
+  CreateConversationResponse: ResolversParentTypes['ConversationSuccess'] | ResolversParentTypes['Redirect'];
   Date: Scalars['Date'];
   Draft: Draft;
   Error: Error;
@@ -565,11 +567,6 @@ export type ConversationResolvers<ContextType = any, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ConversationIdResolvers<ContextType = any, ParentType extends ResolversParentTypes['ConversationId'] = ResolversParentTypes['ConversationId']> = {
-  conversationId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type ConversationMessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['ConversationMessage'] = ResolversParentTypes['ConversationMessage']> = {
   createdDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   fromHost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -578,8 +575,15 @@ export type ConversationMessageResolvers<ContextType = any, ParentType extends R
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ConversationSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['ConversationSuccess'] = ResolversParentTypes['ConversationSuccess']> = {
+  conversationId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  recipient?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  userIdOfRecipient?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateConversationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateConversationResponse'] = ResolversParentTypes['CreateConversationResponse']> = {
-  __resolveType: TypeResolveFn<'ConversationId' | 'Redirect', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'ConversationSuccess' | 'Redirect', ParentType, ContextType>;
 };
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
@@ -769,8 +773,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type Resolvers<ContextType = any> = {
   Booking?: BookingResolvers<ContextType>;
   Conversation?: ConversationResolvers<ContextType>;
-  ConversationId?: ConversationIdResolvers<ContextType>;
   ConversationMessage?: ConversationMessageResolvers<ContextType>;
+  ConversationSuccess?: ConversationSuccessResolvers<ContextType>;
   CreateConversationResponse?: CreateConversationResponseResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Draft?: DraftResolvers<ContextType>;

@@ -11,6 +11,11 @@ import { formatYupError } from "../../shared/utils/formatYupError";
 import { cannotStartConversationWithOwnListing } from "./utils/errorMessages";
 
 export const resolvers: Resolvers = {
+  ConversationSuccess: {
+    recipient: async ({ userIdOfRecipient }, _, { userLoader }) =>
+      userLoader.load(userIdOfRecipient),
+    userIdOfRecipient: () => null, // don't return foreign user's id to client
+  },
   Mutation: {
     createConversation: async (
       _,
@@ -70,8 +75,9 @@ export const resolvers: Resolvers = {
         });
 
         return {
-          __typename: "ConversationId",
+          __typename: "ConversationSuccess",
           conversationId: dbMessage.conversationId,
+          userIdOfRecipient: dbMessage.userIdOfHost,
         };
       }
     },

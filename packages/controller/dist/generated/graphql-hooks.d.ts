@@ -57,10 +57,6 @@ export declare type Conversation = {
     listingId: Scalars['ID'];
     messages: Array<ConversationMessage>;
 };
-export declare type ConversationId = {
-    __typename?: 'ConversationId';
-    conversationId: Scalars['ID'];
-};
 export declare type ConversationMessage = {
     __typename?: 'ConversationMessage';
     createdDate: Scalars['Date'];
@@ -68,7 +64,13 @@ export declare type ConversationMessage = {
     id: Scalars['ID'];
     text: Scalars['String'];
 };
-export declare type CreateConversationResponse = ConversationId | Redirect;
+export declare type ConversationSuccess = {
+    __typename?: 'ConversationSuccess';
+    conversationId: Scalars['ID'];
+    recipient?: Maybe<User>;
+    userIdOfRecipient?: Maybe<Scalars['ID']>;
+};
+export declare type CreateConversationResponse = ConversationSuccess | Redirect;
 export declare type Draft = {
     __typename?: 'Draft';
     amenities?: Maybe<Array<Scalars['String']>>;
@@ -136,7 +138,7 @@ export declare type ListingInfo = {
     __typename?: 'ListingInfo';
     img?: Maybe<Scalars['String']>;
     name?: Maybe<Scalars['String']>;
-    rating?: Maybe<Scalars['Int']>;
+    rating?: Maybe<Scalars['Float']>;
     vesselType?: Maybe<VesselType>;
 };
 export declare type LoginResponse = {
@@ -530,8 +532,14 @@ export declare type CreateConversationMutationVariables = Exact<{
 export declare type CreateConversationMutation = {
     __typename?: 'Mutation';
     createConversation: {
-        __typename?: 'ConversationId';
+        __typename?: 'ConversationSuccess';
         conversationId: string;
+        userIdOfRecipient?: string | null;
+        recipient?: {
+            __typename?: 'User';
+            firstName?: string | null;
+            avatar?: string | null;
+        } | null;
     } | {
         __typename?: 'Redirect';
         redirect: string;
