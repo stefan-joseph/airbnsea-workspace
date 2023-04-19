@@ -71,7 +71,11 @@ export const CompletionOfBooking = ({
               </Typography>
               <Stack direction="row" gap={0.4} mt="auto">
                 {listing?.rating && (
-                  <Rating rating={listing?.rating} fontSize={12} />
+                  <Rating
+                    rating={listing?.rating}
+                    fontSize={12}
+                    starSize={12}
+                  />
                 )}
                 <Typography fontSize={12} color="grey.600">
                   ({7})

@@ -1,6 +1,7 @@
 import { Button, IconButton, Stack } from "@mui/material";
 import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import { IoShareOutline, IoHeartOutline } from "react-icons/io5";
 
 export const ShareSaveButtons = ({
   notVisible,
@@ -14,9 +15,9 @@ export const ShareSaveButtons = ({
   const buttons = [
     {
       text: "Share",
-      icon: <IosShareRoundedIcon fontSize="small" />,
+      icon: <IoShareOutline size={18} />,
     },
-    { text: "Save", icon: <FavoriteBorderOutlinedIcon fontSize="small" /> },
+    { text: "Save", icon: <IoHeartOutline size={18} /> },
   ];
 
   return (
@@ -34,7 +35,7 @@ export const ShareSaveButtons = ({
             key={text}
             color="info"
             startIcon={icon}
-            sx={{ fontSize: 14, opacity: notVisible ? 0 : 1 }}
+            sx={{ fontSize: 13, opacity: notVisible ? 0 : 1 }}
           >
             {text}
           </Button>

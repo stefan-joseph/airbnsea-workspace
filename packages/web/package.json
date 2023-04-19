@@ -33,6 +33,7 @@
     "react-google-maps": "^9.4.5",
     "react-icons": "^4.7.1",
     "react-material-ui-carousel": "^3.4.2",
+    "react-photo-gallery": "^8.0.0",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.4.1",
     "react-scripts": "5.0.1",
