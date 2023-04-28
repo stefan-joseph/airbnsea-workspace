@@ -42,7 +42,7 @@ export const Listing = () => {
     <Box
       sx={{
         mt: matches ? `${searchBarHeight}px` : undefined,
-        mb: matchesReserveBar ? 12 : 0,
+        mb: matchesReserveBar ? 12 : 10,
       }}
     >
       {matches ? (
