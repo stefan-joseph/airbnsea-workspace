@@ -101,8 +101,6 @@ export const PhotoCarousel = ({
               aspectRatio: aspectRatio || "1/1",
               objectFit: "cover",
               width: "100%",
-              overflow: "hidden",
-              borderRadius: 4,
             }}
           />
         ))}

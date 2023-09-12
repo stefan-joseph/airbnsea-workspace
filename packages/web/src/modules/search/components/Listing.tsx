@@ -50,7 +50,13 @@ export const Listing: React.FC<{
         onClick={(e) => data?.id && handleNavigation(e, data.id)}
         sx={{ color: "initial", pb: 2, cursor: "pointer" }}
       >
-        <Box borderRadius={4} overflow="hidden" position="relative">
+        <Box
+          borderRadius={4}
+          overflow="hidden"
+          position="relative"
+          // DO NOT REMOVE: for safari borderRadius/overflow: hidden bug
+          sx={{ isolation: "isolate" }}
+        >
           {data?.photos ? (
             <PhotoCarousel photos={data.photos} showArrowButtons={isHovering} />
           ) : (
