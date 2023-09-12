@@ -61,7 +61,8 @@ export const PhotoCarousel = ({
       <Carousel
         showThumbs={false}
         showStatus={false}
-        renderIndicator={(_, isSelected, index) => (
+        preventMovementUntilSwipeScrollTolerance
+        renderIndicator={(_, isSelected) => (
           <Box
             width={isSelected ? 8 : 6}
             height={isSelected ? 8 : 6}
