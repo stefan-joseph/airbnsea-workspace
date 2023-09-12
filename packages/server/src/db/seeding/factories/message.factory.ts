@@ -1,15 +1,18 @@
-import { Faker } from "@faker-js/faker";
+// import { Faker } from "@faker-js/faker";
 import { setSeederFactory } from "typeorm-extension";
 import { Message } from "../../../entity/Message";
 
-export const MessageFactory = setSeederFactory(Message, (faker: Faker) => {
-  console.log(faker);
+export const MessageFactory = setSeederFactory(Message, () =>
+  // faker: Faker
+  {
+    // console.log(faker);
 
-  const message = new Message();
+    const message = new Message();
 
-  message.userIdOfGuest;
-  message.userIdOfHost;
-  message.listingId;
+    message.userIdOfGuest;
+    message.userIdOfHost;
+    message.listingId;
 
-  return message;
-});
+    return message;
+  }
+);

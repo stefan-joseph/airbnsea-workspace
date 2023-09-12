@@ -17,7 +17,7 @@ const optionsPROD: DataSourceOptions & SeederOptions = {
   url: process.env.DATABASE_URL,
   // ssl: { rejectUnauthorized: false },
   synchronize: true,
-  logging: true,
+  logging: false,
   // dropSchema: true,
   entities: [User, Listing, Draft, Message, Booking],
   migrations: [],

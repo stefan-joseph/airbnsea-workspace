@@ -45,7 +45,7 @@ const secondaryPhotos = [
 ];
 
 const getPhoto = () => {
-  console.log("refreshMainPhotos!!!", refreshMainPhotos);
+  // console.log("refreshMainPhotos!!!", refreshMainPhotos);
 
   if (mainPhotos.length < 1) {
     mainPhotos = [...refreshMainPhotos];

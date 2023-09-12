@@ -42,7 +42,6 @@ const secondaryPhotos = [
     "v1669565123/airbnsea/ylazxmbjbcdlnhba9upw.jpg",
 ];
 const getPhoto = () => {
-    console.log("refreshMainPhotos!!!", refreshMainPhotos);
     if (mainPhotos.length < 1) {
         mainPhotos = [...refreshMainPhotos];
     }
