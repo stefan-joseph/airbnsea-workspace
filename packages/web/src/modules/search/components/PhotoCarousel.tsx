@@ -101,6 +101,7 @@ export const PhotoCarousel = ({
               objectFit: "cover",
               width: "100%",
               overflow: "hidden",
+              borderRadius: 4,
             }}
           />
         ))}
