@@ -21,6 +21,7 @@ export const SearchContainer = ({
 }: Props) => {
   return (
     <Stack
+      className="babyyyy"
       ref={searchBarRef}
       direction="row"
       justifyContent="space-between"

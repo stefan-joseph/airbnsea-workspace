@@ -31,7 +31,9 @@ export const SearchButton = ({
       className="search-button"
       sx={{
         height: subSearch ? 50 : 32,
+        // height: 32,
         width: subSearch && !iconOnly ? 116 : subSearch ? 74 : 32,
+        // width: 32,
         minWidth: subSearch ? "unset" : 32,
         p: subSearch && !iconOnly ? 2 : 0,
         borderRadius: 6,
@@ -46,23 +48,23 @@ export const SearchButton = ({
         // transitionProperty: "width, height",
         // transitionDuration: "1s",
         // transitionTimingFunction: searchBarTimingFunction,
-        animation: `${
-          searchBarTransitionTime / 1.5
-        }ms ${searchBarTimingFunction} 0s ${
-          subSearch === 0 ? "reverse" : ""
-        } expandSearch`,
-        "@keyframes expandSearch": {
-          "0%": {
-            width: "32px",
-            height: "32px",
-            fontSize: "0px",
-          },
-          "100%": {
-            width: "120px",
-            height: "50px",
-            fontSize: "14px",
-          },
-        },
+        // animation: `${
+        //   searchBarTransitionTime / 1.5
+        // }ms ${searchBarTimingFunction} 0s ${
+        //   subSearch === 0 ? "reverse" : ""
+        // } expandSearch`,
+        // "@keyframes expandSearch": {
+        //   "0%": {
+        //     width: "32px",
+        //     height: "32px",
+        //     fontSize: "0px",
+        //   },
+        //   "100%": {
+        //     width: "120px",
+        //     height: "50px",
+        //     fontSize: "14px",
+        //   },
+        // },
 
         "&:hover": {
           backgroundColor: subSearch === 0 ? "primary.main" : null,
@@ -70,7 +72,8 @@ export const SearchButton = ({
       }}
     >
       <IoSearch
-        size={!!subSearch ? 22 : 16}
+        // size={!!subSearch ? 22 : 16}
+        size={16}
         style={{ marginRight: iconOnly || !subSearch ? 0 : 6 }}
       />
       {!subSearch || iconOnly ? "" : "Search"}
