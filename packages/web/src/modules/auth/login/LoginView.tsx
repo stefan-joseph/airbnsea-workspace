@@ -3,10 +3,10 @@ import { Field, Form, Formik } from "formik";
 import { loginSchema } from "@airbnb-clone/common";
 import { LoginUserMutationVariables } from "@airbnb-clone/controller";
 import { NormalizedErrorMap } from "@airbnb-clone/controller/dist/types/NormalizedErrorMap";
-import { Button, Skeleton, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
-import { useGetRandomUserCredentailsLazyQuery } from "@airbnb-clone/controller";
+import { useLoginAsRandomUserMutation } from "@airbnb-clone/controller";
 import { AuthPageContainer } from "../components/AuthPageContainer";
 
 interface Props {
@@ -19,8 +19,8 @@ interface Props {
 export const LoginView = ({ onFinish, submit }: Props) => {
   const location = useLocation();
 
-  const [getRandomUserCredentails, { data, loading }] =
-    useGetRandomUserCredentailsLazyQuery();
+  const [loginAsRandomUserMutation, { client }] =
+    useLoginAsRandomUserMutation();
 
   return (
     <AuthPageContainer>
@@ -33,13 +33,12 @@ export const LoginView = ({ onFinish, submit }: Props) => {
         validateOnBlur={false}
         validateOnChange={false}
         onSubmit={async (values, { setErrors }) => {
-          console.log(values);
           const error = await submit(values);
           if (error) setErrors(error);
           else onFinish();
         }}
       >
-        {({ setFieldValue }) => (
+        {() => (
           <Form>
             <Stack
               sx={{
@@ -49,50 +48,42 @@ export const LoginView = ({ onFinish, submit }: Props) => {
             >
               <Button
                 onClick={async () => {
-                  const { data, error } = await getRandomUserCredentails();
+                  const { data } = await loginAsRandomUserMutation();
 
-                  if (data?.getRandomUserCredentails) {
-                    setFieldValue(
-                      "email",
-                      data?.getRandomUserCredentails.email
-                    );
-                    setFieldValue(
-                      "password",
-                      data?.getRandomUserCredentails.password
-                    );
-                  } else if (error) {
-                    // make general error with useState instead of error for specific field ??
+                  if (data?.loginAsRandomUser.sessionId) {
+                    await client.resetStore();
+                    onFinish();
                   }
                 }}
               >
-                Test User
+                Login as test user
               </Button>
               {location.state?.message && (
                 <Typography fontWeight={600}>
                   {location.state.message}
                 </Typography>
               )}
-              {loading ? (
+              {/* {loading ? (
                 <Skeleton variant="rounded" height={34} />
-              ) : (
-                <Field
-                  name="email"
-                  label="Email"
-                  size="small"
-                  component={TextInput2}
-                />
-              )}
-              {loading ? (
+              ) : ( */}
+              <Field
+                name="email"
+                label="Email"
+                size="small"
+                component={TextInput2}
+              />
+              {/* )} */}
+              {/* {loading ? (
                 <Skeleton variant="rounded" height={34} />
-              ) : (
-                <Field
-                  name="password"
-                  type="password"
-                  label="Password"
-                  size="small"
-                  component={TextInput2}
-                />
-              )}
+              ) : ( */}
+              <Field
+                name="password"
+                type="password"
+                label="Password"
+                size="small"
+                component={TextInput2}
+              />
+              {/* )} */}
               <Button
                 type="submit"
                 variant="contained"

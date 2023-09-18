@@ -54,7 +54,6 @@ exports.resolvers = {
             if (!validPassword) {
                 return { errors: errorResponse };
             }
-            console.log(req.session);
             req.session.userId = user.id;
             if (req.sessionID) {
                 yield redis.lpush(`${constants_1.userSessionIdPrefix}${user.id}`, req.sessionID);

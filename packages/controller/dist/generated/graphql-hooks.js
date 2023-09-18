@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useUpdateInboxSubscriptionSubscription = exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = exports.usePopulateConversationQuery = exports.PopulateConversationDocument = exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useGetRandomUserCredentailsLazyQuery = exports.useGetRandomUserCredentailsQuery = exports.GetRandomUserCredentailsDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.VesselType = exports.Status = exports.InboxType = void 0;
+exports.useUpdateInboxSubscriptionSubscription = exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = exports.usePopulateConversationQuery = exports.PopulateConversationDocument = exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useLoginAsRandomUserMutation = exports.LoginAsRandomUserDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.VesselType = exports.Status = exports.InboxType = void 0;
 const client_1 = require("@apollo/client");
 const Apollo = __importStar(require("@apollo/client"));
 const defaultOptions = {};
@@ -122,24 +122,22 @@ function useResetPasswordMutation(baseOptions) {
     return Apollo.useMutation(exports.ResetPasswordDocument, options);
 }
 exports.useResetPasswordMutation = useResetPasswordMutation;
-exports.GetRandomUserCredentailsDocument = (0, client_1.gql) `
-    query GetRandomUserCredentails {
-  getRandomUserCredentails {
-    email
-    password
+exports.LoginAsRandomUserDocument = (0, client_1.gql) `
+    mutation LoginAsRandomUser {
+  loginAsRandomUser {
+    errors {
+      path
+      message
+    }
+    sessionId
   }
 }
     `;
-function useGetRandomUserCredentailsQuery(baseOptions) {
+function useLoginAsRandomUserMutation(baseOptions) {
     const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useQuery(exports.GetRandomUserCredentailsDocument, options);
+    return Apollo.useMutation(exports.LoginAsRandomUserDocument, options);
 }
-exports.useGetRandomUserCredentailsQuery = useGetRandomUserCredentailsQuery;
-function useGetRandomUserCredentailsLazyQuery(baseOptions) {
-    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
-    return Apollo.useLazyQuery(exports.GetRandomUserCredentailsDocument, options);
-}
-exports.useGetRandomUserCredentailsLazyQuery = useGetRandomUserCredentailsLazyQuery;
+exports.useLoginAsRandomUserMutation = useLoginAsRandomUserMutation;
 exports.CreateBookingDocument = (0, client_1.gql) `
     mutation CreateBooking($listingId: String!, $input: BookingInput!) {
   createBooking(listingId: $listingId, input: $input) {

@@ -15,14 +15,9 @@ const normalizeErrors_1 = require("../../../utils/normalizeErrors");
 const LoginController = (props) => {
     const [loginUserMutation, { client }] = (0, graphql_hooks_1.useLoginUserMutation)();
     const submit = (values) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(values);
         const { data } = yield loginUserMutation({ variables: values });
-        console.log(data === null || data === void 0 ? void 0 : data.login);
         if (data === null || data === void 0 ? void 0 : data.login.errors) {
             return (0, normalizeErrors_1.normalizeErrors)(data.login.errors);
-        }
-        if ((data === null || data === void 0 ? void 0 : data.login.sessionId) && props.onSessionId) {
-            props.onSessionId(data.login.sessionId);
         }
         yield client.resetStore();
         return null;

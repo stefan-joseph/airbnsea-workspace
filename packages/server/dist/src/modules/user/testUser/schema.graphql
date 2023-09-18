@@ -1,8 +1,3 @@
-type Query {
-  getRandomUserCredentails: RandomUser
-}
-
-type RandomUser {
-  email: String!
-  password: String!
+type Mutation {
+  loginAsRandomUser: LoginResponse!
 }

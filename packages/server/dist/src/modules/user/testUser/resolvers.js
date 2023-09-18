@@ -11,18 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const User_1 = require("../../../entity/User");
+const constants_1 = require("../../../utils/constants");
 const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaError");
 exports.resolvers = {
-    Query: {
-        getRandomUserCredentails: () => __awaiter(void 0, void 0, void 0, function* () {
-            const user = yield User_1.User.findOne({ where: {} });
-            if (!user) {
+    Mutation: {
+        loginAsRandomUser: (_, __, { redis, req }) => __awaiter(void 0, void 0, void 0, function* () {
+            const users = yield User_1.User.find({ where: {} });
+            if (!users) {
                 return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("A random user could not be found at this time.");
             }
-            return {
-                email: user.email,
-                password: "secret",
-            };
+            const randomUser = users[Math.floor(Math.random() * users.length)];
+            req.session.userId = randomUser.id;
+            if (req.sessionID) {
+                yield redis.lpush(`${constants_1.userSessionIdPrefix}${randomUser.id}`, req.sessionID);
+            }
+            return { sessionId: req.sessionID };
         }),
     },
 };

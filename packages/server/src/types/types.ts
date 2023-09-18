@@ -171,6 +171,7 @@ export type Mutation = {
   createMessage: Scalars['ID'];
   deleteListing: Scalars['Boolean'];
   login: LoginResponse;
+  loginAsRandomUser: LoginResponse;
   logout?: Maybe<Scalars['Boolean']>;
   register?: Maybe<Array<Error>>;
   resetPassword?: Maybe<Array<Error>>;
@@ -262,7 +263,6 @@ export type Query = {
   __typename?: 'Query';
   getFruit: Scalars['String'];
   getListingUnavailability: Array<Scalars['String']>;
-  getRandomUserCredentails?: Maybe<RandomUser>;
   me?: Maybe<Me>;
   populateConversation: Conversation;
   populateForm: Draft;
@@ -303,12 +303,6 @@ export type QuerySearchListingsArgs = {
 
 export type QueryViewListingArgs = {
   listingId: Scalars['ID'];
-};
-
-export type RandomUser = {
-  __typename?: 'RandomUser';
-  email: Scalars['String'];
-  password: Scalars['String'];
 };
 
 export type Redirect = {
@@ -488,7 +482,6 @@ export type ResolversTypes = {
   Owner: ResolverTypeWrapper<Owner>;
   PhotoUpdate: PhotoUpdate;
   Query: ResolverTypeWrapper<{}>;
-  RandomUser: ResolverTypeWrapper<RandomUser>;
   Redirect: ResolverTypeWrapper<Redirect>;
   SearchListingResult: ResolverTypeWrapper<SearchListingResult>;
   SearchListingsInput: SearchListingsInput;
@@ -530,7 +523,6 @@ export type ResolversParentTypes = {
   Owner: Owner;
   PhotoUpdate: PhotoUpdate;
   Query: {};
-  RandomUser: RandomUser;
   Redirect: Redirect;
   SearchListingResult: SearchListingResult;
   SearchListingsInput: SearchListingsInput;
@@ -690,6 +682,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createMessage?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'conversationId' | 'text'>>;
   deleteListing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteListingArgs, 'id'>>;
   login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
+  loginAsRandomUser?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType>;
   logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   register?: Resolver<Maybe<Array<ResolversTypes['Error']>>, ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'password'>>;
   resetPassword?: Resolver<Maybe<Array<ResolversTypes['Error']>>, ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'key' | 'newPassword'>>;
@@ -707,7 +700,6 @@ export type OwnerResolvers<ContextType = any, ParentType extends ResolversParent
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getFruit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   getListingUnavailability?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetListingUnavailabilityArgs, 'listingId'>>;
-  getRandomUserCredentails?: Resolver<Maybe<ResolversTypes['RandomUser']>, ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes['Me']>, ParentType, ContextType>;
   populateConversation?: Resolver<ResolversTypes['Conversation'], ParentType, ContextType, RequireFields<QueryPopulateConversationArgs, 'conversationId'>>;
   populateForm?: Resolver<ResolversTypes['Draft'], ParentType, ContextType, RequireFields<QueryPopulateFormArgs, 'fields' | 'listingId'>>;
@@ -715,12 +707,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   searchListings?: Resolver<ResolversTypes['SearchListingsResponse'], ParentType, ContextType, RequireFields<QuerySearchListingsArgs, 'limit' | 'offset'>>;
   viewListing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<QueryViewListingArgs, 'listingId'>>;
   viewUserBookings?: Resolver<Array<ResolversTypes['Booking']>, ParentType, ContextType>;
-};
-
-export type RandomUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['RandomUser'] = ResolversParentTypes['RandomUser']> = {
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type RedirectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Redirect'] = ResolversParentTypes['Redirect']> = {
@@ -789,7 +775,6 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   Owner?: OwnerResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  RandomUser?: RandomUserResolvers<ContextType>;
   Redirect?: RedirectResolvers<ContextType>;
   SearchListingResult?: SearchListingResultResolvers<ContextType>;
   SearchListingsResponse?: SearchListingsResponseResolvers<ContextType>;

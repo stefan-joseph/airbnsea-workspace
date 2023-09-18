@@ -172,6 +172,7 @@ export type Mutation = {
   createMessage: Scalars['ID'];
   deleteListing: Scalars['Boolean'];
   login: LoginResponse;
+  loginAsRandomUser: LoginResponse;
   logout?: Maybe<Scalars['Boolean']>;
   register?: Maybe<Array<Error>>;
   resetPassword?: Maybe<Array<Error>>;
@@ -263,7 +264,6 @@ export type Query = {
   __typename?: 'Query';
   getFruit: Scalars['String'];
   getListingUnavailability: Array<Scalars['String']>;
-  getRandomUserCredentails?: Maybe<RandomUser>;
   me?: Maybe<Me>;
   populateConversation: Conversation;
   populateForm: Draft;
@@ -304,12 +304,6 @@ export type QuerySearchListingsArgs = {
 
 export type QueryViewListingArgs = {
   listingId: Scalars['ID'];
-};
-
-export type RandomUser = {
-  __typename?: 'RandomUser';
-  email: Scalars['String'];
-  password: Scalars['String'];
 };
 
 export type Redirect = {
@@ -435,10 +429,10 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword?: Array<{ __typename?: 'Error', path: string, message: string }> | null };
 
-export type GetRandomUserCredentailsQueryVariables = Exact<{ [key: string]: never; }>;
+export type LoginAsRandomUserMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetRandomUserCredentailsQuery = { __typename?: 'Query', getRandomUserCredentails?: { __typename?: 'RandomUser', email: string, password: string } | null };
+export type LoginAsRandomUserMutation = { __typename?: 'Mutation', loginAsRandomUser: { __typename?: 'LoginResponse', sessionId?: string | null, errors?: Array<{ __typename?: 'Error', path: string, message: string }> | null } };
 
 export type CreateBookingMutationVariables = Exact<{
   listingId: Scalars['String'];
@@ -733,41 +727,42 @@ export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOption
 export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
 export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
 export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
-export const GetRandomUserCredentailsDocument = gql`
-    query GetRandomUserCredentails {
-  getRandomUserCredentails {
-    email
-    password
+export const LoginAsRandomUserDocument = gql`
+    mutation LoginAsRandomUser {
+  loginAsRandomUser {
+    errors {
+      path
+      message
+    }
+    sessionId
   }
 }
     `;
+export type LoginAsRandomUserMutationFn = Apollo.MutationFunction<LoginAsRandomUserMutation, LoginAsRandomUserMutationVariables>;
 
 /**
- * __useGetRandomUserCredentailsQuery__
+ * __useLoginAsRandomUserMutation__
  *
- * To run a query within a React component, call `useGetRandomUserCredentailsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetRandomUserCredentailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
+ * To run a mutation, you first call `useLoginAsRandomUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginAsRandomUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useGetRandomUserCredentailsQuery({
+ * const [loginAsRandomUserMutation, { data, loading, error }] = useLoginAsRandomUserMutation({
  *   variables: {
  *   },
  * });
  */
-export function useGetRandomUserCredentailsQuery(baseOptions?: Apollo.QueryHookOptions<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>) {
+export function useLoginAsRandomUserMutation(baseOptions?: Apollo.MutationHookOptions<LoginAsRandomUserMutation, LoginAsRandomUserMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>(GetRandomUserCredentailsDocument, options);
+        return Apollo.useMutation<LoginAsRandomUserMutation, LoginAsRandomUserMutationVariables>(LoginAsRandomUserDocument, options);
       }
-export function useGetRandomUserCredentailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>(GetRandomUserCredentailsDocument, options);
-        }
-export type GetRandomUserCredentailsQueryHookResult = ReturnType<typeof useGetRandomUserCredentailsQuery>;
-export type GetRandomUserCredentailsLazyQueryHookResult = ReturnType<typeof useGetRandomUserCredentailsLazyQuery>;
-export type GetRandomUserCredentailsQueryResult = Apollo.QueryResult<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>;
+export type LoginAsRandomUserMutationHookResult = ReturnType<typeof useLoginAsRandomUserMutation>;
+export type LoginAsRandomUserMutationResult = Apollo.MutationResult<LoginAsRandomUserMutation>;
+export type LoginAsRandomUserMutationOptions = Apollo.BaseMutationOptions<LoginAsRandomUserMutation, LoginAsRandomUserMutationVariables>;
 export const CreateBookingDocument = gql`
     mutation CreateBooking($listingId: String!, $input: BookingInput!) {
   createBooking(listingId: $listingId, input: $input) {

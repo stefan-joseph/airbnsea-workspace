@@ -161,6 +161,7 @@ export declare type Mutation = {
     createMessage: Scalars['ID'];
     deleteListing: Scalars['Boolean'];
     login: LoginResponse;
+    loginAsRandomUser: LoginResponse;
     logout?: Maybe<Scalars['Boolean']>;
     register?: Maybe<Array<Error>>;
     resetPassword?: Maybe<Array<Error>>;
@@ -225,7 +226,6 @@ export declare type Query = {
     __typename?: 'Query';
     getFruit: Scalars['String'];
     getListingUnavailability: Array<Scalars['String']>;
-    getRandomUserCredentails?: Maybe<RandomUser>;
     me?: Maybe<Me>;
     populateConversation: Conversation;
     populateForm: Draft;
@@ -254,11 +254,6 @@ export declare type QuerySearchListingsArgs = {
 };
 export declare type QueryViewListingArgs = {
     listingId: Scalars['ID'];
-};
-export declare type RandomUser = {
-    __typename?: 'RandomUser';
-    email: Scalars['String'];
-    password: Scalars['String'];
 };
 export declare type Redirect = {
     __typename?: 'Redirect';
@@ -394,16 +389,20 @@ export declare type ResetPasswordMutation = {
         message: string;
     }> | null;
 };
-export declare type GetRandomUserCredentailsQueryVariables = Exact<{
+export declare type LoginAsRandomUserMutationVariables = Exact<{
     [key: string]: never;
 }>;
-export declare type GetRandomUserCredentailsQuery = {
-    __typename?: 'Query';
-    getRandomUserCredentails?: {
-        __typename?: 'RandomUser';
-        email: string;
-        password: string;
-    } | null;
+export declare type LoginAsRandomUserMutation = {
+    __typename?: 'Mutation';
+    loginAsRandomUser: {
+        __typename?: 'LoginResponse';
+        sessionId?: string | null;
+        errors?: Array<{
+            __typename?: 'Error';
+            path: string;
+            message: string;
+        }> | null;
+    };
 };
 export declare type CreateBookingMutationVariables = Exact<{
     listingId: Scalars['String'];
@@ -677,16 +676,14 @@ export declare function useResetPasswordMutation(baseOptions?: Apollo.MutationHo
 export declare type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
 export declare type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
 export declare type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
-export declare const GetRandomUserCredentailsDocument: Apollo.DocumentNode;
-export declare function useGetRandomUserCredentailsQuery(baseOptions?: Apollo.QueryHookOptions<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>): Apollo.QueryResult<GetRandomUserCredentailsQuery, Exact<{
+export declare const LoginAsRandomUserDocument: Apollo.DocumentNode;
+export declare type LoginAsRandomUserMutationFn = Apollo.MutationFunction<LoginAsRandomUserMutation, LoginAsRandomUserMutationVariables>;
+export declare function useLoginAsRandomUserMutation(baseOptions?: Apollo.MutationHookOptions<LoginAsRandomUserMutation, LoginAsRandomUserMutationVariables>): Apollo.MutationTuple<LoginAsRandomUserMutation, Exact<{
     [key: string]: never;
-}>>;
-export declare function useGetRandomUserCredentailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>): Apollo.LazyQueryResultTuple<GetRandomUserCredentailsQuery, Exact<{
-    [key: string]: never;
-}>>;
-export declare type GetRandomUserCredentailsQueryHookResult = ReturnType<typeof useGetRandomUserCredentailsQuery>;
-export declare type GetRandomUserCredentailsLazyQueryHookResult = ReturnType<typeof useGetRandomUserCredentailsLazyQuery>;
-export declare type GetRandomUserCredentailsQueryResult = Apollo.QueryResult<GetRandomUserCredentailsQuery, GetRandomUserCredentailsQueryVariables>;
+}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+export declare type LoginAsRandomUserMutationHookResult = ReturnType<typeof useLoginAsRandomUserMutation>;
+export declare type LoginAsRandomUserMutationResult = Apollo.MutationResult<LoginAsRandomUserMutation>;
+export declare type LoginAsRandomUserMutationOptions = Apollo.BaseMutationOptions<LoginAsRandomUserMutation, LoginAsRandomUserMutationVariables>;
 export declare const CreateBookingDocument: Apollo.DocumentNode;
 export declare type CreateBookingMutationFn = Apollo.MutationFunction<CreateBookingMutation, CreateBookingMutationVariables>;
 export declare function useCreateBookingMutation(baseOptions?: Apollo.MutationHookOptions<CreateBookingMutation, CreateBookingMutationVariables>): Apollo.MutationTuple<CreateBookingMutation, Exact<{

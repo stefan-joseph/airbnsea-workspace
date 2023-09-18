@@ -1,6 +1,9 @@
-query GetRandomUserCredentails {
-  getRandomUserCredentails {
-    email
-    password
+mutation LoginAsRandomUser {
+  loginAsRandomUser {
+    errors {
+      path
+      message
+    }
+    sessionId
   }
 }

@@ -53,7 +53,6 @@ export const resolvers: Resolvers = {
       if (!validPassword) {
         return { errors: errorResponse };
       }
-      console.log(req.session);
 
       // login now succesful
       req.session.userId = user.id;

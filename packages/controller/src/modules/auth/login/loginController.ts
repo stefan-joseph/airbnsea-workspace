@@ -19,17 +19,12 @@ interface Props {
 export const LoginController = (props: Props) => {
   const [loginUserMutation, { client }] = useLoginUserMutation();
   const submit = async (values: LoginUserMutationVariables) => {
-    console.log(values);
-
     const { data } = await loginUserMutation({ variables: values });
-    console.log(data?.login);
 
     if (data?.login.errors) {
       return normalizeErrors(data.login.errors);
     }
-    if (data?.login.sessionId && props.onSessionId) {
-      props.onSessionId(data.login.sessionId);
-    }
+
     await client.resetStore();
     return null;
   };
