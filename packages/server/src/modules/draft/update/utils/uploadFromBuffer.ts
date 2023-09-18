@@ -16,7 +16,6 @@ export const uploadFromBuffer = async (buffer: Buffer) => {
           if (result) {
             resolve(result);
           } else {
-            console.log("errorrrr", error);
             reject(
               new GraphQLYogaError(
                 error?.message || "Could not upload selected image"

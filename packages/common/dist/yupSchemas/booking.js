@@ -40,7 +40,6 @@ exports.dateValidation = yup
     dayjs(value).isSame(new Date(), "day"));
 exports.endDateValidation = exports.dateValidation.test("is_after_start", exports.invalidLengthOfStay, function (value) {
     const result = dayjs(value).isAfter(this.parent.start);
-    console.log("result", result);
     return result;
 });
 exports.guestsValidation = yup

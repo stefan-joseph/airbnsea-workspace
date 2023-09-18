@@ -20,8 +20,6 @@ exports.resolvers = {
             subscribe: (_, { conversationId }, { req: { session: { userId }, }, pubSub, }) => __awaiter(void 0, void 0, void 0, function* () {
                 if (!validate(conversationId))
                     return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)((0, errorMessages_1.formatBadUuidErrorMessage)(Object.keys({ conversationId })[0]));
-                console.log("userId", userId);
-                console.log("validate", validate(userId));
                 if (!validate(userId))
                     return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.unauthenticatedErrorMessage);
                 const message = yield Message_1.Message.findOne({
@@ -30,7 +28,6 @@ exports.resolvers = {
                         { conversationId, userIdOfHost: userId },
                     ],
                 });
-                console.log("message", message);
                 if (!message)
                     return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("You do not have permission to view this conversation");
                 return pubSub.subscribe("newMessage", conversationId);
@@ -46,7 +43,6 @@ exports.resolvers = {
                 return pubSub.subscribe("newMessage", userId);
             }),
             resolve: (payload) => {
-                console.log("payload!!!", payload);
                 return payload;
             },
         },

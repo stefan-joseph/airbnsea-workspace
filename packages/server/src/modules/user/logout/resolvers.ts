@@ -4,8 +4,6 @@ import { removeAllOfUsersSessions } from "../../../utils/removeAllOfUsersSession
 export const resolvers: Resolvers = {
   Mutation: {
     logout: async (_, __, { req: { session }, redis, res }) => {
-      console.log(session.userId);
-
       const { userId } = session;
 
       if (userId) {

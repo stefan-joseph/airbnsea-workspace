@@ -9,11 +9,8 @@ export const generateModularSchema = () => {
 
   const resolversArray = loadFilesSync(`${pathToModules}/**/resolvers.*`);
 
-  //   console.log(typesArray, resolversArray);
-
   const typeDefs = mergeTypeDefs(typesArray);
   const resolvers = mergeResolvers(resolversArray);
-  //   console.log(typeDefs, resolvers);
 
   return makeExecutableSchema({ typeDefs, resolvers });
 };

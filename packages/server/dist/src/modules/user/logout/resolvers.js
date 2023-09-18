@@ -14,7 +14,6 @@ const removeAllOfUsersSessions_1 = require("../../../utils/removeAllOfUsersSessi
 exports.resolvers = {
     Mutation: {
         logout: (_, __, { req: { session }, redis, res }) => __awaiter(void 0, void 0, void 0, function* () {
-            console.log(session.userId);
             const { userId } = session;
             if (userId) {
                 yield (0, removeAllOfUsersSessions_1.removeAllOfUsersSessions)(userId, redis);

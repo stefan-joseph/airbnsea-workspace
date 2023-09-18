@@ -12,7 +12,6 @@ export const resolvers: Resolvers = {
         vesselType,
         userId: session.userId,
       }).save();
-      // console.log(listing);
 
       return listing.id;
     },

@@ -72,7 +72,6 @@ export const UpdateUnpublishedListing = (props: Props) => {
   }
 
   if (error) {
-    console.log("error", error);
     return (
       <div>
         There was an error
@@ -87,7 +86,6 @@ export const UpdateUnpublishedListing = (props: Props) => {
         enableReinitialize={true}
         initialValues={{ ...initialValues }}
         onSubmit={async (values, { setErrors, setSubmitting }) => {
-          console.log("values", values);
           let valuesWithHeader;
           if (fieldHeader) {
             valuesWithHeader = { [`${fieldHeader}`]: { ...values } };
@@ -108,7 +106,6 @@ export const UpdateUnpublishedListing = (props: Props) => {
             });
           }
           client.clearStore(); // clear apollo cache
-          console.log("response", response);
           if (response?.data && fieldHeader !== "photos") {
             // const { createListing, updateListing } = data.response;
             const id =

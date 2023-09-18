@@ -61,7 +61,6 @@ export const PopulateConversation = () => {
     );
   }
 
-  console.log("error", error?.message);
   return (
     <ConversationContainer>
       {error && <ErrorMessage error={error} />}

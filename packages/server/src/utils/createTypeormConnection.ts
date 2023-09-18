@@ -9,8 +9,6 @@ export const createTypeormConnection = async () => {
   if (process.env.NODE_ENV === "test") {
     return await AppDataSourceTEST.initialize();
   } else if (process.env.NODE_ENV === "development") {
-    console.log("NODE_ENV", process.env.NODE_ENV);
-
     return await AppDataSourceDEV.initialize();
     // .then(async () => {
     //   await AppDataSourceDEV.synchronize(true);

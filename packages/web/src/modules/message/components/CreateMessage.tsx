@@ -19,9 +19,6 @@ export const CreateMessage = ({ conversationId }: Props) => {
     <Formik
       initialValues={{ text: searchParams.get("text") || "" }}
       onSubmit={async ({ text }, { setFieldValue }) => {
-        console.log("text", text);
-        console.log("conversationId", conversationId);
-
         if (!conversationId) return;
         await createMessage({
           variables: { conversationId, text },

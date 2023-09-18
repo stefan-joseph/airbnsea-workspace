@@ -99,6 +99,5 @@ export const PopulateInbox = () => {
     );
   }
 
-  console.log("error", error);
   return <>{error && <ErrorMessage error={error} />}</>;
 };

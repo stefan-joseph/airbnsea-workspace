@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.formatYupError = void 0;
 const formatYupError = (error) => {
-    console.log("ERROR", error);
     const errors = [];
     error.inner.forEach((err) => {
         errors.push({

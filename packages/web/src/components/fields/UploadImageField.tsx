@@ -19,7 +19,6 @@ export const UploadImageField: React.FC<FieldProps<any>> = ({
         accept={{ "image/*": [".jpeg", ".jpg"] }}
         multiple={false}
         onDrop={async ([file]) => {
-          console.log(file);
           setFieldValue("photoToAdd", file);
           setTimeout(() => onSubmit(), 100);
         }}

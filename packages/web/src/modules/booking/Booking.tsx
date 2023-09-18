@@ -69,7 +69,6 @@ export const Booking = ({
       validateOnChange
       validateOnBlur
       onSubmit={async (values) => {
-        console.log(values);
         const { start, end, guests } = values;
         if (!start || !end || !guests || !listingId) return;
         try {

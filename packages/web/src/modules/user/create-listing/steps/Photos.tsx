@@ -10,8 +10,6 @@ interface Props {
 }
 
 export const Photos = ({ values }: Props) => {
-  console.log("values", values);
-
   let currentPhotos = ["", "", "", "", ""];
   if (values?.photos) {
     //@ts-ignore
@@ -22,7 +20,6 @@ export const Photos = ({ values }: Props) => {
       currentPhotos.push("");
     }
   }
-  console.log("current", currentPhotos);
 
   return (
     <>

@@ -33,7 +33,6 @@ export const Address = ({ setFieldValue, values }: Props) => {
         status == google.maps.places.PlacesServiceStatus.OK &&
         places?.address_components
       ) {
-        console.log("places", places.geometry?.location?.lat());
         if (setFieldValue) {
           let streetNumber: string = "";
           let streetName: string = "";
@@ -53,13 +52,11 @@ export const Address = ({ setFieldValue, values }: Props) => {
           if (streetNumber && streetName)
             setFieldValue("street", streetNumber + " " + streetName);
         }
-        console.log(values);
       }
       // add error handling here
       setLoading(false);
     });
   }, [placeId]);
-  console.log(values);
   if (loading) return <Loader />;
 
   if (!loading && values?.street)

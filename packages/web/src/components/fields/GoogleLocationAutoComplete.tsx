@@ -70,8 +70,6 @@ export const GoogleLocationAutoComplete = ({
   isMobile,
   noValueDisplayComponent,
 }: Props) => {
-  console.log("hello");
-
   const anchorEl = useRef();
   const [value, setValue] = useState<PlaceType | null>(null);
   const [inputValue, setInputValue] = useState("");

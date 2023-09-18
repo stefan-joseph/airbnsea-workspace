@@ -12,9 +12,6 @@ export const resolvers: Resolvers = {
       }
 
       if (listing.userId !== session.userId) {
-        console.log(
-          `user: ${session.userId} is trying to delete a listing that is not theirs`
-        );
         throw new Error("not authorized");
       }
 

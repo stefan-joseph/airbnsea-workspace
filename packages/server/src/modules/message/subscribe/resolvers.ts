@@ -28,8 +28,6 @@ export const resolvers: Resolvers = {
           return formatGraphQLYogaError(
             formatBadUuidErrorMessage(Object.keys({ conversationId })[0]) // change variable name to string
           );
-        console.log("userId", userId);
-        console.log("validate", validate(userId));
 
         if (!validate(userId))
           return formatGraphQLYogaError(unauthenticatedErrorMessage);
@@ -40,7 +38,6 @@ export const resolvers: Resolvers = {
             { conversationId, userIdOfHost: userId },
           ],
         });
-        console.log("message", message);
 
         if (!message)
           return formatGraphQLYogaError(
@@ -69,8 +66,6 @@ export const resolvers: Resolvers = {
         return pubSub.subscribe("newMessage", userId);
       },
       resolve: (payload: InboxMessage) => {
-        console.log("payload!!!", payload);
-
         return payload;
       },
     },

@@ -9,6 +9,5 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 test("sends invalid back if bad id sent", () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(process.env.TEST_HOST);
 }));
 //# sourceMappingURL=confirmEmail.test.js.map

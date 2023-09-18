@@ -54,7 +54,6 @@ export const CreateConversation = ({
           const { data } = await createConversation({
             variables: { listingId: listingId, text },
           });
-          console.log("response", data);
           if (data?.createConversation.__typename == "Redirect") {
             window.location.href = data.createConversation.redirect;
           }

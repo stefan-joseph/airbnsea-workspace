@@ -23,7 +23,6 @@ export const LocationField: React.FC<FieldProps<any> & {}> = ({
     const {
       location: { lat, lng },
     } = place;
-    console.log(place);
 
     setValues({
       ...values,

@@ -13,7 +13,6 @@ exports.resolvers = void 0;
 exports.resolvers = {
     Mutation: {
         addFruit: (_, { fruit }, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
-            console.log(fruit);
             yield redis.set("fruit", fruit + "!");
             return true;
         }),

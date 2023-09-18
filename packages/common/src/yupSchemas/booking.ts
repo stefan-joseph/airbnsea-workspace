@@ -27,7 +27,6 @@ export const endDateValidation = dateValidation.test(
   invalidLengthOfStay,
   function (value) {
     const result = dayjs(value).isAfter(this.parent.start);
-    console.log("result", result);
 
     return result;
   }

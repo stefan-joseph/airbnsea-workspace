@@ -27,7 +27,6 @@ exports.resolvers = {
                 .orderBy("m.conversationId")
                 .addOrderBy("m.createdDate", "DESC");
             if (inboxType === types_1.InboxType.Guest) {
-                console.log("is guest???");
                 query.where("m.userIdOfGuest = :userId", { userId });
             }
             else {
@@ -39,7 +38,6 @@ exports.resolvers = {
                 .map((message) => (Object.assign(Object.assign({}, message), { interlocutorId: inboxType === types_1.InboxType.Guest
                     ? message.userIdOfHost
                     : message.userIdOfGuest })));
-            console.log("results", modifiedResults);
             return modifiedResults;
         }),
     },

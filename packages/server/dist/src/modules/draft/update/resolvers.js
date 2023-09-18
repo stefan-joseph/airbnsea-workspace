@@ -54,12 +54,10 @@ exports.resolvers = {
                     });
                 }
                 else if (photoToDelete) {
-                    console.log(photoToDelete);
                     const { photos: currentPhotos } = yield Draft_1.Draft.findOneOrFail({
                         where: { id: listingId },
                         select: { photos: true },
                     });
-                    console.log(currentPhotos);
                     const publicId = "airbnsea/" + photoToDelete.split("airbnsea/")[1].split(".")[0];
                     const { result } = yield cloudinary.v2.uploader
                         .destroy(`${publicId}`)

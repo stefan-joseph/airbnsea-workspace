@@ -7,8 +7,6 @@ export const sendEmail = async (
   url: string,
   linkText: string
 ) => {
-  // console.log(recipient);
-
   const msg = {
     to: `${recipient}`,
     from: "stefanjosephdevelopment@gmail.com",

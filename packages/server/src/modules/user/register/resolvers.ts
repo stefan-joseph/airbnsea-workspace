@@ -17,7 +17,6 @@ export const resolvers: Resolvers = {
         await validUserSchema.validate(args, { abortEarly: false });
       } catch (error) {
         const errors = formatYupError(error as yup.ValidationError);
-        console.log("errors", errors);
         return errors;
       }
 

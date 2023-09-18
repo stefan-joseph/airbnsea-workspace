@@ -58,15 +58,11 @@ export const resolvers: Resolvers = {
             photos: [...currentPhotos, result.secure_url.split("upload/")[1]],
           });
         } else if (photoToDelete) {
-          console.log(photoToDelete);
-
           // make like photoToAdd
           const { photos: currentPhotos } = await Draft.findOneOrFail({
             where: { id: listingId },
             select: { photos: true },
           });
-
-          console.log(currentPhotos);
 
           const publicId =
             "airbnsea/" + photoToDelete.split("airbnsea/")[1].split(".")[0];

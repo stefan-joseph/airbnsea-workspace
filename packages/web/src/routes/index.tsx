@@ -6,7 +6,7 @@ import { RegisterConnector } from "../modules/auth/register/RegisterController";
 import { ResetPasswordConnector } from "../modules/auth/resetPassword/ResetPasswordConnector";
 import { TextPage } from "../modules/textPage/TextPage";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { Logout } from "../modules/auth/logout/logout";
+import { Logout } from "../modules/auth/logout/Logout";
 import { Listing } from "../modules/listing/Listing";
 import { CreateListing } from "../modules/user/create-listing/CreateListing";
 import { Search } from "../modules/search/Search";

@@ -66,8 +66,6 @@ export const ConversationContainer = ({
             variant="outlined"
             sx={{ marginLeft: "auto" }}
             onClick={() => {
-              console.log("!", location.pathname + location.search);
-
               navigate(`/listing/${data?.listingId}/view`, {
                 state: { from: `${location.pathname + location.search}` },
               });

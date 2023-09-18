@@ -26,8 +26,6 @@ export const resolvers: Resolvers = {
         .addOrderBy("m.createdDate", "DESC");
 
       if (inboxType === InboxType.Guest) {
-        console.log("is guest???");
-
         query.where("m.userIdOfGuest = :userId", { userId });
       } else {
         query.where("m.userIdOfHost = :userId", { userId });
@@ -46,7 +44,6 @@ export const resolvers: Resolvers = {
         }));
       // @TODO add pagination
       // const splitResults = results.slice(0, 11);
-      console.log("results", modifiedResults);
 
       return modifiedResults;
     },

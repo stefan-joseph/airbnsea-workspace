@@ -140,13 +140,11 @@ export default function GoogleRestart({
           open={open}
           blurOnSelect
           onChange={(_: any, newValue: PlaceType | null) => {
-            console.log("onChange", newValue);
             setOptions(newValue ? [newValue, ...options] : options);
             // setValue(newValue);
             newValue && nextSubSearch();
           }}
           onInputChange={(_, newInputValue) => {
-            console.log("onInputChange", newInputValue);
             setInputValue(newInputValue);
             handleInputChange(newInputValue);
             !hasChangedInput && setHasChangedInput(true);

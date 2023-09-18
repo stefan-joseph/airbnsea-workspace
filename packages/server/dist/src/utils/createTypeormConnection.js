@@ -16,7 +16,6 @@ const createTypeormConnection = () => __awaiter(void 0, void 0, void 0, function
         return yield data_source_1.AppDataSourceTEST.initialize();
     }
     else if (process.env.NODE_ENV === "development") {
-        console.log("NODE_ENV", process.env.NODE_ENV);
         return yield data_source_1.AppDataSourceDEV.initialize();
     }
     else {

@@ -25,7 +25,6 @@ exports.resolvers = {
             }
             catch (error) {
                 const errors = (0, formatYupError_1.formatYupError)(error);
-                console.log("errors", errors);
                 return errors;
             }
             const userAlreadyExists = yield User_1.User.findOne({

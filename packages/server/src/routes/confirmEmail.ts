@@ -4,8 +4,6 @@ import { User } from "../entity/User";
 import { redis } from "../redis";
 
 export const confirmEmail = async (req: Request, res: Response) => {
-  // console.log(req, res);
-
   const { id } = req.params;
   const userId = await redis.get(id);
   if (userId) {

@@ -3,7 +3,6 @@ import { Resolvers } from "../../types/types";
 export const resolvers: Resolvers = {
   Mutation: {
     addFruit: async (_, { fruit }, { redis }) => {
-      console.log(fruit);
       await redis.set("fruit", fruit + "!");
       return true;
     },

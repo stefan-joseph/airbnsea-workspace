@@ -10,7 +10,6 @@ export const removeAllOfUsersSessions = async (
     0,
     -1
   );
-  console.log("sessionsIds", sessionIds);
 
   const promises = [];
   for (let i = 0; i < sessionIds.length; i++) {
@@ -18,10 +17,5 @@ export const removeAllOfUsersSessions = async (
   }
   await Promise.all(promises);
 
-  const sessionIds2 = await redis.lrange(
-    `${userSessionIdPrefix}${userId}`,
-    0,
-    -1
-  );
-  console.log("sessionsIds2", sessionIds2);
+  await redis.lrange(`${userSessionIdPrefix}${userId}`, 0, -1);
 };

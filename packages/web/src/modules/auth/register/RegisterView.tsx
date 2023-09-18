@@ -28,7 +28,6 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
         validateOnChange={false}
         onSubmit={async (values, { setErrors }) => {
           const error = await submit(values);
-          console.log("errrrror", error);
 
           if (error) setErrors(error);
           else onFinish();

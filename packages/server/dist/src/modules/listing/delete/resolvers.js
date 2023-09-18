@@ -19,7 +19,6 @@ exports.resolvers = {
                 throw new Error("does not exist");
             }
             if (listing.userId !== session.userId) {
-                console.log(`user: ${session.userId} is trying to delete a listing that is not theirs`);
                 throw new Error("not authorized");
             }
             yield Listing_1.Listing.remove(listing);

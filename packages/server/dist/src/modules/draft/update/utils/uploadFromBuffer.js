@@ -25,7 +25,6 @@ const uploadFromBuffer = (buffer) => __awaiter(void 0, void 0, void 0, function*
                 resolve(result);
             }
             else {
-                console.log("errorrrr", error);
                 reject(new node_1.GraphQLYogaError((error === null || error === void 0 ? void 0 : error.message) || "Could not upload selected image"));
             }
         });
