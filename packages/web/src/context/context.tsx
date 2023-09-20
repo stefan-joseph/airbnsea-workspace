@@ -4,6 +4,7 @@ import { ContextType } from "./types";
 
 const initialState = {
   user: {
+    authenticated: false,
     firstName: "",
     avatar: "",
   },

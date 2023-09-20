@@ -1,6 +1,6 @@
-import React, { ReactNode, useContext, useEffect } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { AppContext } from "../context/context";
-import { useMeLazyQuery, useMeQuery } from "@airbnb-clone/controller";
+import { useMeQuery } from "@airbnb-clone/controller";
 
 export const UserIdentifier = ({ children }: { children: ReactNode }) => {
   const { dispatch } = useContext(AppContext);
@@ -12,6 +12,7 @@ export const UserIdentifier = ({ children }: { children: ReactNode }) => {
     dispatch({
       type: "SET_USER",
       payload: {
+        authenticated: true,
         firstName: data.me.firstName,
         avatar: data.me.avatar,
       },

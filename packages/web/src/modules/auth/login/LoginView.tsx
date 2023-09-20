@@ -8,6 +8,8 @@ import { Button, Stack, Typography } from "@mui/material";
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import { useLoginAsRandomUserMutation } from "@airbnb-clone/controller";
 import { AuthPageContainer } from "../components/AuthPageContainer";
+import { useContext } from "react";
+import { AppContext } from "../../../context/context";
 
 interface Props {
   submit: (
@@ -63,19 +65,12 @@ export const LoginView = ({ onFinish, submit }: Props) => {
                   {location.state.message}
                 </Typography>
               )}
-              {/* {loading ? (
-                <Skeleton variant="rounded" height={34} />
-              ) : ( */}
               <Field
                 name="email"
                 label="Email"
                 size="small"
                 component={TextInput2}
               />
-              {/* )} */}
-              {/* {loading ? (
-                <Skeleton variant="rounded" height={34} />
-              ) : ( */}
               <Field
                 name="password"
                 type="password"
@@ -83,7 +78,6 @@ export const LoginView = ({ onFinish, submit }: Props) => {
                 size="small"
                 component={TextInput2}
               />
-              {/* )} */}
               <Button
                 type="submit"
                 variant="contained"

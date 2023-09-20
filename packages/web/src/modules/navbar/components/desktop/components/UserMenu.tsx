@@ -1,19 +1,17 @@
 import { useState, useRef, useContext } from "react";
 import { Avatar, Button, MenuItem, MenuList } from "@mui/material";
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { IoMenuOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 import { PopperMenu } from "../../../../../components/PopperMenu";
 import { AppContext } from "../../../../../context/context";
-import { raiseOnHoverBoxShadow } from "../../../../../constants/constants";
 
 export const UserMenu = () => {
   const buttonRef = useRef(null);
 
   const {
     globalState: {
-      user: { avatar },
+      user: { authenticated, avatar },
     },
   } = useContext(AppContext);
 
@@ -37,12 +35,7 @@ export const UserMenu = () => {
             backgroundColor: "unset",
           },
         }}
-        startIcon={
-          <IoMenuOutline
-            size={24}
-            //  sx={{ color: "grey.600" }}
-          />
-        }
+        startIcon={<IoMenuOutline size={24} />}
         endIcon={
           <Avatar
             src={avatar ? avatar : undefined}
@@ -62,7 +55,7 @@ export const UserMenu = () => {
         marginTop={1}
         boxShadow="0 2px 16px rgba(0,0,0,0.12)"
       >
-        {avatar ? (
+        {authenticated ? (
           <MenuList sx={{ width: 200 }}>
             <Link to="/inbox">
               <MenuItem sx={{ color: "initial" }}>Messages</MenuItem>

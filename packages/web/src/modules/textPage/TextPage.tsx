@@ -13,7 +13,7 @@ export const TextPage = () => {
     <AuthPageContainer>
       <Stack m={appSidePadding} alignItems="center">
         <Typography variant="h4" component="h2" gutterBottom>
-          {message}.
+          {message}
         </Typography>
         <Box>
           <Button

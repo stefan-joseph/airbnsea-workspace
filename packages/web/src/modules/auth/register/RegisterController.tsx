@@ -6,7 +6,7 @@ export const RegisterConnector = () => {
   let navigate = useNavigate();
   const onFinish = () => {
     navigate("/message/confirm-email", {
-      state: { message: "Please check your email to confirm your account" },
+      state: { message: "Please check your email to confirm your account." },
     });
   };
   return (

@@ -6,7 +6,7 @@ export const ForgotPasswordConnector = () => {
   let navigate = useNavigate();
   const onFinish = () => {
     navigate("/message/reset-password", {
-      state: { message: "Please check your email to reset your password" },
+      state: { message: "Please check your email to reset your password." },
     });
   };
 

@@ -324,6 +324,13 @@ export declare enum VesselType {
 export declare type VesselTypeInput = {
     vesselType: VesselType;
 };
+export declare type ConfirmEmailMutationVariables = Exact<{
+    id: Scalars['String'];
+}>;
+export declare type ConfirmEmailMutation = {
+    __typename?: 'Mutation';
+    confirmEmail: boolean;
+};
 export declare type SendForgotPasswordEmailMutationVariables = Exact<{
     email: Scalars['String'];
 }>;
@@ -623,6 +630,14 @@ export declare type UpdateInboxSubscriptionSubscription = {
         listingId: string;
     };
 };
+export declare const ConfirmEmailDocument: Apollo.DocumentNode;
+export declare type ConfirmEmailMutationFn = Apollo.MutationFunction<ConfirmEmailMutation, ConfirmEmailMutationVariables>;
+export declare function useConfirmEmailMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmEmailMutation, ConfirmEmailMutationVariables>): Apollo.MutationTuple<ConfirmEmailMutation, Exact<{
+    id: string;
+}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+export declare type ConfirmEmailMutationHookResult = ReturnType<typeof useConfirmEmailMutation>;
+export declare type ConfirmEmailMutationResult = Apollo.MutationResult<ConfirmEmailMutation>;
+export declare type ConfirmEmailMutationOptions = Apollo.BaseMutationOptions<ConfirmEmailMutation, ConfirmEmailMutationVariables>;
 export declare const SendForgotPasswordEmailDocument: Apollo.DocumentNode;
 export declare type SendForgotPasswordEmailMutationFn = Apollo.MutationFunction<SendForgotPasswordEmailMutation, SendForgotPasswordEmailMutationVariables>;
 export declare function useSendForgotPasswordEmailMutation(baseOptions?: Apollo.MutationHookOptions<SendForgotPasswordEmailMutation, SendForgotPasswordEmailMutationVariables>): Apollo.MutationTuple<SendForgotPasswordEmailMutation, Exact<{

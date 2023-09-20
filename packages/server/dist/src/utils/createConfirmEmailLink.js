@@ -14,7 +14,7 @@ const uuid_1 = require("uuid");
 const createConfirmEmailLink = (url, userId, redis) => __awaiter(void 0, void 0, void 0, function* () {
     const id = (0, uuid_1.v4)();
     yield redis.set(id, userId, "EX", 60 * 60 * 24);
-    return `${url}confirm-email/${id}`;
+    return `${url}/confirm-email/${id}`;
 });
 exports.createConfirmEmailLink = createConfirmEmailLink;
 //# sourceMappingURL=createConfirmEmailLink.js.map

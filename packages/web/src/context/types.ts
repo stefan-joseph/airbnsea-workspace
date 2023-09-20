@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 
 export interface GlobalStateInterface {
   user: {
+    authenticated: boolean;
     firstName: string;
     avatar: string;
   };

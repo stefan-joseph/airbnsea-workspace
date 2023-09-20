@@ -12,6 +12,7 @@ import { CreateListing } from "../modules/user/create-listing/CreateListing";
 import { Search } from "../modules/search/Search";
 import { Message } from "../modules/message/Message";
 import { BookingConfirmationPage } from "../modules/booking/components/ComfirmationPage";
+import ConfirmEmail from "../modules/auth/confirmEmail/confirmEmail";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
   {
     path: "/logout",
     element: <Logout />,
+  },
+  {
+    path: "/confirm-email/:key",
+    element: <ConfirmEmail />,
   },
   {
     path: "/forgot-password",
