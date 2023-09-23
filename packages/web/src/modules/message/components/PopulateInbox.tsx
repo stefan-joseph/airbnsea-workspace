@@ -32,6 +32,8 @@ export const PopulateInbox = () => {
     variables: {
       inboxType: tab === "host" ? InboxType["Host"] : InboxType["Guest"],
     },
+    // messages are acutely time sensitive and should remian up to date all the time
+    fetchPolicy: "no-cache",
   });
 
   useEffect(() => {
