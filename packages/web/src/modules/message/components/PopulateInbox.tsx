@@ -1,4 +1,4 @@
-import { Divider } from "@mui/material";
+import { Divider, Stack, Typography } from "@mui/material";
 import { InboxType, usePopulateInboxQuery } from "@airbnb-clone/controller";
 import React, { useEffect } from "react";
 import { useSearchParams, useParams } from "react-router-dom";
@@ -25,7 +25,7 @@ const UpdateInboxSubscriptionDocument = gql`
 export const PopulateInbox = () => {
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
-
+  console.log("tab", tab);
   const { conversationId } = useParams();
 
   const { data, loading, error, subscribeToMore } = usePopulateInboxQuery({
@@ -73,6 +73,19 @@ export const PopulateInbox = () => {
   let previousConversationId: string;
 
   if (loading) return <Loader />;
+
+  console.log("data", data);
+
+  if (!data?.populateInbox || data.populateInbox.length < 1) {
+    return (
+      <Stack justifyContent="center" height="100%">
+        <Typography variant="h6" component="p" style={{ alignSelf: "center" }}>
+          You do not have any conversation history as a{" "}
+          {tab === "host" ? tab : "guest"}.
+        </Typography>
+      </Stack>
+    );
+  }
 
   if (data) {
     return (
