@@ -9,12 +9,11 @@ export const sendEmail = async (
 ) => {
   const msg = {
     to: `${recipient}`,
-    from: "stefanjosephdevelopment@gmail.com",
-    subject: "Confirm email",
-    text: "and easy to do anywhere, even with Node.js",
+    from: "stefanjoseph.dev@gmail.com",
+    subject: "Confirm Airbnsea account",
+    // text: "and easy to do anywhere, even with Node.js",
     html: `<a href=${url}>${linkText}</a>`,
   };
 
-  const info = await sgMail.send(msg);
-  console.log(info);
+  await sgMail.send(msg);
 };

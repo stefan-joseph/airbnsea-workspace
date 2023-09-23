@@ -16,13 +16,11 @@ sgMail.setApiKey;
 const sendEmail = (recipient, url, linkText) => __awaiter(void 0, void 0, void 0, function* () {
     const msg = {
         to: `${recipient}`,
-        from: "stefanjosephdevelopment@gmail.com",
-        subject: "Confirm email",
-        text: "and easy to do anywhere, even with Node.js",
+        from: "stefanjoseph.dev@gmail.com",
+        subject: "Confirm Airbnsea account",
         html: `<a href=${url}>${linkText}</a>`,
     };
-    const info = yield sgMail.send(msg);
-    console.log(info);
+    yield sgMail.send(msg);
 });
 exports.sendEmail = sendEmail;
 //# sourceMappingURL=sendEmail.js.map
