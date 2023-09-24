@@ -7,6 +7,7 @@ import { Button, Stack, Typography } from "@mui/material";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import { AuthPageContainer } from "../components/AuthPageContainer";
+import AuthFormContainer from "../components/AuthFormContainer";
 
 interface Props {
   submit: (
@@ -28,50 +29,35 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
         validateOnChange={false}
         onSubmit={async (values, { setErrors }) => {
           const error = await submit(values);
-
           if (error) setErrors(error);
           else onFinish();
         }}
       >
         {() => (
-          <Form>
-            <Stack
-              sx={{
-                maxWidth: "35ch",
-              }}
-              spacing={2}
-            >
-              <Field
-                name="email"
-                label="Email"
-                size="small"
-                component={TextInput2}
-              />
-              <Field
-                name="password"
-                type="password"
-                label="Password"
-                size="small"
-                component={TextInput2}
-              />
-
-              <Button variant="contained" type="submit" color="primary">
-                Sign up
-              </Button>
-              <Typography>
-                Already a member?{" "}
-                <Link to="/login">
-                  <Button>Login</Button>
-                </Link>
-              </Typography>
-              <Typography>
-                Minds blanking?{" "}
-                <Link to="/forgot-password">
-                  <Button>Forgot Password</Button>
-                </Link>
-              </Typography>
-            </Stack>
-          </Form>
+          <AuthFormContainer title="Sign up for an Account">
+            <Field name="email" label="Email" component={TextInput2} />
+            <Field
+              name="password"
+              type="password"
+              label="Password"
+              component={TextInput2}
+            />
+            <Button variant="contained" type="submit" color="primary">
+              Create My Account
+            </Button>
+            <Typography>
+              Already a member?{" "}
+              <Link to="/login">
+                <Button>Login</Button>
+              </Link>
+            </Typography>
+            <Typography>
+              Minds blanking?{" "}
+              <Link to="/forgot-password">
+                <Button>Forgot Password</Button>
+              </Link>
+            </Typography>
+          </AuthFormContainer>
         )}
       </Formik>
     </AuthPageContainer>

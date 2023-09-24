@@ -66,6 +66,7 @@ export const theme = createTheme({
           borderRadius: 8,
           letterSpacing: 0.5,
           fontWeight: 500,
+          padding: "0.875rem 1rem",
           "&:disabled": {
             color: "#FFF",
           },

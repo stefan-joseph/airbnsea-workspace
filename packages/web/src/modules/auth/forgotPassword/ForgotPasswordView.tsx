@@ -5,6 +5,7 @@ import { Button, Stack, Typography } from "@mui/material";
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import { Link } from "react-router-dom";
 import { AuthPageContainer } from "../components/AuthPageContainer";
+import AuthFormContainer from "../components/AuthFormContainer";
 
 interface Props {
   submit: (values: SendForgotPasswordEmailMutationVariables) => Promise<null>;
@@ -28,30 +29,21 @@ export const ForgotPasswordView = ({ submit, onFinish }: Props) => {
         }}
       >
         {() => (
-          <Form>
-            <Stack
-              sx={{
-                maxWidth: "35ch",
-              }}
-              spacing={2}
-            >
-              <Field
-                name="email"
-                label="Email"
-                size="small"
-                component={TextInput2}
-              />
-              <Button type="submit" variant="contained" color="primary">
-                Reset Password
-              </Button>
-              <Typography>
-                Remember something?{" "}
-                <Link to="/login">
-                  <Button>Login</Button>
-                </Link>
-              </Typography>
-            </Stack>
-          </Form>
+          <AuthFormContainer
+            title="Reset Your Password"
+            subtitle="Enter the email associated with your account and we’ll send you password reset instructions."
+          >
+            <Field name="email" label="Email" component={TextInput2} />
+            <Button type="submit" variant="contained" color="primary">
+              Reset Password
+            </Button>
+            <Typography>
+              Jogged your memory?{" "}
+              <Link to="/login">
+                <Button>Login</Button>
+              </Link>
+            </Typography>
+          </AuthFormContainer>
         )}
       </Formik>
     </AuthPageContainer>
