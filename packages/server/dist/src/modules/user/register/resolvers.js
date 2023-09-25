@@ -21,7 +21,7 @@ exports.resolvers = {
         register: (_, args, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
             const { email, password } = args;
             try {
-                yield common_1.validUserSchema.validate(args, { abortEarly: false });
+                yield common_1.registerUserSchema.validate(args, { abortEarly: false });
             }
             catch (error) {
                 const errors = (0, formatYupError_1.formatYupError)(error);

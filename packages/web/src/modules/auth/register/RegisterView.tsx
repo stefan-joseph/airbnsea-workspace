@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { Field, Form, Formik } from "formik";
-import { validUserSchema } from "@airbnb-clone/common";
+import { Field, Formik } from "formik";
+import { registerUserSchemaWithPassword2 } from "@airbnb-clone/common";
 import { RegisterUserMutationVariables } from "@airbnb-clone/controller";
 import { NormalizedErrorMap } from "@airbnb-clone/controller/dist/types/NormalizedErrorMap";
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import { AuthPageContainer } from "../components/AuthPageContainer";
@@ -23,8 +23,9 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
         initialValues={{
           email: "",
           password: "",
+          password2: "",
         }}
-        validationSchema={validUserSchema}
+        validationSchema={registerUserSchemaWithPassword2}
         validateOnBlur={false}
         validateOnChange={false}
         onSubmit={async (values, { setErrors }) => {
@@ -40,6 +41,12 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
               name="password"
               type="password"
               label="Password"
+              component={TextInput2}
+            />
+            <Field
+              name="password2"
+              type="password"
+              label="Retype Password"
               component={TextInput2}
             />
             <Button variant="contained" type="submit" color="primary">

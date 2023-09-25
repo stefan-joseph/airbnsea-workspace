@@ -1,25 +1,29 @@
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import { HomeIcon } from "../../../components/HomeIcon";
+import { appSidePadding } from "../../../constants/constants";
 
 export const AuthPageContainer = ({ children }: { children: JSX.Element }) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
+    <Stack
+      marginLeft={appSidePadding}
+      marginRight={appSidePadding}
+      sx={{ minHeight: "100vh" }}
     >
       <HomeIcon
         sx={{
-          position: "absolute",
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
           fontSize: { xs: 26, md: 30 },
+          marginBottom: 8,
+          marginTop: 2,
         }}
       />
-      {children}
-    </Box>
+      <Stack
+        justifyContent="center"
+        alignItems="center"
+        marginTop="auto"
+        marginBottom="auto"
+      >
+        {children}
+      </Stack>
+    </Stack>
   );
 };

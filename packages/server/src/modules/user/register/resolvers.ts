@@ -5,7 +5,7 @@ import { duplicateEmail } from "./utils/errorMessages";
 import { createConfirmEmailLink } from "../../../utils/createConfirmEmailLink";
 import { sendEmail } from "../../../utils/sendEmail";
 import { Resolvers } from "../../../types/types";
-import { validUserSchema } from "@airbnb-clone/common";
+import { registerUserSchema } from "@airbnb-clone/common";
 
 export const resolvers: Resolvers = {
   Mutation: {
@@ -14,7 +14,7 @@ export const resolvers: Resolvers = {
 
       // yup validation
       try {
-        await validUserSchema.validate(args, { abortEarly: false });
+        await registerUserSchema.validate(args, { abortEarly: false });
       } catch (error) {
         const errors = formatYupError(error as yup.ValidationError);
         return errors;

@@ -23,26 +23,41 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPasswordSchema = exports.forgotPasswordSchema = exports.loginSchema = exports.validUserSchema = exports.registerPasswordValidation = exports.passwordNotLongEnough = exports.invalidEmail = exports.emailNotLongEnough = void 0;
+exports.loginSchema = exports.resetPasswordSchema = exports.forgotPasswordSchema = exports.registerUserSchemaWithPassword2 = exports.registerUserSchema = exports.passwordNotLongEnough = exports.invalidEmail = exports.emailNotLongEnough = void 0;
 const yup = __importStar(require("yup"));
 exports.emailNotLongEnough = "Email must be at least 3 characters";
 exports.invalidEmail = "Email must be a valid email";
 exports.passwordNotLongEnough = "Password must be at least 6 characters";
-exports.registerPasswordValidation = yup
+const emailValidation = yup
     .string()
-    .required("You need to create a password")
+    .required()
+    .min(3, exports.emailNotLongEnough)
+    .max(255)
+    .email(exports.invalidEmail);
+const passwordValidation = yup
+    .string()
+    .required("A password is required")
     .min(6, exports.passwordNotLongEnough)
     .max(255, "Password must not exceed 255 characters");
-exports.validUserSchema = yup.object().shape({
-    email: yup
-        .string()
-        .required()
-        .min(3, exports.emailNotLongEnough)
-        .max(255)
-        .email(exports.invalidEmail),
-    password: exports.registerPasswordValidation,
+const password2Validation = yup
+    .string()
+    .test("matches_password", "Passwords must match", function (value) {
+    return value === this.parent.password;
 });
-const invalidLogin = "invalid login";
+const registrationShapeWithoutPassword2 = {
+    email: emailValidation,
+    password: passwordValidation,
+};
+exports.registerUserSchema = yup.object().shape(Object.assign({}, registrationShapeWithoutPassword2));
+exports.registerUserSchemaWithPassword2 = yup.object().shape(Object.assign(Object.assign({}, registrationShapeWithoutPassword2), { password2: password2Validation }));
+exports.forgotPasswordSchema = yup.object().shape({
+    email: yup.string().email(exports.invalidEmail),
+});
+exports.resetPasswordSchema = yup.object().shape({
+    newPassword: passwordValidation,
+    newPassword2: password2Validation,
+});
+const invalidLogin = "Invalid login";
 exports.loginSchema = yup.object().shape({
     email: yup
         .string()
@@ -51,14 +66,5 @@ exports.loginSchema = yup.object().shape({
         .email(exports.invalidEmail)
         .required(),
     password: yup.string().required().min(6, invalidLogin).max(255, invalidLogin),
-});
-exports.forgotPasswordSchema = yup.object().shape({
-    email: yup.string().email(exports.invalidEmail),
-});
-exports.resetPasswordSchema = yup.object().shape({
-    newPassword: exports.registerPasswordValidation,
-    newPassword2: yup
-        .string()
-        .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
 });
 //# sourceMappingURL=user.js.map
