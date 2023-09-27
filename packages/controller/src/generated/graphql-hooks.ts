@@ -165,6 +165,7 @@ export type Me = {
 export type Mutation = {
   __typename?: 'Mutation';
   addFruit: Scalars['Boolean'];
+  authenticateUserWithOauth: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
   createBooking: Booking;
   createConversation: CreateConversationResponse;
@@ -183,6 +184,11 @@ export type Mutation = {
 
 export type MutationAddFruitArgs = {
   fruit: Scalars['String'];
+};
+
+
+export type MutationAuthenticateUserWithOauthArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -419,6 +425,13 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', firstName?: string | null, avatar?: string | null } | null };
+
+export type AuthenticateUserWithOauthMutationVariables = Exact<{
+  code: Scalars['String'];
+}>;
+
+
+export type AuthenticateUserWithOauthMutation = { __typename?: 'Mutation', authenticateUserWithOauth: boolean };
 
 export type RegisterUserMutationVariables = Exact<{
   email: Scalars['String'];
@@ -695,6 +708,37 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const AuthenticateUserWithOauthDocument = gql`
+    mutation AuthenticateUserWithOauth($code: String!) {
+  authenticateUserWithOauth(code: $code)
+}
+    `;
+export type AuthenticateUserWithOauthMutationFn = Apollo.MutationFunction<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
+
+/**
+ * __useAuthenticateUserWithOauthMutation__
+ *
+ * To run a mutation, you first call `useAuthenticateUserWithOauthMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthenticateUserWithOauthMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authenticateUserWithOauthMutation, { data, loading, error }] = useAuthenticateUserWithOauthMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useAuthenticateUserWithOauthMutation(baseOptions?: Apollo.MutationHookOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>(AuthenticateUserWithOauthDocument, options);
+      }
+export type AuthenticateUserWithOauthMutationHookResult = ReturnType<typeof useAuthenticateUserWithOauthMutation>;
+export type AuthenticateUserWithOauthMutationResult = Apollo.MutationResult<AuthenticateUserWithOauthMutation>;
+export type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
 export const RegisterUserDocument = gql`
     mutation RegisterUser($email: String!, $password: String!) {
   register(email: $email, password: $password) {

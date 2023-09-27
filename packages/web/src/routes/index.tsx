@@ -13,6 +13,7 @@ import { Search } from "../modules/search/Search";
 import { Message } from "../modules/message/Message";
 import { BookingConfirmationPage } from "../modules/booking/components/ComfirmationPage";
 import ConfirmEmail from "../modules/auth/confirmEmail/confirmEmail";
+import OauthGithub from "../modules/auth/oauth/OauthGithub";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
   {
     path: "/reset-password/:key",
     element: <ResetPasswordConnector />,
+  },
+  {
+    path: "auth/github",
+    element: <OauthGithub />,
   },
   {
     path: "/listing/:listingId/view",

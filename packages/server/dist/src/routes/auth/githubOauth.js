@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.githubOauth = void 0;
 const axios_1 = __importDefault(require("axios"));
-const githubOauth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const githubOauth = (req, _) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { data } = yield axios_1.default.post("https://github.com/login/oauth/access_token", {
         client_id: process.env.GITHUB_AUTH_CLIENT_ID,
@@ -43,7 +43,6 @@ const githubOauth = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
     if (!data2.name) {
     }
-    res.redirect(process.env.FRONTEND_HOST);
 });
 exports.githubOauth = githubOauth;
 //# sourceMappingURL=githubOauth.js.map

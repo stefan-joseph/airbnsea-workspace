@@ -6,6 +6,7 @@ import Redis from "ioredis";
 // import { runSeeders } from "typeorm-extension";
 // import rateLimit from "express-rate-limit";
 // import RateLimitRedisStore from "rate-limit-redis";
+
 // import passport = require("passport");
 // import { Strategy } from "passport-facebook";
 import cloudinary = require("cloudinary");
@@ -15,7 +16,6 @@ const cors = require("cors");
 import expressSession = require("express-session");
 const RedisStore = require("connect-redis")(expressSession);
 
-// import { confirmEmail } from "./routes/confirmEmail";
 import { redisSessionPrefix } from "./utils/constants";
 import { redis } from "./redis";
 import { generateModularSchema } from "./utils/generateModularSchema";
@@ -23,7 +23,7 @@ import { authMiddleware, listingIdMiddleware } from "./middleware/middleware";
 import { userLoader } from "./loaders/userLoader";
 import { getTypeormConnection } from "./utils/getTypeormConnection";
 import { ConversationMessage, InboxMessage } from "./types/types";
-import { githubOauth } from "./routes/auth/githubOauth";
+// import { githubOauth } from "./routes/auth/githubOauth";
 
 export const startServer = async () => {
   const app = express();
@@ -38,7 +38,7 @@ export const startServer = async () => {
       cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days,
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       },
     })
@@ -191,13 +191,13 @@ export const startServer = async () => {
   // app.use("/images", express.static("images"));
   // app.get("/confirm-email/:id", confirmEmail);
 
-  app.get("/auth/github", (_, res) => {
-    res.redirect(
-      `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_AUTH_CLIENT_ID}&scope=user:email`
-    );
-  });
+  // app.get("/auth/github", (_, res) => {
+  //   res.redirect(
+  //     `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_AUTH_CLIENT_ID}&scope=user:email`
+  //   );
+  // });
 
-  app.get("/auth/github/callback", githubOauth);
+  // app.get("/auth/github/callback", githubOauth);
 
   // app.get("/auth/github/callback", (req, _) => {
   //   axios

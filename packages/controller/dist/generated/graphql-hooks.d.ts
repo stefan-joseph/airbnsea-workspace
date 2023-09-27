@@ -154,6 +154,7 @@ export declare type Me = {
 export declare type Mutation = {
     __typename?: 'Mutation';
     addFruit: Scalars['Boolean'];
+    authenticateUserWithOauth: Scalars['Boolean'];
     confirmEmail: Scalars['Boolean'];
     createBooking: Booking;
     createConversation: CreateConversationResponse;
@@ -170,6 +171,9 @@ export declare type Mutation = {
 };
 export declare type MutationAddFruitArgs = {
     fruit: Scalars['String'];
+};
+export declare type MutationAuthenticateUserWithOauthArgs = {
+    code: Scalars['String'];
 };
 export declare type MutationConfirmEmailArgs = {
     id: Scalars['String'];
@@ -371,6 +375,13 @@ export declare type MeQuery = {
         firstName?: string | null;
         avatar?: string | null;
     } | null;
+};
+export declare type AuthenticateUserWithOauthMutationVariables = Exact<{
+    code: Scalars['String'];
+}>;
+export declare type AuthenticateUserWithOauthMutation = {
+    __typename?: 'Mutation';
+    authenticateUserWithOauth: boolean;
 };
 export declare type RegisterUserMutationVariables = Exact<{
     email: Scalars['String'];
@@ -673,6 +684,14 @@ export declare function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export declare type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export declare type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export declare type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export declare const AuthenticateUserWithOauthDocument: Apollo.DocumentNode;
+export declare type AuthenticateUserWithOauthMutationFn = Apollo.MutationFunction<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
+export declare function useAuthenticateUserWithOauthMutation(baseOptions?: Apollo.MutationHookOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>): Apollo.MutationTuple<AuthenticateUserWithOauthMutation, Exact<{
+    code: string;
+}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+export declare type AuthenticateUserWithOauthMutationHookResult = ReturnType<typeof useAuthenticateUserWithOauthMutation>;
+export declare type AuthenticateUserWithOauthMutationResult = Apollo.MutationResult<AuthenticateUserWithOauthMutation>;
+export declare type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
 export declare const RegisterUserDocument: Apollo.DocumentNode;
 export declare type RegisterUserMutationFn = Apollo.MutationFunction<RegisterUserMutation, RegisterUserMutationVariables>;
 export declare function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserMutation, RegisterUserMutationVariables>): Apollo.MutationTuple<RegisterUserMutation, Exact<{

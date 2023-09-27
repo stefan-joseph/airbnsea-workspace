@@ -164,6 +164,7 @@ export type Me = {
 export type Mutation = {
   __typename?: 'Mutation';
   addFruit: Scalars['Boolean'];
+  authenticateUserWithOauth: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
   createBooking: Booking;
   createConversation: CreateConversationResponse;
@@ -182,6 +183,11 @@ export type Mutation = {
 
 export type MutationAddFruitArgs = {
   fruit: Scalars['String'];
+};
+
+
+export type MutationAuthenticateUserWithOauthArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -675,6 +681,7 @@ export type MeResolvers<ContextType = any, ParentType extends ResolversParentTyp
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addFruit?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddFruitArgs, 'fruit'>>;
+  authenticateUserWithOauth?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAuthenticateUserWithOauthArgs, 'code'>>;
   confirmEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationConfirmEmailArgs, 'id'>>;
   createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input' | 'listingId'>>;
   createConversation?: Resolver<ResolversTypes['CreateConversationResponse'], ParentType, ContextType, RequireFields<MutationCreateConversationArgs, 'listingId' | 'text'>>;

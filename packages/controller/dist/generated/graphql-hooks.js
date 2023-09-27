@@ -23,7 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useUpdateInboxSubscriptionSubscription = exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = exports.usePopulateConversationQuery = exports.PopulateConversationDocument = exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useLoginAsRandomUserMutation = exports.LoginAsRandomUserDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.useConfirmEmailMutation = exports.ConfirmEmailDocument = exports.VesselType = exports.Status = exports.InboxType = void 0;
+exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = exports.usePopulateConversationQuery = exports.PopulateConversationDocument = exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useLoginAsRandomUserMutation = exports.LoginAsRandomUserDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useAuthenticateUserWithOauthMutation = exports.AuthenticateUserWithOauthDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.useConfirmEmailMutation = exports.ConfirmEmailDocument = exports.VesselType = exports.Status = exports.InboxType = void 0;
+exports.useUpdateInboxSubscriptionSubscription = void 0;
 const client_1 = require("@apollo/client");
 const Apollo = __importStar(require("@apollo/client"));
 const defaultOptions = {};
@@ -106,6 +107,16 @@ function useMeLazyQuery(baseOptions) {
     return Apollo.useLazyQuery(exports.MeDocument, options);
 }
 exports.useMeLazyQuery = useMeLazyQuery;
+exports.AuthenticateUserWithOauthDocument = (0, client_1.gql) `
+    mutation AuthenticateUserWithOauth($code: String!) {
+  authenticateUserWithOauth(code: $code)
+}
+    `;
+function useAuthenticateUserWithOauthMutation(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useMutation(exports.AuthenticateUserWithOauthDocument, options);
+}
+exports.useAuthenticateUserWithOauthMutation = useAuthenticateUserWithOauthMutation;
 exports.RegisterUserDocument = (0, client_1.gql) `
     mutation RegisterUser($email: String!, $password: String!) {
   register(email: $email, password: $password) {

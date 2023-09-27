@@ -1,0 +1,3 @@
+mutation AuthenticateUserWithOauth($code: String!) {
+  authenticateUserWithOauth(code: $code)
+}

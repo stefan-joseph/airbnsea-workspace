@@ -75,6 +75,7 @@ export const theme = createTheme({
           textTransform: "none",
           borderRadius: 8,
           borderWidth: "1px",
+          padding: "0.875rem 1rem",
         },
       },
     },

@@ -2,7 +2,7 @@ import axios from "axios";
 import { Request, Response } from "express";
 import { Endpoints } from "@octokit/types";
 
-export const githubOauth = async (req: Request, res: Response) => {
+export const githubOauth = async (req: Request, _: Response) => {
   const { data } = await axios.post(
     "https://github.com/login/oauth/access_token",
     {
@@ -54,5 +54,5 @@ export const githubOauth = async (req: Request, res: Response) => {
   // if yes, sign in user
   // if no, add new user to database (name, avatarImg, confirmed: true) and sign in user
 
-  res.redirect(process.env.FRONTEND_HOST as string);
+  // res.redirect(process.env.FRONTEND_HOST as string);
 };
