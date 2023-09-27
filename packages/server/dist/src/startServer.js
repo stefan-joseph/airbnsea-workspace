@@ -23,13 +23,13 @@ const graphql_middleware_1 = require("graphql-middleware");
 const cors = require("cors");
 const expressSession = require("express-session");
 const RedisStore = require("connect-redis")(expressSession);
-const confirmEmail_1 = require("./routes/confirmEmail");
 const constants_1 = require("./utils/constants");
 const redis_1 = require("./redis");
 const generateModularSchema_1 = require("./utils/generateModularSchema");
 const middleware_1 = require("./middleware/middleware");
 const userLoader_1 = require("./loaders/userLoader");
 const getTypeormConnection_1 = require("./utils/getTypeormConnection");
+const githubOauth_1 = require("./routes/auth/githubOauth");
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = express();
     app.use(expressSession({
@@ -84,8 +84,10 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         api_secret: process.env.CLOUDINARY_API_SECRET,
     });
     app.set("trust proxy", 1);
-    app.use("/images", express.static("images"));
-    app.get("/confirm-email/:id", confirmEmail_1.confirmEmail);
+    app.get("/auth/github", (_, res) => {
+        res.redirect(`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_AUTH_CLIENT_ID}&scope=user:email`);
+    });
+    app.get("/auth/github/callback", githubOauth_1.githubOauth);
     app.get("/", (_, res) => res.redirect("/graphql"));
     const port = 8080;
     console.log(`running app on port ${port}`);

@@ -19,10 +19,8 @@ export class User extends BaseEntity {
 
   @Column("varchar", {
     length: 255,
-    // , nullable: true
   })
   email: string;
-  //  | null;
 
   @Column("text", { nullable: true })
   password: string | null;

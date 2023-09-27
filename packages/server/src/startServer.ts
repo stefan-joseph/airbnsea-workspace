@@ -2,6 +2,7 @@ import "dotenv/config";
 import { createServer, createPubSub } from "@graphql-yoga/node";
 import { createRedisEventTarget } from "@graphql-yoga/redis-event-target";
 import Redis from "ioredis";
+
 // import { runSeeders } from "typeorm-extension";
 // import rateLimit from "express-rate-limit";
 // import RateLimitRedisStore from "rate-limit-redis";
@@ -14,7 +15,7 @@ const cors = require("cors");
 import expressSession = require("express-session");
 const RedisStore = require("connect-redis")(expressSession);
 
-import { confirmEmail } from "./routes/confirmEmail";
+// import { confirmEmail } from "./routes/confirmEmail";
 import { redisSessionPrefix } from "./utils/constants";
 import { redis } from "./redis";
 import { generateModularSchema } from "./utils/generateModularSchema";
@@ -22,6 +23,7 @@ import { authMiddleware, listingIdMiddleware } from "./middleware/middleware";
 import { userLoader } from "./loaders/userLoader";
 import { getTypeormConnection } from "./utils/getTypeormConnection";
 import { ConversationMessage, InboxMessage } from "./types/types";
+import { githubOauth } from "./routes/auth/githubOauth";
 
 export const startServer = async () => {
   const app = express();
@@ -186,9 +188,56 @@ export const startServer = async () => {
   });
 
   app.set("trust proxy", 1);
-  app.use("/images", express.static("images"));
+  // app.use("/images", express.static("images"));
+  // app.get("/confirm-email/:id", confirmEmail);
 
-  app.get("/confirm-email/:id", confirmEmail);
+  app.get("/auth/github", (_, res) => {
+    res.redirect(
+      `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_AUTH_CLIENT_ID}&scope=user:email`
+    );
+  });
+
+  app.get("/auth/github/callback", githubOauth);
+
+  // app.get("/auth/github/callback", (req, _) => {
+  //   axios
+  //     .post(
+  //       "https://github.com/login/oauth/access_token",
+  //       {
+  //         client_id: process.env.GITHUB_AUTH_CLIENT_ID,
+  //         client_secret: process.env.GITHUB_AUTH_CLIENT_SECRET,
+  //         code: req.query.code,
+  //       },
+  //       {
+  //         headers: {
+  //           Accept: "application/json",
+  //         },
+  //       }
+  //     )
+  //     .then((result) => {
+  //       console.log("result", result);
+  //       console.log("result.data.access_token", result.data.access_token);
+  //       // res.send("you are authorized " + result.data.access_token)
+  //       axios("https://api.github.com/user", {
+  //         headers: { Authorization: `Bearer ${result.data.access_token}` },
+  //       })
+  //         .then((result) => {
+  //           console.log("1st api call result", result.data);
+  //         })
+  //         .catch((err) => console.log(err));
+  //       axios("https://api.github.com/user/emails", {
+  //         headers: { Authorization: `Bearer ${result.data.access_token}` },
+  //       })
+  //         .then((result) => {
+  //           console.log("2nd api call result", result.data);
+  //         })
+  //         .catch((err) => console.log(err));
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // });
+
   app.get("/", (_, res) => res.redirect("/graphql"));
 
   const port = 8080;

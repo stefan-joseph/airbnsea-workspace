@@ -8,6 +8,7 @@ import { Button, Typography } from "@mui/material";
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import { AuthPageContainer } from "../components/AuthPageContainer";
 import AuthFormContainer from "../components/AuthFormContainer";
+import { getServerUrl } from "../../../utils/getServerURL";
 
 interface Props {
   submit: (
@@ -36,6 +37,7 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
       >
         {() => (
           <AuthFormContainer title="Sign up for an Account">
+            {/* <a href={`${getServerUrl()}/auth/github`}>Sign in with Github</a> */}
             <Field name="email" label="Email" component={TextInput2} />
             <Field
               name="password"
