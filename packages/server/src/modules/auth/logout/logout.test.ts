@@ -4,12 +4,14 @@ import { TestClient } from "../../shared/test-utils/TestClient";
 
 const email = "bob@bob.com";
 const password = "cjdkvbndsjvk";
+const firstName = "Bob";
 
 beforeAll(async () => {
   await createTypeormConnection();
   await User.create({
     email,
     password,
+    firstName,
     confirmed: true,
   }).save();
 });

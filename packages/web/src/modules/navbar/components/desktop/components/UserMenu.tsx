@@ -1,6 +1,7 @@
 import { useState, useRef, useContext } from "react";
 import { Avatar, Button, MenuItem, MenuList } from "@mui/material";
 import { IoMenuOutline } from "react-icons/io5";
+import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 import { PopperMenu } from "../../../../../components/PopperMenu";
@@ -11,7 +12,7 @@ export const UserMenu = () => {
 
   const {
     globalState: {
-      user: { authenticated, avatar },
+      user: { authenticated, avatar, firstName },
     },
   } = useContext(AppContext);
 
@@ -27,6 +28,7 @@ export const UserMenu = () => {
         sx={{
           borderRadius: 10,
           borderColor: "grey.300",
+          p: 0.8,
           pl: 1.3,
           pr: 1.3,
           boxShadow: isOpen ? "0 2px 4px rgba(0,0,0,0.18)" : "unset",
@@ -39,13 +41,21 @@ export const UserMenu = () => {
         endIcon={
           <Avatar
             src={avatar ? avatar : undefined}
+            alt="User avatar"
             sx={{
               width: 30,
               height: 30,
               marginLeft: -1,
-              backgroundColor: "grey.600",
+              color: authenticated && firstName ? "#FFF" : "grey.600",
+              backgroundColor: authenticated && firstName ? "grey.600" : "#FFF",
             }}
-          />
+          >
+            {authenticated && firstName ? (
+              Array.from(firstName)[0]
+            ) : (
+              <FaUserCircle size={28} />
+            )}
+          </Avatar>
         }
       />
       <PopperMenu

@@ -38,7 +38,7 @@ const optionsDEV: DataSourceOptions & SeederOptions = {
   database: "airbnb-clone",
   synchronize: true,
   logging: false,
-  // dropSchema: true,
+  dropSchema: false,
   entities: [User, Listing, Draft, Message, Booking],
   migrations: [],
   subscribers: [],

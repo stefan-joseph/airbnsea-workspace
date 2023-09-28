@@ -3,7 +3,7 @@ import { Field, Formik } from "formik";
 import { registerUserSchemaWithPassword2 } from "@airbnb-clone/common";
 import { RegisterUserMutationVariables } from "@airbnb-clone/controller";
 import { NormalizedErrorMap } from "@airbnb-clone/controller/dist/types/NormalizedErrorMap";
-import { Alert, Button, Divider, Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import { AuthPageContainer } from "../components/AuthPageContainer";
@@ -27,6 +27,7 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
           email: "",
           password: "",
           password2: "",
+          firstName: "",
         }}
         validationSchema={registerUserSchemaWithPassword2}
         validateOnBlur={false}
@@ -69,6 +70,7 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
               label="Retype Password"
               component={TextInput2}
             />
+            <Field name="firstName" label="First Name" component={TextInput2} />
             <Button variant="contained" type="submit" color="primary">
               Create My Account
             </Button>

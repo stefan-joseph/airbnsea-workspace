@@ -12,12 +12,13 @@ beforeAll(async () => {
   const user = await User.create({
     email: "bob@bob.gmail.com",
     password: "cjdkvbndsjvk",
+    firstName: "Bob",
   }).save();
   userId = user.id;
 });
 
 describe("test createConfirmEmailLink", () => {
-  it("makes sure to confirm user and clears key in redis", async () => {
+  test("makes sure to confirm user and clears key in redis", async () => {
     const url = await createConfirmEmailLink(
       process.env.TEST_HOST as string,
       userId,
@@ -41,7 +42,7 @@ describe("test createConfirmEmailLink", () => {
     expect(value).toBeNull();
   });
 
-  it("sends invalid back if bad id sent", async () => {
+  test("sends invalid back if bad id sent", async () => {
     const response = await request(
       (process.env.TEST_HOST as string) + "graphql",
       ` mutation {

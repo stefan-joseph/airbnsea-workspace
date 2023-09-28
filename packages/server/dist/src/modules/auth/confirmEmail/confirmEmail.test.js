@@ -24,11 +24,12 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield User_1.User.create({
         email: "bob@bob.gmail.com",
         password: "cjdkvbndsjvk",
+        firstName: "Bob",
     }).save();
     userId = user.id;
 }));
 describe("test createConfirmEmailLink", () => {
-    it("makes sure to confirm user and clears key in redis", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("makes sure to confirm user and clears key in redis", () => __awaiter(void 0, void 0, void 0, function* () {
         const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)(process.env.TEST_HOST, userId, redis);
         const urlChunks = url.split("/");
         const id = urlChunks[urlChunks.length - 1];
@@ -41,7 +42,7 @@ describe("test createConfirmEmailLink", () => {
         const value = yield redis.get(id);
         expect(value).toBeNull();
     }));
-    it("sends invalid back if bad id sent", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("sends invalid back if bad id sent", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, graphql_request_1.request)(process.env.TEST_HOST + "graphql", ` mutation {
                 confirmEmail(id: "${43543}")
             }`);

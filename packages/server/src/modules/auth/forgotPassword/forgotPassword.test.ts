@@ -13,12 +13,14 @@ const redis = new Redis();
 const email = "bob@bob.com";
 const password = "forgottenPassword";
 const newPassword = "newPassword";
+const firstName = "Bob";
 
 beforeAll(async () => {
   await createTypeormConnection();
   const user = await User.create({
     email,
     password,
+    firstName,
     confirmed: true,
   }).save();
   userId = user.id;

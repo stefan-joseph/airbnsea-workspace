@@ -12,7 +12,7 @@ export const resolvers: Resolvers = {
       let response;
       try {
         const { data } = await axios.post(
-          "https://githubcom/login/oauth/access_token",
+          "https://github.com/login/oauth/access_token",
           {
             client_id: process.env.GITHUB_AUTH_CLIENT_ID,
             client_secret: process.env.GITHUB_AUTH_CLIENT_SECRET,
@@ -25,14 +25,10 @@ export const resolvers: Resolvers = {
           }
         );
         response = data;
+        if (response.error) {
+          throw Error;
+        }
       } catch {
-        return formatGraphQLYogaError(badGithubOauthRequest);
-      }
-
-      console.log("starting");
-      console.log(response);
-
-      if (response.error) {
         return formatGraphQLYogaError(badGithubOauthRequest);
       }
 
@@ -44,6 +40,7 @@ export const resolvers: Resolvers = {
           headers: { Authorization: `Bearer ${response.access_token}` },
         });
         response2 = data;
+        // what does error message look like?
       } catch {
         return formatGraphQLYogaError(badGithubOauthRequest);
       }
@@ -62,6 +59,7 @@ export const resolvers: Resolvers = {
           const emails: Endpoints["GET /user/emails"]["response"]["data"] =
             data;
           email = emails.find((email) => email.primary)?.email;
+          // what does error message look like?
         } catch {
           return formatGraphQLYogaError(badGithubOauthRequest);
         }

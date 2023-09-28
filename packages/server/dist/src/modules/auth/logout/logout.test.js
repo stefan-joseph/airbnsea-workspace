@@ -14,11 +14,13 @@ const createTypeormConnection_1 = require("../../../utils/createTypeormConnectio
 const TestClient_1 = require("../../shared/test-utils/TestClient");
 const email = "bob@bob.com";
 const password = "cjdkvbndsjvk";
+const firstName = "Bob";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, createTypeormConnection_1.createTypeormConnection)();
     yield User_1.User.create({
         email,
         password,
+        firstName,
         confirmed: true,
     }).save();
 }));

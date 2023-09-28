@@ -14,12 +14,13 @@ beforeAll(async () => {
 
 const email = "bob@bob.com";
 const password = "dsjkvd";
+const firstName = "Bob";
 
 describe("Register user", () => {
   const client = new TestClient("graphql");
-  it("registers a user", async () => {
+  test("registers a user", async () => {
     // registers a user
-    const response = await client.register(email, password);
+    const response = await client.register(email, password, firstName);
     expect(response.data).toEqual({ register: null });
     const users = await User.find({ where: { email } });
     expect(users).toHaveLength(1);
@@ -28,8 +29,8 @@ describe("Register user", () => {
     expect(user.password).not.toEqual(password);
   });
 
-  it("attempt to sign up with duplicate email", async () => {
-    const response = await client.register(email, password);
+  test("attempt to sign up with duplicate email", async () => {
+    const response = await client.register(email, password, firstName);
     expect(response.data.register).toHaveLength(1);
     expect(response.data.register[0]).toEqual({
       path: "email",
@@ -37,8 +38,8 @@ describe("Register user", () => {
     });
   });
 
-  it("checks for bad email", async () => {
-    const response = await client.register("b", password);
+  test("checks for bad email", async () => {
+    const response = await client.register("b", password, firstName);
 
     expect(response.data).toEqual({
       register: [
@@ -54,8 +55,8 @@ describe("Register user", () => {
     });
   });
 
-  it("checks for bad password", async () => {
-    const response = await client.register(email, "asdsd");
+  test("checks for bad password", async () => {
+    const response = await client.register(email, "asdsd", firstName);
 
     expect(response.data).toEqual({
       register: [
@@ -67,8 +68,8 @@ describe("Register user", () => {
     });
   });
 
-  it("checks for bad email and password", async () => {
-    const response = await client.register("bo", "asdsd");
+  test("checks for bad email and password", async () => {
+    const response = await client.register("bo", "asdsd", firstName);
 
     expect(response.data).toEqual({
       register: [
@@ -87,4 +88,6 @@ describe("Register user", () => {
       ],
     });
   });
+
+  //@TODO add test for firstName
 });

@@ -5,6 +5,7 @@ import { confirmEmailError, invalidLogin } from "./errorMessages";
 
 const email = "bob@bob.com";
 const password = "dsjkvd";
+const firstName = "Bob";
 
 const loginExpectError = async (
   client: TestClient,
@@ -36,7 +37,7 @@ describe("login", () => {
   });
 
   test("email not confirmed", async () => {
-    await client.register(email, password);
+    await client.register(email, password, firstName);
     await loginExpectError(client, email, password, confirmEmailError);
   });
 

@@ -15,6 +15,7 @@ const TestClient_1 = require("../../shared/test-utils/TestClient");
 const errorMessages_1 = require("./errorMessages");
 const email = "bob@bob.com";
 const password = "dsjkvd";
+const firstName = "Bob";
 const loginExpectError = (client, e, p, errMsg) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield client.login(e, p);
     expect(response.data.login).toEqual({
@@ -36,7 +37,7 @@ describe("login", () => {
         yield loginExpectError(client, "john@john.com", password, errorMessages_1.invalidLogin);
     }));
     test("email not confirmed", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield client.register(email, password);
+        yield client.register(email, password, firstName);
         yield loginExpectError(client, email, password, errorMessages_1.confirmEmailError);
     }));
     test("incorrect password", () => __awaiter(void 0, void 0, void 0, function* () {

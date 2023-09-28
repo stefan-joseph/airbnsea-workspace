@@ -10,7 +10,7 @@ import { registerUserSchema } from "@airbnb-clone/common";
 export const resolvers: Resolvers = {
   Mutation: {
     register: async (_, args, { redis }) => {
-      const { email, password } = args;
+      const { email, password, firstName } = args;
 
       // yup validation
       try {
@@ -37,6 +37,7 @@ export const resolvers: Resolvers = {
       const user = User.create({
         email,
         password,
+        firstName,
       });
 
       await user.save();

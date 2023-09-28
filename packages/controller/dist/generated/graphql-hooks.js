@@ -118,8 +118,8 @@ function useAuthenticateUserWithOauthMutation(baseOptions) {
 }
 exports.useAuthenticateUserWithOauthMutation = useAuthenticateUserWithOauthMutation;
 exports.RegisterUserDocument = (0, client_1.gql) `
-    mutation RegisterUser($email: String!, $password: String!) {
-  register(email: $email, password: $password) {
+    mutation RegisterUser($email: String!, $password: String!, $firstName: String!) {
+  register(email: $email, password: $password, firstName: $firstName) {
     path
     message
   }

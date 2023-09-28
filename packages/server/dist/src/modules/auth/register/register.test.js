@@ -19,10 +19,11 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 }));
 const email = "bob@bob.com";
 const password = "dsjkvd";
+const firstName = "Bob";
 describe("Register user", () => {
     const client = new TestClient_1.TestClient("graphql");
-    it("registers a user", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield client.register(email, password);
+    test("registers a user", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield client.register(email, password, firstName);
         expect(response.data).toEqual({ register: null });
         const users = yield User_1.User.find({ where: { email } });
         expect(users).toHaveLength(1);
@@ -30,16 +31,16 @@ describe("Register user", () => {
         expect(user.email).toEqual(email);
         expect(user.password).not.toEqual(password);
     }));
-    it("attempt to sign up with duplicate email", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield client.register(email, password);
+    test("attempt to sign up with duplicate email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield client.register(email, password, firstName);
         expect(response.data.register).toHaveLength(1);
         expect(response.data.register[0]).toEqual({
             path: "email",
             message: errorMessages_1.duplicateEmail,
         });
     }));
-    it("checks for bad email", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield client.register("b", password);
+    test("checks for bad email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield client.register("b", password, firstName);
         expect(response.data).toEqual({
             register: [
                 {
@@ -53,8 +54,8 @@ describe("Register user", () => {
             ],
         });
     }));
-    it("checks for bad password", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield client.register(email, "asdsd");
+    test("checks for bad password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield client.register(email, "asdsd", firstName);
         expect(response.data).toEqual({
             register: [
                 {
@@ -64,8 +65,8 @@ describe("Register user", () => {
             ],
         });
     }));
-    it("checks for bad email and password", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield client.register("bo", "asdsd");
+    test("checks for bad email and password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield client.register("bo", "asdsd", firstName);
         expect(response.data).toEqual({
             register: [
                 {

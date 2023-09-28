@@ -5,15 +5,13 @@ import { appSidePadding } from "../../constants/constants";
 
 export const TextPage = () => {
   const navigate = useNavigate();
-  const {
-    state: { message },
-  } = useLocation();
+  const { state } = useLocation();
 
   return (
     <AuthPageContainer>
       <Stack m={appSidePadding} alignItems="center">
         <Typography variant="h4" component="h2" gutterBottom>
-          {message}
+          {state?.message && state.message}
         </Typography>
         <Box>
           <Button

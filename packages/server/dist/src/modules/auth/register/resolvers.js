@@ -19,7 +19,7 @@ const common_1 = require("@airbnb-clone/common");
 exports.resolvers = {
     Mutation: {
         register: (_, args, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
-            const { email, password } = args;
+            const { email, password, firstName } = args;
             try {
                 yield common_1.registerUserSchema.validate(args, { abortEarly: false });
             }
@@ -42,6 +42,7 @@ exports.resolvers = {
             const user = User_1.User.create({
                 email,
                 password,
+                firstName,
             });
             yield user.save();
             const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)(process.env.FRONTEND_HOST, user.id, redis);

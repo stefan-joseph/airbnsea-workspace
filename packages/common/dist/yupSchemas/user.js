@@ -23,14 +23,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginSchema = exports.resetPasswordSchema = exports.forgotPasswordSchema = exports.registerUserSchemaWithPassword2 = exports.registerUserSchema = exports.passwordNotLongEnough = exports.invalidEmail = exports.emailNotLongEnough = void 0;
+exports.loginSchema = exports.resetPasswordSchema = exports.forgotPasswordSchema = exports.registerUserSchemaWithPassword2 = exports.registerUserSchema = exports.nameTooLong = exports.nameNotLongEnough = exports.passwordNotLongEnough = exports.invalidEmail = exports.emailNotLongEnough = void 0;
 const yup = __importStar(require("yup"));
 exports.emailNotLongEnough = "Email must be at least 3 characters";
 exports.invalidEmail = "Email must be a valid email";
 exports.passwordNotLongEnough = "Password must be at least 6 characters";
+exports.nameNotLongEnough = "First name on account must be at least 2 characters";
+exports.nameTooLong = "First name on account must not exceed 50 characters";
 const emailValidation = yup
     .string()
-    .required()
+    .required("An email is required")
     .min(3, exports.emailNotLongEnough)
     .max(255)
     .email(exports.invalidEmail);
@@ -47,6 +49,11 @@ const password2Validation = yup
 const registrationShapeWithoutPassword2 = {
     email: emailValidation,
     password: passwordValidation,
+    firstName: yup
+        .string()
+        .required("A first name on the account is required")
+        .min(2, exports.nameNotLongEnough)
+        .max(50, exports.nameTooLong),
 };
 exports.registerUserSchema = yup.object().shape(Object.assign({}, registrationShapeWithoutPassword2));
 exports.registerUserSchemaWithPassword2 = yup.object().shape(Object.assign(Object.assign({}, registrationShapeWithoutPassword2), { password2: password2Validation }));

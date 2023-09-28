@@ -24,7 +24,7 @@ exports.resolvers = {
             var _a;
             let response;
             try {
-                const { data } = yield axios_1.default.post("https://githubcom/login/oauth/access_token", {
+                const { data } = yield axios_1.default.post("https://github.com/login/oauth/access_token", {
                     client_id: process.env.GITHUB_AUTH_CLIENT_ID,
                     client_secret: process.env.GITHUB_AUTH_CLIENT_SECRET,
                     code,
@@ -34,13 +34,11 @@ exports.resolvers = {
                     },
                 });
                 response = data;
+                if (response.error) {
+                    throw Error;
+                }
             }
             catch (_b) {
-                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.badGithubOauthRequest);
-            }
-            console.log("starting");
-            console.log(response);
-            if (response.error) {
                 return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.badGithubOauthRequest);
             }
             let email;

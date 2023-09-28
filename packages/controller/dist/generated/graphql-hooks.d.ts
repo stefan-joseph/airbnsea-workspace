@@ -202,6 +202,7 @@ export declare type MutationLoginArgs = {
 };
 export declare type MutationRegisterArgs = {
     email: Scalars['String'];
+    firstName: Scalars['String'];
     password: Scalars['String'];
 };
 export declare type MutationResetPasswordArgs = {
@@ -386,6 +387,7 @@ export declare type AuthenticateUserWithOauthMutation = {
 export declare type RegisterUserMutationVariables = Exact<{
     email: Scalars['String'];
     password: Scalars['String'];
+    firstName: Scalars['String'];
 }>;
 export declare type RegisterUserMutation = {
     __typename?: 'Mutation';
@@ -697,6 +699,7 @@ export declare type RegisterUserMutationFn = Apollo.MutationFunction<RegisterUse
 export declare function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserMutation, RegisterUserMutationVariables>): Apollo.MutationTuple<RegisterUserMutation, Exact<{
     email: string;
     password: string;
+    firstName: string;
 }>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
 export declare type RegisterUserMutationHookResult = ReturnType<typeof useRegisterUserMutation>;
 export declare type RegisterUserMutationResult = Apollo.MutationResult<RegisterUserMutation>;

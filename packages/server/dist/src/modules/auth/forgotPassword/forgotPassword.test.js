@@ -26,11 +26,13 @@ const redis = new ioredis_1.default();
 const email = "bob@bob.com";
 const password = "forgottenPassword";
 const newPassword = "newPassword";
+const firstName = "Bob";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, createTypeormConnection_1.createTypeormConnection)();
     const user = yield User_1.User.create({
         email,
         password,
+        firstName,
         confirmed: true,
     }).save();
     userId = user.id;

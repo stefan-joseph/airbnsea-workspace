@@ -233,6 +233,7 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   email: Scalars['String'];
+  firstName: Scalars['String'];
   password: Scalars['String'];
 };
 
@@ -436,6 +437,7 @@ export type AuthenticateUserWithOauthMutation = { __typename?: 'Mutation', authe
 export type RegisterUserMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
+  firstName: Scalars['String'];
 }>;
 
 
@@ -740,8 +742,8 @@ export type AuthenticateUserWithOauthMutationHookResult = ReturnType<typeof useA
 export type AuthenticateUserWithOauthMutationResult = Apollo.MutationResult<AuthenticateUserWithOauthMutation>;
 export type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
 export const RegisterUserDocument = gql`
-    mutation RegisterUser($email: String!, $password: String!) {
-  register(email: $email, password: $password) {
+    mutation RegisterUser($email: String!, $password: String!, $firstName: String!) {
+  register(email: $email, password: $password, firstName: $firstName) {
     path
     message
   }
@@ -764,6 +766,7 @@ export type RegisterUserMutationFn = Apollo.MutationFunction<RegisterUserMutatio
  *   variables: {
  *      email: // value for 'email'
  *      password: // value for 'password'
+ *      firstName: // value for 'firstName'
  *   },
  * });
  */

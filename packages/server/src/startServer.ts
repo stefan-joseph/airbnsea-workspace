@@ -4,6 +4,7 @@ import { createRedisEventTarget } from "@graphql-yoga/redis-event-target";
 import Redis from "ioredis";
 
 // import { runSeeders } from "typeorm-extension";
+
 // import rateLimit from "express-rate-limit";
 // import RateLimitRedisStore from "rate-limit-redis";
 
@@ -23,7 +24,6 @@ import { authMiddleware, listingIdMiddleware } from "./middleware/middleware";
 import { userLoader } from "./loaders/userLoader";
 import { getTypeormConnection } from "./utils/getTypeormConnection";
 import { ConversationMessage, InboxMessage } from "./types/types";
-// import { githubOauth } from "./routes/auth/githubOauth";
 
 export const startServer = async () => {
   const app = express();
@@ -189,7 +189,6 @@ export const startServer = async () => {
 
   app.set("trust proxy", 1);
   // app.use("/images", express.static("images"));
-  // app.get("/confirm-email/:id", confirmEmail);
 
   // app.get("/auth/github", (_, res) => {
   //   res.redirect(
