@@ -32,17 +32,13 @@ export const ForgotPasswordView = ({ submit, onFinish }: Props) => {
           <AuthFormContainer
             title="Reset Your Password"
             subtitle="Enter the email associated with your account and we’ll send you password reset instructions."
+            buttonLabel="Send Reset Instructions"
+            authLink1={{
+              href: "/login",
+              text: "Return to Log in",
+            }}
           >
             <Field name="email" label="Email" component={TextInput2} />
-            <Button type="submit" variant="contained" color="primary">
-              Reset Password
-            </Button>
-            <Typography>
-              Jogged your memory?{" "}
-              <Link to="/login">
-                <Button>Login</Button>
-              </Link>
-            </Typography>
           </AuthFormContainer>
         )}
       </Formik>

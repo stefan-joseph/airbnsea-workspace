@@ -7,6 +7,7 @@ export const AuthPageContainer = ({ children }: { children: JSX.Element }) => {
     <Stack
       marginLeft={appSidePadding}
       marginRight={appSidePadding}
+      marginBottom={10}
       sx={{ minHeight: "100vh" }}
     >
       <HomeIcon

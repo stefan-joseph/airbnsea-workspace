@@ -43,6 +43,13 @@ export const LoginView = ({ onFinish, submit }: Props) => {
           <AuthFormContainer
             title="Log in to Your Account"
             subtitle="If you'd like to try the application out without signing up click the 'log in as test user' button to sign in to an auto-generated account."
+            type="log in"
+            buttonLabel="Log in"
+            authLink1={{
+              href: "/forgot-password",
+              text: "Forgot Your Password?",
+            }}
+            authLink2={{ href: "/register", text: "Need an Account?" }}
           >
             <Button
               onClick={async () => {
@@ -56,9 +63,6 @@ export const LoginView = ({ onFinish, submit }: Props) => {
             >
               Log in as test user
             </Button>
-            {location.state?.message && (
-              <Typography fontWeight={600}>{location.state.message}</Typography>
-            )}
             <Field name="email" label="Email" component={TextInput2} />
             <Field
               name="password"
@@ -66,21 +70,6 @@ export const LoginView = ({ onFinish, submit }: Props) => {
               label="Password"
               component={TextInput2}
             />
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Log in
-            </Button>
-            <Typography>
-              Not a member?{" "}
-              <Link to="/register">
-                <Button type="button">Sign up</Button>
-              </Link>
-            </Typography>
-            <Typography>
-              Minds blanking?{" "}
-              <Link to="/forgot-password">
-                <Button type="button">Forgot Password</Button>
-              </Link>
-            </Typography>
           </AuthFormContainer>
         )}
       </Formik>

@@ -1,15 +1,14 @@
-import { Link, useLocation } from "react-router-dom";
 import { Field, Formik } from "formik";
 import { registerUserSchemaWithPassword2 } from "@airbnb-clone/common";
 import { RegisterUserMutationVariables } from "@airbnb-clone/controller";
 import { NormalizedErrorMap } from "@airbnb-clone/controller/dist/types/NormalizedErrorMap";
-import { Button, Divider, Typography } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import { AuthPageContainer } from "../components/AuthPageContainer";
 import AuthFormContainer from "../components/AuthFormContainer";
-import OauthLink from "../components/OauthLink";
-import TransitionAlerts from "../components/TransitionAlerts";
+
+import AuthLink from "../components/AuthLink";
 
 interface Props {
   submit: (
@@ -19,7 +18,6 @@ interface Props {
 }
 
 export const RegisterView = ({ submit, onFinish }: Props) => {
-  const { state } = useLocation();
   return (
     <AuthPageContainer>
       <Formik
@@ -39,24 +37,16 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
         }}
       >
         {() => (
-          <AuthFormContainer title="Sign up for an Account">
-            {state?.message && (
-              <TransitionAlerts severity="error" text={state.message} />
-            )}
-            <OauthLink
-              name="Sign up with Github"
-              href="https://github.com/login/oauth/authorize"
-            />
-            <Divider
-              sx={{
-                fontSize: 14,
-                span: {
-                  opacity: 0.4,
-                },
-              }}
-            >
-              or
-            </Divider>
+          <AuthFormContainer
+            title="Sign up for an Account"
+            type="sign up"
+            buttonLabel="Create My Account"
+            authLink1={{
+              href: "/forgot-password",
+              text: "Forgot Your Password?",
+            }}
+            authLink2={{ href: "/login", text: "Have an Account?" }}
+          >
             <Field name="email" label="Email" component={TextInput2} />
             <Field
               name="password"
@@ -71,21 +61,6 @@ export const RegisterView = ({ submit, onFinish }: Props) => {
               component={TextInput2}
             />
             <Field name="firstName" label="First Name" component={TextInput2} />
-            <Button variant="contained" type="submit" color="primary">
-              Create My Account
-            </Button>
-            <Typography>
-              Already a member?{" "}
-              <Link to="/login">
-                <Button>Login</Button>
-              </Link>
-            </Typography>
-            <Typography>
-              Minds blanking?{" "}
-              <Link to="/forgot-password">
-                <Button>Forgot Password</Button>
-              </Link>
-            </Typography>
           </AuthFormContainer>
         )}
       </Formik>

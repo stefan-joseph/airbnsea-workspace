@@ -7,11 +7,7 @@ export const TextInput2: React.FC<
     placeholder: string;
     type: string;
   }
-> = ({
-  field: { ...field },
-  form: { touched, errors, setFieldValue },
-  ...props
-}) => {
+> = ({ field: { ...field }, form: { touched, errors }, ...props }) => {
   const errorMsg = touched[field.name] && errors[field.name];
   return (
     <TextField
@@ -24,6 +20,10 @@ export const TextInput2: React.FC<
         style: {
           borderRadius: 8,
         },
+      }}
+      InputLabelProps={{
+        shrink: true,
+        sx: { fontSize: 19, backgroundColor: "#FFF", pr: 0.6 },
       }}
     />
   );
