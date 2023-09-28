@@ -18,7 +18,7 @@ const optionsPROD: DataSourceOptions & SeederOptions = {
   // ssl: { rejectUnauthorized: false },
   synchronize: true,
   logging: false,
-  // dropSchema: true,
+  dropSchema: true,
   entities: [User, Listing, Draft, Message, Booking],
   migrations: [],
   subscribers: [],
