@@ -30,6 +30,15 @@ export declare type Address = {
     street: Scalars['String'];
     zipcode: Scalars['String'];
 };
+export declare enum AuthorizationServer {
+    Github = "GITHUB",
+    Google = "GOOGLE"
+}
+export declare type BadCredentialsError = Errors & {
+    __typename?: 'BadCredentialsError';
+    field: Scalars['String'];
+    message: Scalars['String'];
+};
 export declare type Booking = {
     __typename?: 'Booking';
     end: Scalars['String'];
@@ -46,6 +55,12 @@ export declare type BookingInput = {
     end: Scalars['String'];
     guests: Scalars['Int'];
     start: Scalars['String'];
+};
+export declare type CheckEmailPayload = BadCredentialsError | CheckEmailResponse;
+export declare type CheckEmailResponse = {
+    __typename?: 'CheckEmailResponse';
+    oAuth?: Maybe<OAuthDetected>;
+    userExists: Scalars['Boolean'];
 };
 export declare type Conversation = {
     __typename?: 'Conversation';
@@ -95,6 +110,9 @@ export declare type Error = {
     __typename?: 'Error';
     message: Scalars['String'];
     path: Scalars['String'];
+};
+export declare type Errors = {
+    message: Scalars['String'];
 };
 export declare type InboxMessage = {
     __typename?: 'InboxMessage';
@@ -229,6 +247,7 @@ export declare type PhotoUpdate = {
 };
 export declare type Query = {
     __typename?: 'Query';
+    checkEmail: CheckEmailPayload;
     getFruit: Scalars['String'];
     getListingUnavailability: Array<Scalars['String']>;
     me?: Maybe<Me>;
@@ -238,6 +257,9 @@ export declare type Query = {
     searchListings: SearchListingsResponse;
     viewListing: Listing;
     viewUserBookings: Array<Booking>;
+};
+export declare type QueryCheckEmailArgs = {
+    email: Scalars['String'];
 };
 export declare type QueryGetListingUnavailabilityArgs = {
     listingId: Scalars['ID'];
@@ -328,6 +350,34 @@ export declare enum VesselType {
 }
 export declare type VesselTypeInput = {
     vesselType: VesselType;
+};
+export declare type OAuthDetected = {
+    __typename?: 'oAuthDetected';
+    authorizationServer: AuthorizationServer;
+    avatar?: Maybe<Scalars['String']>;
+    emailReminder: Scalars['String'];
+    firstName: Scalars['String'];
+};
+export declare type CheckEmailQueryVariables = Exact<{
+    email: Scalars['String'];
+}>;
+export declare type CheckEmailQuery = {
+    __typename?: 'Query';
+    checkEmail: {
+        __typename?: 'BadCredentialsError';
+        field: string;
+        message: string;
+    } | {
+        __typename?: 'CheckEmailResponse';
+        userExists: boolean;
+        oAuth?: {
+            __typename?: 'oAuthDetected';
+            authorizationServer: AuthorizationServer;
+            emailReminder: string;
+            firstName: string;
+            avatar?: string | null;
+        } | null;
+    };
 };
 export declare type ConfirmEmailMutationVariables = Exact<{
     id: Scalars['String'];
@@ -643,6 +693,16 @@ export declare type UpdateInboxSubscriptionSubscription = {
         listingId: string;
     };
 };
+export declare const CheckEmailDocument: Apollo.DocumentNode;
+export declare function useCheckEmailQuery(baseOptions: Apollo.QueryHookOptions<CheckEmailQuery, CheckEmailQueryVariables>): Apollo.QueryResult<CheckEmailQuery, Exact<{
+    email: string;
+}>>;
+export declare function useCheckEmailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckEmailQuery, CheckEmailQueryVariables>): Apollo.LazyQueryResultTuple<CheckEmailQuery, Exact<{
+    email: string;
+}>>;
+export declare type CheckEmailQueryHookResult = ReturnType<typeof useCheckEmailQuery>;
+export declare type CheckEmailLazyQueryHookResult = ReturnType<typeof useCheckEmailLazyQuery>;
+export declare type CheckEmailQueryResult = Apollo.QueryResult<CheckEmailQuery, CheckEmailQueryVariables>;
 export declare const ConfirmEmailDocument: Apollo.DocumentNode;
 export declare type ConfirmEmailMutationFn = Apollo.MutationFunction<ConfirmEmailMutation, ConfirmEmailMutationVariables>;
 export declare function useConfirmEmailMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmEmailMutation, ConfirmEmailMutationVariables>): Apollo.MutationTuple<ConfirmEmailMutation, Exact<{

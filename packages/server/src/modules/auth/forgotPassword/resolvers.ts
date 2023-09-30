@@ -14,7 +14,9 @@ export const resolvers: Resolvers = {
   Mutation: {
     sendForgotPasswordEmail: async (_, { email }, { redis }) => {
       if (!email) return true; // 'undefined' email will still return first user in db
-      const user = await User.findOne({ where: { email } });
+      const user = await User.findOne({
+        where: { email: email.toLowerCase() },
+      });
       if (!user) return true;
       // if no user with inputted email then return same response so as
       // to not concede whether that email is associeted with a user

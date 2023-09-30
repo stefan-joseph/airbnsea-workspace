@@ -45,10 +45,6 @@ describe("Register user", () => {
             register: [
                 {
                     path: "email",
-                    message: common_1.emailNotLongEnough,
-                },
-                {
-                    path: "email",
                     message: common_1.invalidEmail,
                 },
             ],
@@ -69,10 +65,6 @@ describe("Register user", () => {
         const response = yield client.register("bo", "asdsd", firstName);
         expect(response.data).toEqual({
             register: [
-                {
-                    path: "email",
-                    message: common_1.emailNotLongEnough,
-                },
                 {
                     path: "email",
                     message: common_1.invalidEmail,

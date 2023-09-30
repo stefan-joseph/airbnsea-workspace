@@ -26,6 +26,17 @@ export type Address = {
   zipcode: Scalars['String'];
 };
 
+export enum AuthorizationServer {
+  Github = 'GITHUB',
+  Google = 'GOOGLE'
+}
+
+export type BadCredentialsError = Errors & {
+  __typename?: 'BadCredentialsError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type Booking = {
   __typename?: 'Booking';
   end: Scalars['String'];
@@ -43,6 +54,14 @@ export type BookingInput = {
   end: Scalars['String'];
   guests: Scalars['Int'];
   start: Scalars['String'];
+};
+
+export type CheckEmailPayload = BadCredentialsError | CheckEmailResponse;
+
+export type CheckEmailResponse = {
+  __typename?: 'CheckEmailResponse';
+  oAuth?: Maybe<OAuthDetected>;
+  userExists: Scalars['Boolean'];
 };
 
 export type Conversation = {
@@ -98,6 +117,10 @@ export type Error = {
   __typename?: 'Error';
   message: Scalars['String'];
   path: Scalars['String'];
+};
+
+export type Errors = {
+  message: Scalars['String'];
 };
 
 export type InboxMessage = {
@@ -268,6 +291,7 @@ export type PhotoUpdate = {
 
 export type Query = {
   __typename?: 'Query';
+  checkEmail: CheckEmailPayload;
   getFruit: Scalars['String'];
   getListingUnavailability: Array<Scalars['String']>;
   me?: Maybe<Me>;
@@ -277,6 +301,11 @@ export type Query = {
   searchListings: SearchListingsResponse;
   viewListing: Listing;
   viewUserBookings: Array<Booking>;
+};
+
+
+export type QueryCheckEmailArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -394,6 +423,14 @@ export type VesselTypeInput = {
   vesselType: VesselType;
 };
 
+export type OAuthDetected = {
+  __typename?: 'oAuthDetected';
+  authorizationServer: AuthorizationServer;
+  avatar?: Maybe<Scalars['String']>;
+  emailReminder: Scalars['String'];
+  firstName: Scalars['String'];
+};
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -464,9 +501,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Address: Address;
+  AuthorizationServer: AuthorizationServer;
+  BadCredentialsError: ResolverTypeWrapper<BadCredentialsError>;
   Booking: ResolverTypeWrapper<Booking>;
   BookingInput: BookingInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CheckEmailPayload: ResolversTypes['BadCredentialsError'] | ResolversTypes['CheckEmailResponse'];
+  CheckEmailResponse: ResolverTypeWrapper<CheckEmailResponse>;
   Conversation: ResolverTypeWrapper<Conversation>;
   ConversationMessage: ResolverTypeWrapper<ConversationMessage>;
   ConversationSuccess: ResolverTypeWrapper<ConversationSuccess>;
@@ -474,6 +515,7 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Draft: ResolverTypeWrapper<Draft>;
   Error: ResolverTypeWrapper<Error>;
+  Errors: ResolversTypes['BadCredentialsError'];
   File: ResolverTypeWrapper<Scalars['File']>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -501,14 +543,18 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   VesselType: VesselType;
   VesselTypeInput: VesselTypeInput;
+  oAuthDetected: ResolverTypeWrapper<OAuthDetected>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Address: Address;
+  BadCredentialsError: BadCredentialsError;
   Booking: Booking;
   BookingInput: BookingInput;
   Boolean: Scalars['Boolean'];
+  CheckEmailPayload: ResolversParentTypes['BadCredentialsError'] | ResolversParentTypes['CheckEmailResponse'];
+  CheckEmailResponse: CheckEmailResponse;
   Conversation: Conversation;
   ConversationMessage: ConversationMessage;
   ConversationSuccess: ConversationSuccess;
@@ -516,6 +562,7 @@ export type ResolversParentTypes = {
   Date: Scalars['Date'];
   Draft: Draft;
   Error: Error;
+  Errors: ResolversParentTypes['BadCredentialsError'];
   File: Scalars['File'];
   Float: Scalars['Float'];
   ID: Scalars['ID'];
@@ -540,6 +587,13 @@ export type ResolversParentTypes = {
   UpdateListingFields: UpdateListingFields;
   User: User;
   VesselTypeInput: VesselTypeInput;
+  oAuthDetected: OAuthDetected;
+};
+
+export type BadCredentialsErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['BadCredentialsError'] = ResolversParentTypes['BadCredentialsError']> = {
+  field?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type BookingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Booking'] = ResolversParentTypes['Booking']> = {
@@ -552,6 +606,16 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
   start?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   taxes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CheckEmailPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CheckEmailPayload'] = ResolversParentTypes['CheckEmailPayload']> = {
+  __resolveType: TypeResolveFn<'BadCredentialsError' | 'CheckEmailResponse', ParentType, ContextType>;
+};
+
+export type CheckEmailResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CheckEmailResponse'] = ResolversParentTypes['CheckEmailResponse']> = {
+  oAuth?: Resolver<Maybe<ResolversTypes['oAuthDetected']>, ParentType, ContextType>;
+  userExists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -614,6 +678,11 @@ export type ErrorResolvers<ContextType = any, ParentType extends ResolversParent
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ErrorsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Errors'] = ResolversParentTypes['Errors']> = {
+  __resolveType: TypeResolveFn<'BadCredentialsError', ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export interface FileScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['File'], any> {
@@ -706,6 +775,7 @@ export type OwnerResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  checkEmail?: Resolver<ResolversTypes['CheckEmailPayload'], ParentType, ContextType, RequireFields<QueryCheckEmailArgs, 'email'>>;
   getFruit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   getListingUnavailability?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetListingUnavailabilityArgs, 'listingId'>>;
   me?: Resolver<Maybe<ResolversTypes['Me']>, ParentType, ContextType>;
@@ -764,8 +834,19 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type OAuthDetectedResolvers<ContextType = any, ParentType extends ResolversParentTypes['oAuthDetected'] = ResolversParentTypes['oAuthDetected']> = {
+  authorizationServer?: Resolver<ResolversTypes['AuthorizationServer'], ParentType, ContextType>;
+  avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  emailReminder?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
+  BadCredentialsError?: BadCredentialsErrorResolvers<ContextType>;
   Booking?: BookingResolvers<ContextType>;
+  CheckEmailPayload?: CheckEmailPayloadResolvers<ContextType>;
+  CheckEmailResponse?: CheckEmailResponseResolvers<ContextType>;
   Conversation?: ConversationResolvers<ContextType>;
   ConversationMessage?: ConversationMessageResolvers<ContextType>;
   ConversationSuccess?: ConversationSuccessResolvers<ContextType>;
@@ -773,6 +854,7 @@ export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType;
   Draft?: DraftResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
+  Errors?: ErrorsResolvers<ContextType>;
   File?: GraphQLScalarType;
   Image?: GraphQLScalarType;
   InboxMessage?: InboxMessageResolvers<ContextType>;
@@ -789,5 +871,6 @@ export type Resolvers<ContextType = any> = {
   SearchLocation?: SearchLocationResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  oAuthDetected?: OAuthDetectedResolvers<ContextType>;
 };
 

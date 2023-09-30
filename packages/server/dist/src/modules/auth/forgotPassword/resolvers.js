@@ -24,7 +24,9 @@ exports.resolvers = {
         sendForgotPasswordEmail: (_, { email }, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
             if (!email)
                 return true;
-            const user = yield User_1.User.findOne({ where: { email } });
+            const user = yield User_1.User.findOne({
+                where: { email: email.toLowerCase() },
+            });
             if (!user)
                 return true;
             yield (0, forgotPasswordLockAccount_1.forgotPasswordLockAccount)(user.id, redis);

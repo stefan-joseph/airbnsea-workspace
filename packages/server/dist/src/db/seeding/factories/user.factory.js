@@ -5,7 +5,7 @@ const typeorm_extension_1 = require("typeorm-extension");
 const User_1 = require("../../../entity/User");
 exports.UserFactory = (0, typeorm_extension_1.setSeederFactory)(User_1.User, (faker) => {
     const user = new User_1.User();
-    user.email = faker.internet.email();
+    user.email = faker.internet.email().toLowerCase();
     user.password = "secret";
     user.confirmed = true;
     user.firstName = faker.name.firstName();

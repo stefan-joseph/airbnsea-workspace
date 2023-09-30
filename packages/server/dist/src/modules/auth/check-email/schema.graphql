@@ -1,0 +1,31 @@
+type Query {
+  checkEmail(email: String!): CheckEmailPayload!
+}
+
+union CheckEmailPayload = CheckEmailResponse | BadCredentialsError
+
+interface Errors {
+  message: String!
+}
+
+type BadCredentialsError implements Errors {
+  message: String!
+  field: String!
+}
+
+type CheckEmailResponse {
+  userExists: Boolean!
+  oAuth: oAuthDetected
+}
+
+type oAuthDetected {
+  authorizationServer: AuthorizationServer!
+  emailReminder: String!
+  firstName: String!
+  avatar: String
+}
+
+enum AuthorizationServer {
+  GITHUB
+  GOOGLE
+}

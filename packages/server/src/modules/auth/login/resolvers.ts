@@ -20,7 +20,7 @@ export const resolvers: Resolvers = {
     login: async (_, { email, password }, { redis, req }) => {
       let user;
       if (email) {
-        user = await User.findOne({ where: { email } });
+        user = await User.findOne({ where: { email: email.toLowerCase() } });
       }
 
       if (!user) {

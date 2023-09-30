@@ -1,6 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VesselType = exports.Status = exports.InboxType = void 0;
+exports.VesselType = exports.Status = exports.InboxType = exports.AuthorizationServer = void 0;
+var AuthorizationServer;
+(function (AuthorizationServer) {
+    AuthorizationServer["Github"] = "GITHUB";
+    AuthorizationServer["Google"] = "GOOGLE";
+})(AuthorizationServer = exports.AuthorizationServer || (exports.AuthorizationServer = {}));
 var InboxType;
 (function (InboxType) {
     InboxType["Guest"] = "GUEST";

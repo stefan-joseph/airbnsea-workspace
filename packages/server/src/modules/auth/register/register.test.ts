@@ -2,11 +2,7 @@ import { User } from "../../../entity/User";
 import { createTypeormConnection } from "../../../utils/createTypeormConnection";
 import { TestClient } from "../../shared/test-utils/TestClient";
 import { duplicateEmail } from "./utils/errorMessages";
-import {
-  emailNotLongEnough,
-  invalidEmail,
-  passwordNotLongEnough,
-} from "@airbnb-clone/common";
+import { invalidEmail, passwordNotLongEnough } from "@airbnb-clone/common";
 
 beforeAll(async () => {
   await createTypeormConnection();
@@ -45,10 +41,6 @@ describe("Register user", () => {
       register: [
         {
           path: "email",
-          message: emailNotLongEnough,
-        },
-        {
-          path: "email",
           message: invalidEmail,
         },
       ],
@@ -73,10 +65,6 @@ describe("Register user", () => {
 
     expect(response.data).toEqual({
       register: [
-        {
-          path: "email",
-          message: emailNotLongEnough,
-        },
         {
           path: "email",
           message: invalidEmail,

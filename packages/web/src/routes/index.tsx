@@ -14,6 +14,7 @@ import { Message } from "../modules/message/Message";
 import { BookingConfirmationPage } from "../modules/booking/components/ComfirmationPage";
 import ConfirmEmail from "../modules/auth/confirmEmail/confirmEmail";
 import OauthGithub from "../modules/auth/oauth/OauthGithub";
+import Auth from "../modules/newauth/Auth";
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
   {
     path: "auth/github",
     element: <OauthGithub />,
+  },
+  {
+    path: "login-new",
+    element: <Auth />,
   },
   {
     path: "/listing/:listingId/view",

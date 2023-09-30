@@ -15,15 +15,20 @@ export const TextInput2: React.FC<
       {...props}
       error={!!errorMsg}
       helperText={errorMsg as ReactNode}
-      sx={{ borderRadius: 8 }}
+      sx={{ mt: 1.2 }}
       InputProps={{
-        style: {
-          borderRadius: 8,
+        sx: {
+          borderRadius: 2,
         },
       }}
       InputLabelProps={{
         shrink: true,
-        sx: { fontSize: 19, backgroundColor: "#FFF", pr: 0.6 },
+        sx: {
+          fontSize: 19,
+          backgroundColor: "#FFF",
+          pr: 0.6,
+          color: "rgba(0, 0, 0, 0.67)",
+        },
       }}
     />
   );

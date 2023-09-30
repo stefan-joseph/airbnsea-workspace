@@ -1,0 +1,17 @@
+query CheckEmail($email: String!) {
+  checkEmail(email: $email) {
+    ... on CheckEmailResponse {
+      userExists
+      oAuth {
+        authorizationServer
+        emailReminder
+        firstName
+        avatar
+      }
+    }
+    ... on BadCredentialsError {
+      field
+      message
+    }
+  }
+}

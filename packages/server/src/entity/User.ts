@@ -7,6 +7,8 @@ import {
   BeforeInsert,
   OneToMany,
 } from "typeorm";
+
+import { AuthorizationServer } from "../types/types";
 import { Booking } from "./Booking";
 import { Listing } from "./Listing";
 import { Draft } from "./Draft";
@@ -19,11 +21,19 @@ export class User extends BaseEntity {
 
   @Column("varchar", {
     length: 255,
+    unique: true,
   })
   email: string;
 
   @Column("text", { nullable: true })
   password: string | null;
+
+  @Column({
+    type: "enum",
+    enum: AuthorizationServer,
+    nullable: true,
+  })
+  oAuth: AuthorizationServer;
 
   @Column("varchar", { length: 50 })
   firstName: string;

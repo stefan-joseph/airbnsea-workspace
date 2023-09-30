@@ -27,6 +27,17 @@ export type Address = {
   zipcode: Scalars['String'];
 };
 
+export enum AuthorizationServer {
+  Github = 'GITHUB',
+  Google = 'GOOGLE'
+}
+
+export type BadCredentialsError = Errors & {
+  __typename?: 'BadCredentialsError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type Booking = {
   __typename?: 'Booking';
   end: Scalars['String'];
@@ -44,6 +55,14 @@ export type BookingInput = {
   end: Scalars['String'];
   guests: Scalars['Int'];
   start: Scalars['String'];
+};
+
+export type CheckEmailPayload = BadCredentialsError | CheckEmailResponse;
+
+export type CheckEmailResponse = {
+  __typename?: 'CheckEmailResponse';
+  oAuth?: Maybe<OAuthDetected>;
+  userExists: Scalars['Boolean'];
 };
 
 export type Conversation = {
@@ -99,6 +118,10 @@ export type Error = {
   __typename?: 'Error';
   message: Scalars['String'];
   path: Scalars['String'];
+};
+
+export type Errors = {
+  message: Scalars['String'];
 };
 
 export type InboxMessage = {
@@ -269,6 +292,7 @@ export type PhotoUpdate = {
 
 export type Query = {
   __typename?: 'Query';
+  checkEmail: CheckEmailPayload;
   getFruit: Scalars['String'];
   getListingUnavailability: Array<Scalars['String']>;
   me?: Maybe<Me>;
@@ -278,6 +302,11 @@ export type Query = {
   searchListings: SearchListingsResponse;
   viewListing: Listing;
   viewUserBookings: Array<Booking>;
+};
+
+
+export type QueryCheckEmailArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -394,6 +423,21 @@ export enum VesselType {
 export type VesselTypeInput = {
   vesselType: VesselType;
 };
+
+export type OAuthDetected = {
+  __typename?: 'oAuthDetected';
+  authorizationServer: AuthorizationServer;
+  avatar?: Maybe<Scalars['String']>;
+  emailReminder: Scalars['String'];
+  firstName: Scalars['String'];
+};
+
+export type CheckEmailQueryVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type CheckEmailQuery = { __typename?: 'Query', checkEmail: { __typename?: 'BadCredentialsError', field: string, message: string } | { __typename?: 'CheckEmailResponse', userExists: boolean, oAuth?: { __typename?: 'oAuthDetected', authorizationServer: AuthorizationServer, emailReminder: string, firstName: string, avatar?: string | null } | null } };
 
 export type ConfirmEmailMutationVariables = Exact<{
   id: Scalars['String'];
@@ -545,6 +589,53 @@ export type UpdateInboxSubscriptionSubscriptionVariables = Exact<{ [key: string]
 export type UpdateInboxSubscriptionSubscription = { __typename?: 'Subscription', updateInbox: { __typename?: 'InboxMessage', id: string, text: string, conversationId: string, fromHost: boolean, createdDate: any, listingId: string } };
 
 
+export const CheckEmailDocument = gql`
+    query CheckEmail($email: String!) {
+  checkEmail(email: $email) {
+    ... on CheckEmailResponse {
+      userExists
+      oAuth {
+        authorizationServer
+        emailReminder
+        firstName
+        avatar
+      }
+    }
+    ... on BadCredentialsError {
+      field
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useCheckEmailQuery__
+ *
+ * To run a query within a React component, call `useCheckEmailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckEmailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckEmailQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useCheckEmailQuery(baseOptions: Apollo.QueryHookOptions<CheckEmailQuery, CheckEmailQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckEmailQuery, CheckEmailQueryVariables>(CheckEmailDocument, options);
+      }
+export function useCheckEmailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckEmailQuery, CheckEmailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckEmailQuery, CheckEmailQueryVariables>(CheckEmailDocument, options);
+        }
+export type CheckEmailQueryHookResult = ReturnType<typeof useCheckEmailQuery>;
+export type CheckEmailLazyQueryHookResult = ReturnType<typeof useCheckEmailLazyQuery>;
+export type CheckEmailQueryResult = Apollo.QueryResult<CheckEmailQuery, CheckEmailQueryVariables>;
 export const ConfirmEmailDocument = gql`
     mutation ConfirmEmail($id: String!) {
   confirmEmail(id: $id)

@@ -25,7 +25,7 @@ exports.resolvers = {
         login: (_, { email, password }, { redis, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let user;
             if (email) {
-                user = yield User_1.User.findOne({ where: { email } });
+                user = yield User_1.User.findOne({ where: { email: email.toLowerCase() } });
             }
             if (!user) {
                 return { errors: errorResponse };

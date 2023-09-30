@@ -4,7 +4,7 @@ import { User } from "../../../entity/User";
 
 export const UserFactory = setSeederFactory(User, (faker: Faker) => {
   const user = new User();
-  user.email = faker.internet.email();
+  user.email = faker.internet.email().toLowerCase();
   user.password = "secret";
   user.confirmed = true;
   user.firstName = faker.name.firstName();

@@ -21,6 +21,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const bcryptjs_1 = require("bcryptjs");
 const typeorm_1 = require("typeorm");
+const types_1 = require("../types/types");
 const Booking_1 = require("./Booking");
 const Listing_1 = require("./Listing");
 const Draft_1 = require("./Draft");
@@ -41,6 +42,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)("varchar", {
         length: 255,
+        unique: true,
     }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
@@ -48,6 +50,14 @@ __decorate([
     (0, typeorm_1.Column)("text", { nullable: true }),
     __metadata("design:type", Object)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: "enum",
+        enum: types_1.AuthorizationServer,
+        nullable: true,
+    }),
+    __metadata("design:type", String)
+], User.prototype, "oAuth", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { length: 50 }),
     __metadata("design:type", String)
