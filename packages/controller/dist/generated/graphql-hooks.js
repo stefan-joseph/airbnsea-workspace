@@ -51,14 +51,19 @@ var VesselType;
 exports.CheckEmailDocument = (0, client_1.gql) `
     query CheckEmail($email: String!) {
   checkEmail(email: $email) {
-    ... on CheckEmailResponse {
+    ... on EmailExistsWithPassword {
+      email
       userExists
-      oAuth {
-        authorizationServer
-        emailReminder
-        firstName
-        avatar
-      }
+    }
+    ... on EmailExistsWithOAuth {
+      authorizationServer
+      email
+      firstName
+      avatar
+    }
+    ... on NoUserWithThisEmail {
+      email
+      userExists
     }
     ... on BadCredentialsError {
       field

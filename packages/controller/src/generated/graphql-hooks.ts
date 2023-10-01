@@ -32,7 +32,7 @@ export enum AuthorizationServer {
   Google = 'GOOGLE'
 }
 
-export type BadCredentialsError = Errors & {
+export type BadCredentialsError = {
   __typename?: 'BadCredentialsError';
   field: Scalars['String'];
   message: Scalars['String'];
@@ -57,13 +57,7 @@ export type BookingInput = {
   start: Scalars['String'];
 };
 
-export type CheckEmailPayload = BadCredentialsError | CheckEmailResponse;
-
-export type CheckEmailResponse = {
-  __typename?: 'CheckEmailResponse';
-  oAuth?: Maybe<OAuthDetected>;
-  userExists: Scalars['Boolean'];
-};
+export type CheckEmailPayload = BadCredentialsError | EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail;
 
 export type Conversation = {
   __typename?: 'Conversation';
@@ -114,14 +108,24 @@ export type Draft = {
   zipcode?: Maybe<Scalars['String']>;
 };
 
+export type EmailExistsWithOAuth = {
+  __typename?: 'EmailExistsWithOAuth';
+  authorizationServer: AuthorizationServer;
+  avatar?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+};
+
+export type EmailExistsWithPassword = {
+  __typename?: 'EmailExistsWithPassword';
+  email: Scalars['String'];
+  userExists: Scalars['Boolean'];
+};
+
 export type Error = {
   __typename?: 'Error';
   message: Scalars['String'];
   path: Scalars['String'];
-};
-
-export type Errors = {
-  message: Scalars['String'];
 };
 
 export type InboxMessage = {
@@ -277,6 +281,12 @@ export type MutationUpdateListingArgs = {
   listingId: Scalars['String'];
 };
 
+export type NoUserWithThisEmail = {
+  __typename?: 'NoUserWithThisEmail';
+  email: Scalars['String'];
+  userExists: Scalars['Boolean'];
+};
+
 export type Owner = {
   __typename?: 'Owner';
   avatar: Scalars['String'];
@@ -424,20 +434,12 @@ export type VesselTypeInput = {
   vesselType: VesselType;
 };
 
-export type OAuthDetected = {
-  __typename?: 'oAuthDetected';
-  authorizationServer: AuthorizationServer;
-  avatar?: Maybe<Scalars['String']>;
-  emailReminder: Scalars['String'];
-  firstName: Scalars['String'];
-};
-
 export type CheckEmailQueryVariables = Exact<{
   email: Scalars['String'];
 }>;
 
 
-export type CheckEmailQuery = { __typename?: 'Query', checkEmail: { __typename?: 'BadCredentialsError', field: string, message: string } | { __typename?: 'CheckEmailResponse', userExists: boolean, oAuth?: { __typename?: 'oAuthDetected', authorizationServer: AuthorizationServer, emailReminder: string, firstName: string, avatar?: string | null } | null } };
+export type CheckEmailQuery = { __typename?: 'Query', checkEmail: { __typename?: 'BadCredentialsError', field: string, message: string } | { __typename?: 'EmailExistsWithOAuth', authorizationServer: AuthorizationServer, email: string, firstName: string, avatar?: string | null } | { __typename?: 'EmailExistsWithPassword', email: string, userExists: boolean } | { __typename?: 'NoUserWithThisEmail', email: string, userExists: boolean } };
 
 export type ConfirmEmailMutationVariables = Exact<{
   id: Scalars['String'];
@@ -592,14 +594,19 @@ export type UpdateInboxSubscriptionSubscription = { __typename?: 'Subscription',
 export const CheckEmailDocument = gql`
     query CheckEmail($email: String!) {
   checkEmail(email: $email) {
-    ... on CheckEmailResponse {
+    ... on EmailExistsWithPassword {
+      email
       userExists
-      oAuth {
-        authorizationServer
-        emailReminder
-        firstName
-        avatar
-      }
+    }
+    ... on EmailExistsWithOAuth {
+      authorizationServer
+      email
+      firstName
+      avatar
+    }
+    ... on NoUserWithThisEmail {
+      email
+      userExists
     }
     ... on BadCredentialsError {
       field

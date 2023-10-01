@@ -34,7 +34,7 @@ export declare enum AuthorizationServer {
     Github = "GITHUB",
     Google = "GOOGLE"
 }
-export declare type BadCredentialsError = Errors & {
+export declare type BadCredentialsError = {
     __typename?: 'BadCredentialsError';
     field: Scalars['String'];
     message: Scalars['String'];
@@ -56,12 +56,7 @@ export declare type BookingInput = {
     guests: Scalars['Int'];
     start: Scalars['String'];
 };
-export declare type CheckEmailPayload = BadCredentialsError | CheckEmailResponse;
-export declare type CheckEmailResponse = {
-    __typename?: 'CheckEmailResponse';
-    oAuth?: Maybe<OAuthDetected>;
-    userExists: Scalars['Boolean'];
-};
+export declare type CheckEmailPayload = BadCredentialsError | EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail;
 export declare type Conversation = {
     __typename?: 'Conversation';
     conversationId: Scalars['ID'];
@@ -106,13 +101,22 @@ export declare type Draft = {
     vesselType?: Maybe<VesselType>;
     zipcode?: Maybe<Scalars['String']>;
 };
+export declare type EmailExistsWithOAuth = {
+    __typename?: 'EmailExistsWithOAuth';
+    authorizationServer: AuthorizationServer;
+    avatar?: Maybe<Scalars['String']>;
+    email: Scalars['String'];
+    firstName: Scalars['String'];
+};
+export declare type EmailExistsWithPassword = {
+    __typename?: 'EmailExistsWithPassword';
+    email: Scalars['String'];
+    userExists: Scalars['Boolean'];
+};
 export declare type Error = {
     __typename?: 'Error';
     message: Scalars['String'];
     path: Scalars['String'];
-};
-export declare type Errors = {
-    message: Scalars['String'];
 };
 export declare type InboxMessage = {
     __typename?: 'InboxMessage';
@@ -234,6 +238,11 @@ export declare type MutationUpdateListingArgs = {
     fields: UpdateListingFields;
     listingId: Scalars['String'];
 };
+export declare type NoUserWithThisEmail = {
+    __typename?: 'NoUserWithThisEmail';
+    email: Scalars['String'];
+    userExists: Scalars['Boolean'];
+};
 export declare type Owner = {
     __typename?: 'Owner';
     avatar: Scalars['String'];
@@ -351,13 +360,6 @@ export declare enum VesselType {
 export declare type VesselTypeInput = {
     vesselType: VesselType;
 };
-export declare type OAuthDetected = {
-    __typename?: 'oAuthDetected';
-    authorizationServer: AuthorizationServer;
-    avatar?: Maybe<Scalars['String']>;
-    emailReminder: Scalars['String'];
-    firstName: Scalars['String'];
-};
 export declare type CheckEmailQueryVariables = Exact<{
     email: Scalars['String'];
 }>;
@@ -368,15 +370,19 @@ export declare type CheckEmailQuery = {
         field: string;
         message: string;
     } | {
-        __typename?: 'CheckEmailResponse';
+        __typename?: 'EmailExistsWithOAuth';
+        authorizationServer: AuthorizationServer;
+        email: string;
+        firstName: string;
+        avatar?: string | null;
+    } | {
+        __typename?: 'EmailExistsWithPassword';
+        email: string;
         userExists: boolean;
-        oAuth?: {
-            __typename?: 'oAuthDetected';
-            authorizationServer: AuthorizationServer;
-            emailReminder: string;
-            firstName: string;
-            avatar?: string | null;
-        } | null;
+    } | {
+        __typename?: 'NoUserWithThisEmail';
+        email: string;
+        userExists: boolean;
     };
 };
 export declare type ConfirmEmailMutationVariables = Exact<{

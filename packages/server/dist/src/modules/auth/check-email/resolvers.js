@@ -29,27 +29,27 @@ exports.resolvers = {
             const user = yield User_1.User.findOne({
                 where: { email: email.toLowerCase() },
             });
-            let userExists = false;
             if (user) {
-                userExists = true;
                 if (!user.confirmed) {
                     return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("Your email has not been confirmed");
                 }
-                if (user.password) {
-                    return { userExists };
-                }
                 const { email, firstName, avatar, oAuth } = user;
+                if (user.password) {
+                    return {
+                        __typename: "EmailExistsWithPassword",
+                        email,
+                        userExists: true,
+                    };
+                }
                 return {
-                    userExists,
-                    oAuth: {
-                        authorizationServer: oAuth,
-                        emailReminder: email,
-                        firstName,
-                        avatar,
-                    },
+                    __typename: "EmailExistsWithOAuth",
+                    authorizationServer: oAuth,
+                    email,
+                    firstName,
+                    avatar,
                 };
             }
-            return { userExists };
+            return { __typename: "NoUserWithThisEmail", email, userExists: false };
         }),
     },
 };

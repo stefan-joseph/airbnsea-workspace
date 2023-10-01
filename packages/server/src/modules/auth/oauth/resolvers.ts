@@ -1,10 +1,12 @@
 import axios from "axios";
-import { Resolvers } from "../../../types/types";
+// import * as yup from "yup";
+import { AuthorizationServer, Resolvers } from "../../../types/types";
 import { Endpoints } from "@octokit/types";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
 import { badGithubOauthRequest } from "./errorMessages";
 import { User } from "../../../entity/User";
 import { userSessionIdPrefix } from "../../../utils/constants";
+import { registerOAuthUserSchema } from "@airbnb-clone/common";
 
 export const resolvers: Resolvers = {
   Mutation: {
@@ -26,36 +28,36 @@ export const resolvers: Resolvers = {
         );
         response = data;
         if (response.error) {
-          throw Error;
+          console.log("error", response.error);
+          return formatGraphQLYogaError(response.error.message);
         }
       } catch {
         return formatGraphQLYogaError(badGithubOauthRequest);
       }
 
       let email;
-      let response2;
+      let response2: Endpoints["GET /user"]["response"]["data"];
 
       try {
         const { data } = await axios("https://api.github.com/user", {
           headers: { Authorization: `Bearer ${response.access_token}` },
         });
+
         response2 = data;
+        console.log("response2", response2);
+        email = response2.email;
         // what does error message look like?
       } catch {
         return formatGraphQLYogaError(badGithubOauthRequest);
       }
 
-      console.log("response2", response2);
-
-      email = response2.email;
-
-      // github users email is set to private and needs to be called with more specific API endpoint
-
       if (!email) {
+        // github users email is set to private and needs to be called with more specific API endpoint
         try {
           const { data } = await axios("https://api.github.com/user/emails", {
             headers: { Authorization: `Bearer ${response.access_token}` },
           });
+          console.log("response3", data);
           const emails: Endpoints["GET /user/emails"]["response"]["data"] =
             data;
           email = emails.find((email) => email.primary)?.email;
@@ -70,7 +72,9 @@ export const resolvers: Resolvers = {
       if (!email) {
         // email is needed as unique identifier for sign up
         return formatGraphQLYogaError(
-          "Cannot access the email associated with your Github account. Please use an alternative sign up method."
+          `Cannot access the email associated with your Github account.
+          Please use an alternative sign up method 
+          or check the email settings on your github account.`
         );
       }
 
@@ -82,21 +86,25 @@ export const resolvers: Resolvers = {
       if (userAlreadyExists) {
         console.log(userAlreadyExists);
         // login now succesful
-        const { id, confirmed, avatar } = userAlreadyExists;
+        const { id, confirmed, avatar, password, oAuth } = userAlreadyExists;
 
-        // user doesn't have to confirm email now
+        if (password && !oAuth) {
+          // user needs to input password before linking to oauth account
+        }
+
+        // by this point, user is guaranteed to have confirmed email
+        // through oauth sign up or traditional sign up
+        // superfluous error check
         if (!confirmed) {
-          await User.update({ id }, { confirmed: true });
+          return formatGraphQLYogaError("Not confirmed");
         }
 
         // grab avatar from github if user doesn't have one
         if (!avatar && response2.avatar_url) {
           await User.update({ id }, { avatar: response2.avatar_url });
         }
-        //@TODO batch these ^^^
 
-        //@TODO check forgotPasswordLocked?
-
+        // login successful
         req.session.userId = id;
         if (req.sessionID) {
           await redis.lpush(`${userSessionIdPrefix}${id}`, req.sessionID);
@@ -104,16 +112,52 @@ export const resolvers: Resolvers = {
         return true;
       }
 
-      if (!response2.name) {
-        // name is required for all airbnsea users
-        return formatGraphQLYogaError(
-          "You do not have a name asscoiated with your Github account. Please add one or use an alternative method to sign up."
-        );
+      const { name, avatar_url } = response2;
+
+      if (!name) {
+        // firstName is required for all airbnsea users
+        //@TODO must redirect user to fill in firstName
+        console.log("no name");
+        return false;
       }
 
-      // if no, add new user to database (name, avatarImg, confirmed: true) and sign in user
+      // get just first word from name value and make sure its capitalized
+      let firstName = name.split(" ")[0];
+      firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
 
-      // res.redirect(process.env.FRONTEND_HOST as string);
+      // @TODO yup validations checks for:
+      // email, firstName sent by authorzation server
+
+      // yup validation
+      try {
+        await registerOAuthUserSchema.validate(
+          { email, firstName },
+          { abortEarly: false }
+        );
+      } catch (error) {
+        // if firstName error, user redirected to fill in firstName before sign up
+        // if email, error, user redirected to default login screen with error explanation
+        console.log(error);
+
+        // const errors = formatYupError(error as yup.ValidationError);
+        // return errors;
+      }
+
+      const user = User.create({
+        email,
+        firstName,
+        avatar: avatar_url,
+        confirmed: true,
+        oAuth: AuthorizationServer["Github"],
+      });
+
+      const { id } = await user.save();
+
+      // oauth registration and login successful
+      req.session.userId = id;
+      if (req.sessionID) {
+        await redis.lpush(`${userSessionIdPrefix}${id}`, req.sessionID);
+      }
       return true;
     },
   },

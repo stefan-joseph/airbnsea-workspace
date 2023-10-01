@@ -31,7 +31,7 @@ export enum AuthorizationServer {
   Google = 'GOOGLE'
 }
 
-export type BadCredentialsError = Errors & {
+export type BadCredentialsError = {
   __typename?: 'BadCredentialsError';
   field: Scalars['String'];
   message: Scalars['String'];
@@ -56,13 +56,7 @@ export type BookingInput = {
   start: Scalars['String'];
 };
 
-export type CheckEmailPayload = BadCredentialsError | CheckEmailResponse;
-
-export type CheckEmailResponse = {
-  __typename?: 'CheckEmailResponse';
-  oAuth?: Maybe<OAuthDetected>;
-  userExists: Scalars['Boolean'];
-};
+export type CheckEmailPayload = BadCredentialsError | EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail;
 
 export type Conversation = {
   __typename?: 'Conversation';
@@ -113,14 +107,24 @@ export type Draft = {
   zipcode?: Maybe<Scalars['String']>;
 };
 
+export type EmailExistsWithOAuth = {
+  __typename?: 'EmailExistsWithOAuth';
+  authorizationServer: AuthorizationServer;
+  avatar?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+};
+
+export type EmailExistsWithPassword = {
+  __typename?: 'EmailExistsWithPassword';
+  email: Scalars['String'];
+  userExists: Scalars['Boolean'];
+};
+
 export type Error = {
   __typename?: 'Error';
   message: Scalars['String'];
   path: Scalars['String'];
-};
-
-export type Errors = {
-  message: Scalars['String'];
 };
 
 export type InboxMessage = {
@@ -276,6 +280,12 @@ export type MutationUpdateListingArgs = {
   listingId: Scalars['String'];
 };
 
+export type NoUserWithThisEmail = {
+  __typename?: 'NoUserWithThisEmail';
+  email: Scalars['String'];
+  userExists: Scalars['Boolean'];
+};
+
 export type Owner = {
   __typename?: 'Owner';
   avatar: Scalars['String'];
@@ -423,14 +433,6 @@ export type VesselTypeInput = {
   vesselType: VesselType;
 };
 
-export type OAuthDetected = {
-  __typename?: 'oAuthDetected';
-  authorizationServer: AuthorizationServer;
-  avatar?: Maybe<Scalars['String']>;
-  emailReminder: Scalars['String'];
-  firstName: Scalars['String'];
-};
-
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -506,16 +508,16 @@ export type ResolversTypes = {
   Booking: ResolverTypeWrapper<Booking>;
   BookingInput: BookingInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  CheckEmailPayload: ResolversTypes['BadCredentialsError'] | ResolversTypes['CheckEmailResponse'];
-  CheckEmailResponse: ResolverTypeWrapper<CheckEmailResponse>;
+  CheckEmailPayload: ResolversTypes['BadCredentialsError'] | ResolversTypes['EmailExistsWithOAuth'] | ResolversTypes['EmailExistsWithPassword'] | ResolversTypes['NoUserWithThisEmail'];
   Conversation: ResolverTypeWrapper<Conversation>;
   ConversationMessage: ResolverTypeWrapper<ConversationMessage>;
   ConversationSuccess: ResolverTypeWrapper<ConversationSuccess>;
   CreateConversationResponse: ResolversTypes['ConversationSuccess'] | ResolversTypes['Redirect'];
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Draft: ResolverTypeWrapper<Draft>;
+  EmailExistsWithOAuth: ResolverTypeWrapper<EmailExistsWithOAuth>;
+  EmailExistsWithPassword: ResolverTypeWrapper<EmailExistsWithPassword>;
   Error: ResolverTypeWrapper<Error>;
-  Errors: ResolversTypes['BadCredentialsError'];
   File: ResolverTypeWrapper<Scalars['File']>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -528,6 +530,7 @@ export type ResolversTypes = {
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Me: ResolverTypeWrapper<Me>;
   Mutation: ResolverTypeWrapper<{}>;
+  NoUserWithThisEmail: ResolverTypeWrapper<NoUserWithThisEmail>;
   Owner: ResolverTypeWrapper<Owner>;
   PhotoUpdate: PhotoUpdate;
   Query: ResolverTypeWrapper<{}>;
@@ -543,7 +546,6 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   VesselType: VesselType;
   VesselTypeInput: VesselTypeInput;
-  oAuthDetected: ResolverTypeWrapper<OAuthDetected>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -553,16 +555,16 @@ export type ResolversParentTypes = {
   Booking: Booking;
   BookingInput: BookingInput;
   Boolean: Scalars['Boolean'];
-  CheckEmailPayload: ResolversParentTypes['BadCredentialsError'] | ResolversParentTypes['CheckEmailResponse'];
-  CheckEmailResponse: CheckEmailResponse;
+  CheckEmailPayload: ResolversParentTypes['BadCredentialsError'] | ResolversParentTypes['EmailExistsWithOAuth'] | ResolversParentTypes['EmailExistsWithPassword'] | ResolversParentTypes['NoUserWithThisEmail'];
   Conversation: Conversation;
   ConversationMessage: ConversationMessage;
   ConversationSuccess: ConversationSuccess;
   CreateConversationResponse: ResolversParentTypes['ConversationSuccess'] | ResolversParentTypes['Redirect'];
   Date: Scalars['Date'];
   Draft: Draft;
+  EmailExistsWithOAuth: EmailExistsWithOAuth;
+  EmailExistsWithPassword: EmailExistsWithPassword;
   Error: Error;
-  Errors: ResolversParentTypes['BadCredentialsError'];
   File: Scalars['File'];
   Float: Scalars['Float'];
   ID: Scalars['ID'];
@@ -574,6 +576,7 @@ export type ResolversParentTypes = {
   LoginResponse: LoginResponse;
   Me: Me;
   Mutation: {};
+  NoUserWithThisEmail: NoUserWithThisEmail;
   Owner: Owner;
   PhotoUpdate: PhotoUpdate;
   Query: {};
@@ -587,7 +590,6 @@ export type ResolversParentTypes = {
   UpdateListingFields: UpdateListingFields;
   User: User;
   VesselTypeInput: VesselTypeInput;
-  oAuthDetected: OAuthDetected;
 };
 
 export type BadCredentialsErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['BadCredentialsError'] = ResolversParentTypes['BadCredentialsError']> = {
@@ -610,13 +612,7 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type CheckEmailPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CheckEmailPayload'] = ResolversParentTypes['CheckEmailPayload']> = {
-  __resolveType: TypeResolveFn<'BadCredentialsError' | 'CheckEmailResponse', ParentType, ContextType>;
-};
-
-export type CheckEmailResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CheckEmailResponse'] = ResolversParentTypes['CheckEmailResponse']> = {
-  oAuth?: Resolver<Maybe<ResolversTypes['oAuthDetected']>, ParentType, ContextType>;
-  userExists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'BadCredentialsError' | 'EmailExistsWithOAuth' | 'EmailExistsWithPassword' | 'NoUserWithThisEmail', ParentType, ContextType>;
 };
 
 export type ConversationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Conversation'] = ResolversParentTypes['Conversation']> = {
@@ -674,15 +670,24 @@ export type DraftResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EmailExistsWithOAuthResolvers<ContextType = any, ParentType extends ResolversParentTypes['EmailExistsWithOAuth'] = ResolversParentTypes['EmailExistsWithOAuth']> = {
+  authorizationServer?: Resolver<ResolversTypes['AuthorizationServer'], ParentType, ContextType>;
+  avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EmailExistsWithPasswordResolvers<ContextType = any, ParentType extends ResolversParentTypes['EmailExistsWithPassword'] = ResolversParentTypes['EmailExistsWithPassword']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userExists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']> = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ErrorsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Errors'] = ResolversParentTypes['Errors']> = {
-  __resolveType: TypeResolveFn<'BadCredentialsError', ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export interface FileScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['File'], any> {
@@ -767,6 +772,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateListing?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationUpdateListingArgs, 'fields' | 'listingId'>>;
 };
 
+export type NoUserWithThisEmailResolvers<ContextType = any, ParentType extends ResolversParentTypes['NoUserWithThisEmail'] = ResolversParentTypes['NoUserWithThisEmail']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userExists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type OwnerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Owner'] = ResolversParentTypes['Owner']> = {
   avatar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -834,27 +845,19 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type OAuthDetectedResolvers<ContextType = any, ParentType extends ResolversParentTypes['oAuthDetected'] = ResolversParentTypes['oAuthDetected']> = {
-  authorizationServer?: Resolver<ResolversTypes['AuthorizationServer'], ParentType, ContextType>;
-  avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  emailReminder?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = any> = {
   BadCredentialsError?: BadCredentialsErrorResolvers<ContextType>;
   Booking?: BookingResolvers<ContextType>;
   CheckEmailPayload?: CheckEmailPayloadResolvers<ContextType>;
-  CheckEmailResponse?: CheckEmailResponseResolvers<ContextType>;
   Conversation?: ConversationResolvers<ContextType>;
   ConversationMessage?: ConversationMessageResolvers<ContextType>;
   ConversationSuccess?: ConversationSuccessResolvers<ContextType>;
   CreateConversationResponse?: CreateConversationResponseResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Draft?: DraftResolvers<ContextType>;
+  EmailExistsWithOAuth?: EmailExistsWithOAuthResolvers<ContextType>;
+  EmailExistsWithPassword?: EmailExistsWithPasswordResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
-  Errors?: ErrorsResolvers<ContextType>;
   File?: GraphQLScalarType;
   Image?: GraphQLScalarType;
   InboxMessage?: InboxMessageResolvers<ContextType>;
@@ -863,6 +866,7 @@ export type Resolvers<ContextType = any> = {
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Me?: MeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  NoUserWithThisEmail?: NoUserWithThisEmailResolvers<ContextType>;
   Owner?: OwnerResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Redirect?: RedirectResolvers<ContextType>;
@@ -871,6 +875,5 @@ export type Resolvers<ContextType = any> = {
   SearchLocation?: SearchLocationResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-  oAuthDetected?: OAuthDetectedResolvers<ContextType>;
 };
 

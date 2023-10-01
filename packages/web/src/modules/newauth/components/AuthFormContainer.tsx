@@ -1,19 +1,20 @@
 import { IconButton, Stack, Typography } from "@mui/material";
-import { borderRadius, formBorderColor } from "../../../constants/constants";
+import { borderRadius } from "../../../constants/constants";
 import { IoChevronBack } from "react-icons/io5";
+import { Steps } from "../Auth";
 
-export default function AuthForm({
+export default function AuthFormContainer({
   children,
   title,
   welcome,
   back,
   setAuthStep,
 }: {
-  children: () => JSX.Element;
+  children: JSX.Element | JSX.Element[];
   title: string;
   welcome?: boolean;
-  back?: string;
-  setAuthStep: React.Dispatch<React.SetStateAction<string>>;
+  back?: boolean;
+  setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
   return (
     <Stack
@@ -27,7 +28,7 @@ export default function AuthForm({
           {back && (
             <IconButton
               aria-label="back"
-              onClick={() => setAuthStep(back)}
+              onClick={() => setAuthStep(Steps.DEFAULT)}
               sx={{ position: "absolute", left: 0 }}
             >
               <IoChevronBack />
@@ -46,7 +47,7 @@ export default function AuthForm({
             </Typography>
           </Stack>
         )}
-        {children()}
+        {children}
       </Stack>
     </Stack>
   );

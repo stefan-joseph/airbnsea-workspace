@@ -14,6 +14,7 @@ export default function OauthLink({
   return (
     <Button
       variant="outlined"
+      fullWidth
       size="large"
       href={href}
       onClick={(e) => {

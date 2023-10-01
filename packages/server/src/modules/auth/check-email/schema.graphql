@@ -2,25 +2,29 @@ type Query {
   checkEmail(email: String!): CheckEmailPayload!
 }
 
-union CheckEmailPayload = CheckEmailResponse | BadCredentialsError
+union CheckEmailPayload =
+    EmailExistsWithPassword
+  | EmailExistsWithOAuth
+  | NoUserWithThisEmail
+  | BadCredentialsError
 
-interface Errors {
-  message: String!
-}
+# interface Errors {
+#   message: String!
+# }
 
-type BadCredentialsError implements Errors {
+type BadCredentialsError {
   message: String!
   field: String!
 }
 
-type CheckEmailResponse {
+type EmailExistsWithPassword {
+  email: String!
   userExists: Boolean!
-  oAuth: oAuthDetected
 }
 
-type oAuthDetected {
+type EmailExistsWithOAuth {
   authorizationServer: AuthorizationServer!
-  emailReminder: String!
+  email: String!
   firstName: String!
   avatar: String
 }
@@ -28,4 +32,9 @@ type oAuthDetected {
 enum AuthorizationServer {
   GITHUB
   GOOGLE
+}
+
+type NoUserWithThisEmail {
+  email: String!
+  userExists: Boolean!
 }

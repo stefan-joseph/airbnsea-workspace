@@ -13,16 +13,13 @@ export const resolvers: Resolvers = {
       try {
         await checkEmailSchema.validate({ email }, { abortEarly: false });
       } catch (error) {
-        // return Promise.reject(new GraphQLError("baby"));
-        // console.log("error", error);
-        // const errors = formatYupError(error as yup.ValidationError);
-        // console.log("errors", errors);
         const formatYupError = (error: yup.ValidationError) => {
           const { message, path } = error.inner[0];
           return { message, field: path as string };
         };
         return {
           __typename: "BadCredentialsError",
+
           ...formatYupError(error as yup.ValidationError),
         };
       }
@@ -31,30 +28,29 @@ export const resolvers: Resolvers = {
         where: { email: email.toLowerCase() },
       });
 
-      let userExists = false;
-
       if (user) {
-        userExists = true;
-
         // check if user is confirmed
         if (!user.confirmed) {
           return formatGraphQLYogaError("Your email has not been confirmed");
         }
 
+        const { email, firstName, avatar, oAuth } = user;
         if (user.password) {
           // if user has password, they must sign in with it
-          return { userExists };
+          return {
+            __typename: "EmailExistsWithPassword",
+            email,
+            userExists: true,
+          };
         }
+
         // otherwise user must be oAuth
-        const { email, firstName, avatar, oAuth } = user;
         return {
-          userExists,
-          oAuth: {
-            authorizationServer: oAuth,
-            emailReminder: email,
-            firstName,
-            avatar,
-          },
+          __typename: "EmailExistsWithOAuth",
+          authorizationServer: oAuth,
+          email,
+          firstName,
+          avatar,
         };
       }
 
@@ -80,9 +76,8 @@ export const resolvers: Resolvers = {
       //   };
       // }
 
-      // login now succesful
-
-      return { userExists };
+      // email does not exist in db, continue to finish sign up process
+      return { __typename: "NoUserWithThisEmail", email, userExists: false };
     },
   },
 };
