@@ -1,9 +1,3 @@
 mutation LoginAsRandomUser {
-  loginAsRandomUser {
-    errors {
-      path
-      message
-    }
-    sessionId
-  }
+  loginAsRandomUser
 }

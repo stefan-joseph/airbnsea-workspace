@@ -1,3 +1,9 @@
 type Mutation {
-  register(email: String!, password: String!, firstName: String!): [Error!]
+  register(
+    email: String!
+    password: String!
+    firstName: String!
+  ): RegisterPayload!
 }
+
+union RegisterPayload = ValidationError | SuccessResponse

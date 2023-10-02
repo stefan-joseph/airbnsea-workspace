@@ -34,11 +34,6 @@ export declare enum AuthorizationServer {
     Github = "GITHUB",
     Google = "GOOGLE"
 }
-export declare type BadCredentialsError = {
-    __typename?: 'BadCredentialsError';
-    field: Scalars['String'];
-    message: Scalars['String'];
-};
 export declare type Booking = {
     __typename?: 'Booking';
     end: Scalars['String'];
@@ -56,7 +51,7 @@ export declare type BookingInput = {
     guests: Scalars['Int'];
     start: Scalars['String'];
 };
-export declare type CheckEmailPayload = BadCredentialsError | EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail;
+export declare type CheckEmailPayload = EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail | ValidationError;
 export declare type Conversation = {
     __typename?: 'Conversation';
     conversationId: Scalars['ID'];
@@ -163,11 +158,7 @@ export declare type ListingInfo = {
     rating?: Maybe<Scalars['Float']>;
     vesselType?: Maybe<VesselType>;
 };
-export declare type LoginResponse = {
-    __typename?: 'LoginResponse';
-    errors?: Maybe<Array<Error>>;
-    sessionId?: Maybe<Scalars['String']>;
-};
+export declare type LoginPayload = SuccessResponse | ValidationError;
 export declare type Me = {
     __typename?: 'Me';
     avatar?: Maybe<Scalars['String']>;
@@ -183,10 +174,10 @@ export declare type Mutation = {
     createListing: Scalars['ID'];
     createMessage: Scalars['ID'];
     deleteListing: Scalars['Boolean'];
-    login: LoginResponse;
-    loginAsRandomUser: LoginResponse;
+    login: LoginPayload;
+    loginAsRandomUser: Scalars['Boolean'];
     logout?: Maybe<Scalars['Boolean']>;
-    register?: Maybe<Array<Error>>;
+    register: RegisterPayload;
     resetPassword?: Maybe<Array<Error>>;
     sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
     updateListing?: Maybe<Scalars['ID']>;
@@ -295,6 +286,7 @@ export declare type Redirect = {
     __typename?: 'Redirect';
     redirect: Scalars['String'];
 };
+export declare type RegisterPayload = SuccessResponse | ValidationError;
 export declare type SearchListingResult = {
     __typename?: 'SearchListingResult';
     beds: Scalars['Int'];
@@ -341,6 +333,10 @@ export declare type Subscription = {
 export declare type SubscriptionNewMessageArgs = {
     conversationId: Scalars['String'];
 };
+export declare type SuccessResponse = {
+    __typename?: 'SuccessResponse';
+    success: Scalars['Boolean'];
+};
 export declare type UpdateListingFields = {
     address?: InputMaybe<Address>;
     name?: InputMaybe<Scalars['String']>;
@@ -352,6 +348,11 @@ export declare type User = {
     avatar?: Maybe<Scalars['String']>;
     firstName?: Maybe<Scalars['String']>;
     lastName?: Maybe<Scalars['String']>;
+};
+export declare type ValidationError = {
+    __typename?: 'ValidationError';
+    field: Scalars['String'];
+    message: Scalars['String'];
 };
 export declare enum VesselType {
     Catamaran = "catamaran",
@@ -366,10 +367,6 @@ export declare type CheckEmailQueryVariables = Exact<{
 export declare type CheckEmailQuery = {
     __typename?: 'Query';
     checkEmail: {
-        __typename?: 'BadCredentialsError';
-        field: string;
-        message: string;
-    } | {
         __typename?: 'EmailExistsWithOAuth';
         authorizationServer: AuthorizationServer;
         email: string;
@@ -383,6 +380,10 @@ export declare type CheckEmailQuery = {
         __typename?: 'NoUserWithThisEmail';
         email: string;
         userExists: boolean;
+    } | {
+        __typename?: 'ValidationError';
+        field: string;
+        message: string;
     };
 };
 export declare type ConfirmEmailMutationVariables = Exact<{
@@ -406,13 +407,12 @@ export declare type LoginUserMutationVariables = Exact<{
 export declare type LoginUserMutation = {
     __typename?: 'Mutation';
     login: {
-        __typename?: 'LoginResponse';
-        sessionId?: string | null;
-        errors?: Array<{
-            __typename?: 'Error';
-            path: string;
-            message: string;
-        }> | null;
+        __typename?: 'SuccessResponse';
+        success: boolean;
+    } | {
+        __typename?: 'ValidationError';
+        field: string;
+        message: string;
     };
 };
 export declare type LogoutUserMutationVariables = Exact<{
@@ -447,11 +447,14 @@ export declare type RegisterUserMutationVariables = Exact<{
 }>;
 export declare type RegisterUserMutation = {
     __typename?: 'Mutation';
-    register?: Array<{
-        __typename?: 'Error';
-        path: string;
+    register: {
+        __typename?: 'SuccessResponse';
+        success: boolean;
+    } | {
+        __typename?: 'ValidationError';
+        field: string;
         message: string;
-    }> | null;
+    };
 };
 export declare type ResetPasswordMutationVariables = Exact<{
     newPassword: Scalars['String'];
@@ -470,15 +473,7 @@ export declare type LoginAsRandomUserMutationVariables = Exact<{
 }>;
 export declare type LoginAsRandomUserMutation = {
     __typename?: 'Mutation';
-    loginAsRandomUser: {
-        __typename?: 'LoginResponse';
-        sessionId?: string | null;
-        errors?: Array<{
-            __typename?: 'Error';
-            path: string;
-            message: string;
-        }> | null;
-    };
+    loginAsRandomUser: boolean;
 };
 export declare type CreateBookingMutationVariables = Exact<{
     listingId: Scalars['String'];

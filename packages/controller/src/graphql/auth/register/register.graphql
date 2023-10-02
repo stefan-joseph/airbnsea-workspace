@@ -4,7 +4,12 @@ mutation RegisterUser(
   $firstName: String!
 ) {
   register(email: $email, password: $password, firstName: $firstName) {
-    path
-    message
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
+      message
+    }
   }
 }

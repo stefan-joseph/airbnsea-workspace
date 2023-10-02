@@ -8,57 +8,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
-const User_1 = require("../../../entity/User");
 const bcryptjs_1 = require("bcryptjs");
+const common_1 = require("@airbnb-clone/common");
+const User_1 = require("../../../entity/User");
 const errorMessages_1 = require("./errorMessages");
 const constants_1 = require("../../../utils/constants");
-const errorResponse = [
-    {
-        path: "email",
-        message: errorMessages_1.invalidLogin,
-    },
-];
+const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaError");
+const formatYupError_1 = __importDefault(require("../../shared/utils/formatYupError"));
 exports.resolvers = {
     Mutation: {
-        login: (_, { email, password }, { redis, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            let user;
-            if (email) {
-                user = yield User_1.User.findOne({ where: { email: email.toLowerCase() } });
+        login: (_, args, { redis, req }) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                yield common_1.loginSchema.validate(args);
             }
+            catch (error) {
+                return Object.assign({ __typename: "ValidationError" }, (0, formatYupError_1.default)(error));
+            }
+            const { email, password } = args;
+            const user = yield User_1.User.findOne({
+                where: { email: email.toLowerCase() },
+            });
             if (!user) {
-                return { errors: errorResponse };
+                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.invalidCredentails);
             }
             if (!user.confirmed) {
-                return {
-                    errors: [
-                        {
-                            path: "email",
-                            message: errorMessages_1.confirmEmailError,
-                        },
-                    ],
-                };
-            }
-            if (user.forgotPasswordLocked) {
-                return {
-                    errors: [
-                        {
-                            path: "email",
-                            message: errorMessages_1.forgotPasswordLockedError,
-                        },
-                    ],
-                };
+                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.confirmEmailError);
             }
             const validPassword = yield (0, bcryptjs_1.compare)(password, user.password);
             if (!validPassword) {
-                return { errors: errorResponse };
+                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.invalidCredentails);
             }
             req.session.userId = user.id;
             if (req.sessionID) {
                 yield redis.lpush(`${constants_1.userSessionIdPrefix}${user.id}`, req.sessionID);
             }
-            return { sessionId: req.sessionID };
+            return { __typename: "SuccessResponse", success: true };
         }),
     },
 };

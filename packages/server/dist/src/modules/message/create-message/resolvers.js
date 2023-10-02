@@ -34,7 +34,7 @@ exports.resolvers = {
                 yield common_1.messageSchema.validate(args);
             }
             catch (error) {
-                return (0, formatYupError_1.formatYupError)(error);
+                return (0, formatYupError_1.formatYupGraphQLError)(error);
             }
             const fromHost = userId === userIdOfHost ? true : false;
             const dbMessage = yield Message_1.Message.create({

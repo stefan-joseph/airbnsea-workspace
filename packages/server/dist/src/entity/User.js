@@ -77,7 +77,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)("boolean", { default: false }),
     __metadata("design:type", Boolean)
-], User.prototype, "forgotPasswordLocked", void 0);
+], User.prototype, "locked", void 0);
 __decorate([
     (0, typeorm_1.Column)("text", { nullable: true }),
     __metadata("design:type", Object)

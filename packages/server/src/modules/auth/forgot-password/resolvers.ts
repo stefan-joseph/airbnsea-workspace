@@ -3,12 +3,12 @@ import { hash } from "bcryptjs";
 import { Resolvers } from "../../../types/types";
 import { forgotPasswordPrefix } from "../../../utils/constants";
 import { createForgotPasswordLink } from "../../../utils/createForgotPasswordLink";
-import { forgotPasswordLockAccount } from "../../../utils/forgotPasswordLockAccount";
 import { expiredKeyError } from "./errorMessages";
 import * as yup from "yup";
 import { formatYupError } from "../../../utils/formatYupError";
 import { sendEmail } from "../../../utils/sendEmail";
 import { resetPasswordSchema } from "@airbnb-clone/common";
+import { removeAllOfUsersSessions } from "../../../utils/removeAllOfUsersSessions";
 
 export const resolvers: Resolvers = {
   Mutation: {
@@ -21,7 +21,8 @@ export const resolvers: Resolvers = {
       // if no user with inputted email then return same response so as
       // to not concede whether that email is associeted with a user
 
-      await forgotPasswordLockAccount(user.id, redis);
+      // remove all sessions
+      await removeAllOfUsersSessions(user.id, redis);
 
       const url = await createForgotPasswordLink(
         process.env.FRONTEND_HOST as string,
@@ -60,7 +61,6 @@ export const resolvers: Resolvers = {
       const updateUserPromise = User.update(
         { id: userId },
         {
-          forgotPasswordLocked: false,
           password: hashedPassword,
         }
       );

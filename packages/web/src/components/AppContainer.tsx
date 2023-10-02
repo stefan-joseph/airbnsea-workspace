@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, Stack, useMediaQuery } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import {
   bottomNavbarHeight,
@@ -21,13 +21,10 @@ export const AppContainer = ({
   const location = useLocation();
   const matches = useMediaQuery(desktopMinWidth);
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        mt: !matches && withoutSearch ? undefined : `${searchBarHeight}px`,
-        mb: !matches ? `${bottomNavbarHeight}px` : undefined,
-      }}
+    <Stack
+      flexDirection="column"
+      mt={!matches && withoutSearch ? undefined : `${searchBarHeight}px`}
+      mb={!matches ? `${bottomNavbarHeight}px` : "46.2px"}
     >
       <Navbar withoutSearch={!!withoutSearch} />
       {children}
@@ -37,6 +34,6 @@ export const AppContainer = ({
           <SiteMap />
         </Box>
       )}
-    </Box>
+    </Stack>
   );
 };

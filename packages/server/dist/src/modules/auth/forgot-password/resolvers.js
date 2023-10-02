@@ -14,11 +14,11 @@ const User_1 = require("../../../entity/User");
 const bcryptjs_1 = require("bcryptjs");
 const constants_1 = require("../../../utils/constants");
 const createForgotPasswordLink_1 = require("../../../utils/createForgotPasswordLink");
-const forgotPasswordLockAccount_1 = require("../../../utils/forgotPasswordLockAccount");
 const errorMessages_1 = require("./errorMessages");
 const formatYupError_1 = require("../../../utils/formatYupError");
 const sendEmail_1 = require("../../../utils/sendEmail");
 const common_1 = require("@airbnb-clone/common");
+const removeAllOfUsersSessions_1 = require("../../../utils/removeAllOfUsersSessions");
 exports.resolvers = {
     Mutation: {
         sendForgotPasswordEmail: (_, { email }, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,7 +29,7 @@ exports.resolvers = {
             });
             if (!user)
                 return true;
-            yield (0, forgotPasswordLockAccount_1.forgotPasswordLockAccount)(user.id, redis);
+            yield (0, removeAllOfUsersSessions_1.removeAllOfUsersSessions)(user.id, redis);
             const url = yield (0, createForgotPasswordLink_1.createForgotPasswordLink)(process.env.FRONTEND_HOST, user.id, redis);
             yield (0, sendEmail_1.sendEmail)(email, url, "Click here to reset your password");
             return true;
@@ -53,7 +53,6 @@ exports.resolvers = {
             }
             const hashedPassword = yield (0, bcryptjs_1.hash)(newPassword, 10);
             const updateUserPromise = User_1.User.update({ id: userId }, {
-                forgotPasswordLocked: false,
                 password: hashedPassword,
             });
             const deleteKeyPromise = redis.del(redisKey);

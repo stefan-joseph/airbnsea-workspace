@@ -25,7 +25,7 @@ exports.resolvers = {
             if (req.sessionID) {
                 yield redis.lpush(`${constants_1.userSessionIdPrefix}${randomUser.id}`, req.sessionID);
             }
-            return { sessionId: req.sessionID };
+            return true;
         }),
     },
 };

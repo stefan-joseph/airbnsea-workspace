@@ -1,26 +1,20 @@
-import * as yup from "yup";
+import { ValidationError } from "yup";
 import { User } from "../../../entity/User";
 import { Resolvers } from "../../../types/types";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
 import { checkEmailSchema } from "@airbnb-clone/common";
-// import { formatYupError } from "../../shared/utils/formatYupError";
-// import { GraphQLError } from "graphql";
+import formatYupError from "../../shared/utils/formatYupError";
 
 export const resolvers: Resolvers = {
   Query: {
     checkEmail: async (_, { email }) => {
       // yup validation
       try {
-        await checkEmailSchema.validate({ email }, { abortEarly: false });
+        await checkEmailSchema.validate({ email });
       } catch (error) {
-        const formatYupError = (error: yup.ValidationError) => {
-          const { message, path } = error.inner[0];
-          return { message, field: path as string };
-        };
         return {
-          __typename: "BadCredentialsError",
-
-          ...formatYupError(error as yup.ValidationError),
+          __typename: "ValidationError",
+          ...formatYupError(error as ValidationError),
         };
       }
 

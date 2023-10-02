@@ -1,0 +1,108 @@
+import { useState } from "react";
+import { ButtonBase, Stack, Typography } from "@mui/material";
+import { Field, Form, Formik } from "formik";
+import { useRegisterUserMutation } from "@airbnb-clone/controller";
+import { registerUserSchema } from "@airbnb-clone/common";
+
+import { TextInput2 } from "../../../components/fields/TextInput2";
+import { Steps } from "../Auth";
+import AuthFormContainer from "../components/AuthFormContainer";
+import { IoCheckmarkCircle } from "react-icons/io5";
+import { theme } from "../../../MuiTheme";
+import LoadingButton from "../../../components/LoadingButton";
+
+export default function SignUpForm({
+  email,
+  setAuthStep,
+}: {
+  email: string;
+  setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
+}) {
+  const [signUpComplete, setSignUpComplete] = useState(false);
+
+  const [registerUserMutation, { error, loading }] = useRegisterUserMutation();
+
+  if (signUpComplete) {
+    return (
+      <AuthFormContainer
+        header="Your account has been created!"
+        HeaderIcon={
+          <IoCheckmarkCircle size={26} color={theme.palette.success.main} />
+        }
+        title="Please confirm your email"
+        setAuthStep={setAuthStep}
+      >
+        <Typography>
+          An email has been sent to the email address provided.
+        </Typography>
+        <Typography mt={2}>
+          Please follow the link in the email to confirm your Airbnsea account.
+          You will need to do this before logging in.
+        </Typography>
+        <Stack alignSelf="flex-start" mt={6}>
+          <ButtonBase
+            onClick={() => setAuthStep(Steps.DEFAULT)}
+            sx={{ fontSize: 16, textDecoration: "underline", fontWeight: 600 }}
+          >
+            Return to login
+          </ButtonBase>
+        </Stack>
+      </AuthFormContainer>
+    );
+  }
+  return (
+    <AuthFormContainer
+      header="Finish signing up"
+      setAuthStep={setAuthStep}
+      error={error?.message}
+      back
+    >
+      <Formik
+        initialValues={{
+          firstName: "",
+          email,
+          password: "",
+        }}
+        validationSchema={registerUserSchema}
+        validateOnBlur={false}
+        validateOnChange={false}
+        onSubmit={async (values, { setFieldError }) => {
+          const { data } = await registerUserMutation({ variables: values });
+          console.log("data", data);
+          console.log("error", error);
+
+          if (!data) return;
+          const { register } = data;
+          const { __typename } = register;
+
+          if (__typename == "ValidationError") {
+            const { field, message } = register;
+            setFieldError(field, message);
+          } else if (__typename == "SuccessResponse") {
+            register.success && setSignUpComplete(true);
+          }
+        }}
+      >
+        {() => (
+          <Stack component={Form} gap={3}>
+            <Field name="firstName" label="First name" component={TextInput2} />
+            <Field name="email" label="Email" component={TextInput2} />
+            <Field
+              name="password"
+              type="password"
+              label="Password"
+              component={TextInput2}
+            />
+            <Typography fontSize="0.75rem">
+              By selecting <b>Agree and continue</b>, I agree to Airbnsea’s
+              Terms of Service, Payments Terms of Service, and Nondiscrimination
+              Policy and acknowledge the Privacy Policy.
+            </Typography>
+
+            <LoadingButton text="Agree and continue" loading={loading} />
+          </Stack>
+        )}
+      </Formik>
+    </AuthFormContainer>
+  );
+}

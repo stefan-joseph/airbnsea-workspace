@@ -3,7 +3,7 @@ import {
   useRegisterUserMutation,
 } from "../../../generated/graphql-hooks";
 import { NormalizedErrorMap } from "../../../types/NormalizedErrorMap";
-import { normalizeErrors } from "../../../utils/normalizeErrors";
+// import { normalizeErrors } from "../../../utils/normalizeErrors";
 
 interface Props {
   children: (data: {
@@ -22,7 +22,7 @@ export const RegisterController = (props: Props) => {
     console.log(data?.register);
 
     if (data?.register) {
-      return normalizeErrors(data.register);
+      // return normalizeErrors(data.register);
     }
 
     return null;

@@ -17,10 +17,8 @@ const User_1 = require("../../../entity/User");
 const TestClient_1 = require("../../shared/test-utils/TestClient");
 const createForgotPasswordLink_1 = require("../../../utils/createForgotPasswordLink");
 const createTypeormConnection_1 = require("../../../utils/createTypeormConnection");
-const forgotPasswordLockAccount_1 = require("../../../utils/forgotPasswordLockAccount");
-const errorMessages_1 = require("../login/errorMessages");
 const common_1 = require("@airbnb-clone/common");
-const errorMessages_2 = require("./errorMessages");
+const errorMessages_1 = require("./errorMessages");
 let userId;
 const redis = new ioredis_1.default();
 const email = "bob@bob.com";
@@ -40,26 +38,10 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 describe("forgot password", () => {
     const client = new TestClient_1.TestClient("graphql");
     let key;
-    test("make sure user cannot log in after starting process", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, forgotPasswordLockAccount_1.forgotPasswordLockAccount)(userId, redis);
+    test("try changing password to something invalid", () => __awaiter(void 0, void 0, void 0, function* () {
         const url = yield (0, createForgotPasswordLink_1.createForgotPasswordLink)("", userId, redis);
         const urlChunks = url.split("/");
         key = urlChunks[urlChunks.length - 1];
-        expect(yield client.login(email, password)).toEqual({
-            data: {
-                login: {
-                    errors: [
-                        {
-                            path: "email",
-                            message: errorMessages_1.forgotPasswordLockedError,
-                        },
-                    ],
-                    sessionId: null,
-                },
-            },
-        });
-    }));
-    test("try changing password to something invalid", () => __awaiter(void 0, void 0, void 0, function* () {
         expect(yield client.resetPassword("short", key)).toEqual({
             data: {
                 resetPassword: [
@@ -83,7 +65,7 @@ describe("forgot password", () => {
                 resetPassword: [
                     {
                         path: "newPassword",
-                        message: errorMessages_2.expiredKeyError,
+                        message: errorMessages_1.expiredKeyError,
                     },
                 ],
             },
@@ -91,8 +73,7 @@ describe("forgot password", () => {
     }));
     test("user can log in with new password", () => __awaiter(void 0, void 0, void 0, function* () {
         const { data } = yield client.login(email, newPassword);
-        expect(data.login.errors).toBeNull();
-        expect(data.login.sessionId).toBeTruthy();
+        expect(data.login.success).toEqual(true);
     }));
 });
 //# sourceMappingURL=forgotPassword.test.js.map

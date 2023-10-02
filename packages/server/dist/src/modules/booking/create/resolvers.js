@@ -36,7 +36,7 @@ exports.resolvers = {
                 yield common_1.bookingSchema.validate(input);
             }
             catch (error) {
-                return (0, formatYupError_1.formatYupError)(error);
+                return (0, formatYupError_1.formatYupGraphQLError)(error);
             }
             const listing = yield Listing_1.Listing.findOne({ where: { id: listingId } });
             if (!listing) {

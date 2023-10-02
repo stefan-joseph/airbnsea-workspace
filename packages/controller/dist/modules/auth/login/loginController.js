@@ -11,13 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginController = void 0;
 const graphql_hooks_1 = require("../../../generated/graphql-hooks");
-const normalizeErrors_1 = require("../../../utils/normalizeErrors");
 const LoginController = (props) => {
     const [loginUserMutation, { client }] = (0, graphql_hooks_1.useLoginUserMutation)();
     const submit = (values) => __awaiter(void 0, void 0, void 0, function* () {
         const { data } = yield loginUserMutation({ variables: values });
-        if (data === null || data === void 0 ? void 0 : data.login.errors) {
-            return (0, normalizeErrors_1.normalizeErrors)(data.login.errors);
+        if (data === null || data === void 0 ? void 0 : data.login) {
+            console.log("cahnged this, no longer valid response shape");
         }
         yield client.resetStore();
         return null;

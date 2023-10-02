@@ -48,7 +48,7 @@ export class User extends BaseEntity {
   confirmed: boolean;
 
   @Column("boolean", { default: false })
-  forgotPasswordLocked: boolean;
+  locked: boolean;
 
   @Column("text", { nullable: true })
   facebookId: string | null;

@@ -5,7 +5,7 @@ import { Message } from "../../../entity/Message";
 import { Resolvers } from "../../../types/types";
 import { formatNotFoundWithGivenIdErrorMessage } from "../../shared/utils/errorMessages";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
-import { formatYupError } from "../../shared/utils/formatYupError";
+import { formatYupGraphQLError } from "../../shared/utils/formatYupError";
 import { noPermissionToParticipateInConversationErrorMessage } from "./utils/errorMessages";
 
 export const resolvers: Resolvers = {
@@ -46,7 +46,7 @@ export const resolvers: Resolvers = {
       try {
         await messageSchema.validate(args);
       } catch (error) {
-        return formatYupError(error as ValidationError);
+        return formatYupGraphQLError(error as ValidationError);
       }
 
       const fromHost = userId === userIdOfHost ? true : false;

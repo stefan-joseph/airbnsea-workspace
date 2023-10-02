@@ -1,9 +1,11 @@
 mutation LoginUser($email: String!, $password: String!) {
   login(email: $email, password: $password) {
-    errors {
-      path
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
       message
     }
-    sessionId
   }
 }

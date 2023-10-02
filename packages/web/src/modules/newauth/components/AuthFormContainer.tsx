@@ -1,19 +1,27 @@
 import { IconButton, Stack, Typography } from "@mui/material";
-import { borderRadius } from "../../../constants/constants";
 import { IoChevronBack } from "react-icons/io5";
+
+import { borderRadius } from "../../../constants/constants";
 import { Steps } from "../Auth";
+import TransitionAlerts from "./TransitionAlerts";
 
 export default function AuthFormContainer({
   children,
+  header,
+  HeaderIcon,
   title,
-  welcome,
+  subtitle,
   back,
+  error,
   setAuthStep,
 }: {
   children: JSX.Element | JSX.Element[];
-  title: string;
-  welcome?: boolean;
+  header: string;
+  HeaderIcon?: JSX.Element;
+  title?: string;
+  subtitle?: JSX.Element;
   back?: boolean;
+  error?: string;
   setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
   return (
@@ -34,17 +42,30 @@ export default function AuthFormContainer({
               <IoChevronBack />
             </IconButton>
           )}
-          <Typography component="h2" fontWeight={600} m="auto">
-            {title}
-          </Typography>
+          <Stack flexDirection="row" alignItems="center" m="auto" gap={1}>
+            {HeaderIcon}
+            <Typography component="h2" fontWeight={600}>
+              {header}
+            </Typography>
+          </Stack>
         </Stack>
       </Stack>
       <Stack p={4}>
-        {welcome && (
+        {title && (
           <Stack pt={1} pb={2}>
             <Typography component="h3" variant="h5" gutterBottom>
-              Welcome to Airbnsea
+              {title}
             </Typography>
+            {subtitle && (
+              <Stack pt={1} pb={2}>
+                {subtitle}
+              </Stack>
+            )}
+          </Stack>
+        )}
+        {error && (
+          <Stack mb={3}>
+            <TransitionAlerts severity="error" text={error} />
           </Stack>
         )}
         {children}

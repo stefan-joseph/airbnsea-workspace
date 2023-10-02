@@ -23,12 +23,8 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/register",
-    element: <RegisterConnector />,
-  },
-  {
     path: "/login",
-    element: <LoginConnector />,
+    element: <Auth />,
   },
   {
     path: "/logout",
@@ -49,10 +45,6 @@ export const router = createBrowserRouter([
   {
     path: "auth/github",
     element: <OauthGithub />,
-  },
-  {
-    path: "login-new",
-    element: <Auth />,
   },
   {
     path: "/listing/:listingId/view",

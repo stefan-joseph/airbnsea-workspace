@@ -1,15 +1,20 @@
-import { Button, Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import { TextInput2 } from "../../../components/fields/TextInput2";
-import { useCheckEmailLazyQuery } from "@airbnb-clone/controller";
-import { checkEmailSchema } from "@airbnb-clone/common";
-import TransitionAlerts from "./TransitionAlerts";
-import OrDivider from "./OrDivider";
-import OauthLink from "./OauthLink";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import AuthFormContainer from "./AuthFormContainer";
+import {
+  useCheckEmailLazyQuery,
+  useLoginAsRandomUserMutation,
+} from "@airbnb-clone/controller";
+import { checkEmailSchema } from "@airbnb-clone/common";
+
+import { TextInput2 } from "../../../components/fields/TextInput2";
+import OrDivider from "../components/OrDivider";
+import OauthLink from "../components/OauthLink";
+import AuthFormContainer from "../components/AuthFormContainer";
 import { Steps, User } from "../Auth";
+import TestUserButton from "../components/TestUserButton";
+import LoadingButton from "../../../components/LoadingButton";
 
 export default function EmailForm({
   user,
@@ -20,14 +25,24 @@ export default function EmailForm({
   setUser: React.Dispatch<React.SetStateAction<User>>;
   setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
-  const [checkEmailLazyQuery, { data, error, loading }] =
-    useCheckEmailLazyQuery();
+  const [checkEmailLazyQuery, { error, loading }] = useCheckEmailLazyQuery();
+
+  const [loginAsRandomUserMutation, { error: error2, loading: loading2 }] =
+    useLoginAsRandomUserMutation();
 
   return (
     <AuthFormContainer
-      title="Log in or sign up"
-      welcome
+      header="Log in or sign up"
+      title="Welcome to Airbnsea"
+      subtitle={
+        <Typography fontSize={14}>
+          If you'd like to try out the application without signing up, click{" "}
+          <b>Continue as test user</b> below to sign in to an auto-generated
+          account.
+        </Typography>
+      }
       setAuthStep={setAuthStep}
+      error={error?.message || error2?.message}
     >
       <Formik
         initialValues={{
@@ -36,27 +51,21 @@ export default function EmailForm({
         validationSchema={checkEmailSchema}
         validateOnBlur={false}
         validateOnChange={false}
-        onSubmit={async (values, { setSubmitting, setFieldError }) => {
-          const { data, error } = await checkEmailLazyQuery({
-            variables: values,
+        onSubmit={async ({ email }, { setSubmitting, setFieldError }) => {
+          // setSubmitting(true);
+          // for (let step = 0; step < 9999999999; step++) {}
+          const { data } = await checkEmailLazyQuery({
+            variables: { email: email.trim() },
           });
-
-          if (error) {
-            console.log(error);
-            return;
-          }
 
           if (!data) return;
           const { checkEmail } = data;
           const { __typename } = checkEmail;
 
-          if (__typename === "BadCredentialsError") {
+          if (__typename === "ValidationError") {
             const { field, message } = checkEmail;
             setFieldError(field, message);
-            return;
-          }
-
-          if (__typename === "EmailExistsWithOAuth") {
+          } else if (__typename === "EmailExistsWithOAuth") {
             const { authorizationServer, email, firstName, avatar } =
               checkEmail;
             setAuthStep(Steps.OAUTH);
@@ -77,20 +86,10 @@ export default function EmailForm({
           }
         }}
       >
-        {({ isSubmitting }) => (
+        {() => (
           <Stack component={Form} gap={3}>
-            {error && (
-              <TransitionAlerts severity="error" text={error.message} />
-            )}
             <Field name="email" label="Email" component={TextInput2} />
-            <Button
-              disabled={isSubmitting}
-              variant="contained"
-              type="submit"
-              color="primary"
-            >
-              Continue
-            </Button>
+            <LoadingButton text="Continue" loading={loading || loading2} />
           </Stack>
         )}
       </Formik>
@@ -106,6 +105,7 @@ export default function EmailForm({
           text="Continue with Github"
           Icon={FaGithub}
         />
+        <TestUserButton handleClick={loginAsRandomUserMutation} />
       </Stack>
     </AuthFormContainer>
   );

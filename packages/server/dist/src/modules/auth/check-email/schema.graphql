@@ -6,16 +6,7 @@ union CheckEmailPayload =
     EmailExistsWithPassword
   | EmailExistsWithOAuth
   | NoUserWithThisEmail
-  | BadCredentialsError
-
-# interface Errors {
-#   message: String!
-# }
-
-type BadCredentialsError {
-  message: String!
-  field: String!
-}
+  | ValidationError
 
 type EmailExistsWithPassword {
   email: String!

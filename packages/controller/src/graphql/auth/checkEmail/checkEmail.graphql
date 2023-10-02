@@ -14,7 +14,7 @@ query CheckEmail($email: String!) {
       email
       userExists
     }
-    ... on BadCredentialsError {
+    ... on ValidationError {
       field
       message
     }

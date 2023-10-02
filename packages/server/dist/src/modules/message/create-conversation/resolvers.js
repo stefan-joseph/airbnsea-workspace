@@ -37,7 +37,7 @@ exports.resolvers = {
                 yield common_1.messageSchema.validate(args);
             }
             catch (error) {
-                return (0, formatYupError_1.formatYupError)(error);
+                return (0, formatYupError_1.formatYupGraphQLError)(error);
             }
             const existingConversation = yield Message_1.Message.findOne({
                 where: { listingId, userIdOfGuest: userId },

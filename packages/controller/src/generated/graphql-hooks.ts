@@ -32,12 +32,6 @@ export enum AuthorizationServer {
   Google = 'GOOGLE'
 }
 
-export type BadCredentialsError = {
-  __typename?: 'BadCredentialsError';
-  field: Scalars['String'];
-  message: Scalars['String'];
-};
-
 export type Booking = {
   __typename?: 'Booking';
   end: Scalars['String'];
@@ -57,7 +51,7 @@ export type BookingInput = {
   start: Scalars['String'];
 };
 
-export type CheckEmailPayload = BadCredentialsError | EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail;
+export type CheckEmailPayload = EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail | ValidationError;
 
 export type Conversation = {
   __typename?: 'Conversation';
@@ -177,11 +171,7 @@ export type ListingInfo = {
   vesselType?: Maybe<VesselType>;
 };
 
-export type LoginResponse = {
-  __typename?: 'LoginResponse';
-  errors?: Maybe<Array<Error>>;
-  sessionId?: Maybe<Scalars['String']>;
-};
+export type LoginPayload = SuccessResponse | ValidationError;
 
 export type Me = {
   __typename?: 'Me';
@@ -199,10 +189,10 @@ export type Mutation = {
   createListing: Scalars['ID'];
   createMessage: Scalars['ID'];
   deleteListing: Scalars['Boolean'];
-  login: LoginResponse;
-  loginAsRandomUser: LoginResponse;
+  login: LoginPayload;
+  loginAsRandomUser: Scalars['Boolean'];
   logout?: Maybe<Scalars['Boolean']>;
-  register?: Maybe<Array<Error>>;
+  register: RegisterPayload;
   resetPassword?: Maybe<Array<Error>>;
   sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
   updateListing?: Maybe<Scalars['ID']>;
@@ -357,6 +347,8 @@ export type Redirect = {
   redirect: Scalars['String'];
 };
 
+export type RegisterPayload = SuccessResponse | ValidationError;
+
 export type SearchListingResult = {
   __typename?: 'SearchListingResult';
   beds: Scalars['Int'];
@@ -411,6 +403,11 @@ export type SubscriptionNewMessageArgs = {
   conversationId: Scalars['String'];
 };
 
+export type SuccessResponse = {
+  __typename?: 'SuccessResponse';
+  success: Scalars['Boolean'];
+};
+
 export type UpdateListingFields = {
   address?: InputMaybe<Address>;
   name?: InputMaybe<Scalars['String']>;
@@ -423,6 +420,12 @@ export type User = {
   avatar?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
+};
+
+export type ValidationError = {
+  __typename?: 'ValidationError';
+  field: Scalars['String'];
+  message: Scalars['String'];
 };
 
 export enum VesselType {
@@ -439,7 +442,7 @@ export type CheckEmailQueryVariables = Exact<{
 }>;
 
 
-export type CheckEmailQuery = { __typename?: 'Query', checkEmail: { __typename?: 'BadCredentialsError', field: string, message: string } | { __typename?: 'EmailExistsWithOAuth', authorizationServer: AuthorizationServer, email: string, firstName: string, avatar?: string | null } | { __typename?: 'EmailExistsWithPassword', email: string, userExists: boolean } | { __typename?: 'NoUserWithThisEmail', email: string, userExists: boolean } };
+export type CheckEmailQuery = { __typename?: 'Query', checkEmail: { __typename?: 'EmailExistsWithOAuth', authorizationServer: AuthorizationServer, email: string, firstName: string, avatar?: string | null } | { __typename?: 'EmailExistsWithPassword', email: string, userExists: boolean } | { __typename?: 'NoUserWithThisEmail', email: string, userExists: boolean } | { __typename?: 'ValidationError', field: string, message: string } };
 
 export type ConfirmEmailMutationVariables = Exact<{
   id: Scalars['String'];
@@ -461,7 +464,7 @@ export type LoginUserMutationVariables = Exact<{
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', sessionId?: string | null, errors?: Array<{ __typename?: 'Error', path: string, message: string }> | null } };
+export type LoginUserMutation = { __typename?: 'Mutation', login: { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'ValidationError', field: string, message: string } };
 
 export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -487,7 +490,7 @@ export type RegisterUserMutationVariables = Exact<{
 }>;
 
 
-export type RegisterUserMutation = { __typename?: 'Mutation', register?: Array<{ __typename?: 'Error', path: string, message: string }> | null };
+export type RegisterUserMutation = { __typename?: 'Mutation', register: { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'ValidationError', field: string, message: string } };
 
 export type ResetPasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -500,7 +503,7 @@ export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword?: A
 export type LoginAsRandomUserMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LoginAsRandomUserMutation = { __typename?: 'Mutation', loginAsRandomUser: { __typename?: 'LoginResponse', sessionId?: string | null, errors?: Array<{ __typename?: 'Error', path: string, message: string }> | null } };
+export type LoginAsRandomUserMutation = { __typename?: 'Mutation', loginAsRandomUser: boolean };
 
 export type CreateBookingMutationVariables = Exact<{
   listingId: Scalars['String'];
@@ -608,7 +611,7 @@ export const CheckEmailDocument = gql`
       email
       userExists
     }
-    ... on BadCredentialsError {
+    ... on ValidationError {
       field
       message
     }
@@ -708,11 +711,13 @@ export type SendForgotPasswordEmailMutationOptions = Apollo.BaseMutationOptions<
 export const LoginUserDocument = gql`
     mutation LoginUser($email: String!, $password: String!) {
   login(email: $email, password: $password) {
-    errors {
-      path
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
       message
     }
-    sessionId
   }
 }
     `;
@@ -842,8 +847,13 @@ export type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOption
 export const RegisterUserDocument = gql`
     mutation RegisterUser($email: String!, $password: String!, $firstName: String!) {
   register(email: $email, password: $password, firstName: $firstName) {
-    path
-    message
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
+      message
+    }
   }
 }
     `;
@@ -912,13 +922,7 @@ export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMut
 export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
 export const LoginAsRandomUserDocument = gql`
     mutation LoginAsRandomUser {
-  loginAsRandomUser {
-    errors {
-      path
-      message
-    }
-    sessionId
-  }
+  loginAsRandomUser
 }
     `;
 export type LoginAsRandomUserMutationFn = Apollo.MutationFunction<LoginAsRandomUserMutation, LoginAsRandomUserMutationVariables>;

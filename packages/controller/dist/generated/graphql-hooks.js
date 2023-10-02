@@ -65,7 +65,7 @@ exports.CheckEmailDocument = (0, client_1.gql) `
       email
       userExists
     }
-    ... on BadCredentialsError {
+    ... on ValidationError {
       field
       message
     }
@@ -105,11 +105,13 @@ exports.useSendForgotPasswordEmailMutation = useSendForgotPasswordEmailMutation;
 exports.LoginUserDocument = (0, client_1.gql) `
     mutation LoginUser($email: String!, $password: String!) {
   login(email: $email, password: $password) {
-    errors {
-      path
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
       message
     }
-    sessionId
   }
 }
     `;
@@ -159,8 +161,13 @@ exports.useAuthenticateUserWithOauthMutation = useAuthenticateUserWithOauthMutat
 exports.RegisterUserDocument = (0, client_1.gql) `
     mutation RegisterUser($email: String!, $password: String!, $firstName: String!) {
   register(email: $email, password: $password, firstName: $firstName) {
-    path
-    message
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
+      message
+    }
   }
 }
     `;
@@ -184,13 +191,7 @@ function useResetPasswordMutation(baseOptions) {
 exports.useResetPasswordMutation = useResetPasswordMutation;
 exports.LoginAsRandomUserDocument = (0, client_1.gql) `
     mutation LoginAsRandomUser {
-  loginAsRandomUser {
-    errors {
-      path
-      message
-    }
-    sessionId
-  }
+  loginAsRandomUser
 }
     `;
 function useLoginAsRandomUserMutation(baseOptions) {

@@ -1,11 +1,9 @@
-// import {} from "@apollo/client";
-
 import {
   LoginUserMutationVariables,
   useLoginUserMutation,
 } from "../../../generated/graphql-hooks";
 import { NormalizedErrorMap } from "../../../types/NormalizedErrorMap";
-import { normalizeErrors } from "../../../utils/normalizeErrors";
+// import { normalizeErrors } from "../../../utils/normalizeErrors";
 
 interface Props {
   onSessionId?: (sessionId: string) => void;
@@ -21,8 +19,9 @@ export const LoginController = (props: Props) => {
   const submit = async (values: LoginUserMutationVariables) => {
     const { data } = await loginUserMutation({ variables: values });
 
-    if (data?.login.errors) {
-      return normalizeErrors(data.login.errors);
+    if (data?.login) {
+      console.log("cahnged this, no longer valid response shape");
+      // return normalizeErrors(data.login.errors);
     }
 
     await client.resetStore();

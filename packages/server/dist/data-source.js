@@ -21,7 +21,7 @@ const optionsPROD = {
     url: process.env.DATABASE_URL,
     synchronize: true,
     logging: false,
-    dropSchema: false,
+    dropSchema: true,
     entities: [User_1.User, Listing_1.Listing, Draft_1.Draft, Message_1.Message, Booking_1.Booking],
     migrations: [],
     subscribers: [],

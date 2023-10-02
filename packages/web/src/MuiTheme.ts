@@ -50,6 +50,7 @@ export const theme = createTheme({
       },
       styleOverrides: {
         text: {
+          height: 48,
           textTransform: "none",
           fontWeight: 700,
           textDecoration: "underline",
@@ -61,21 +62,23 @@ export const theme = createTheme({
           },
         },
         contained: {
+          height: 48,
           textTransform: "none",
           fontSize: 16,
           borderRadius: 8,
           letterSpacing: 0.5,
           fontWeight: 500,
-          padding: "0.875rem 1rem",
+          padding: "0 1rem",
           "&:disabled": {
             color: "#FFF",
           },
         },
         outlined: {
+          height: 48,
           textTransform: "none",
           borderRadius: 8,
           borderWidth: "1px",
-          padding: "0.875rem 1rem",
+          padding: "0 1rem",
         },
       },
     },

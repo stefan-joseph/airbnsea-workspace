@@ -1,11 +1,12 @@
-import * as yup from "yup";
+import { ValidationError } from "yup";
 import { User } from "../../../entity/User";
-import { formatYupError } from "../../../utils/formatYupError";
-import { duplicateEmail } from "./utils/errorMessages";
+import { duplicateEmail } from "./errorMessages";
 import { createConfirmEmailLink } from "../../../utils/createConfirmEmailLink";
 import { sendEmail } from "../../../utils/sendEmail";
 import { Resolvers } from "../../../types/types";
 import { registerUserSchema } from "@airbnb-clone/common";
+import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
+import formatYupError from "../../shared/utils/formatYupError";
 
 export const resolvers: Resolvers = {
   Mutation: {
@@ -14,10 +15,12 @@ export const resolvers: Resolvers = {
 
       // yup validation
       try {
-        await registerUserSchema.validate(args, { abortEarly: false });
+        await registerUserSchema.validate(args);
       } catch (error) {
-        const errors = formatYupError(error as yup.ValidationError);
-        return errors;
+        return {
+          __typename: "ValidationError",
+          ...formatYupError(error as ValidationError),
+        };
       }
 
       const userAlreadyExists = await User.findOne({
@@ -26,12 +29,7 @@ export const resolvers: Resolvers = {
       });
 
       if (userAlreadyExists) {
-        return [
-          {
-            path: "email",
-            message: duplicateEmail,
-          },
-        ];
+        return formatGraphQLYogaError(duplicateEmail);
       }
 
       const user = User.create({
@@ -52,7 +50,7 @@ export const resolvers: Resolvers = {
         await sendEmail(email, url, "Click here to confirm your email");
       }
 
-      return null;
+      return { __typename: "SuccessResponse", success: true };
     },
   },
 };

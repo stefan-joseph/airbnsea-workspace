@@ -55,10 +55,10 @@ export const LoginView = ({ onFinish, submit }: Props) => {
               onClick={async () => {
                 const { data } = await loginAsRandomUserMutation();
 
-                if (data?.loginAsRandomUser.sessionId) {
-                  await client.resetStore();
-                  onFinish();
-                }
+                // if (data?.loginAsRandomUser.sessionId) {
+                //   await client.resetStore();
+                //   onFinish();
+                // }
               }}
             >
               Log in as test user

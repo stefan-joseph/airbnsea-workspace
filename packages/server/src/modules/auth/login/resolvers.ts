@@ -1,57 +1,44 @@
-import { User } from "../../../entity/User";
+import { ValidationError } from "yup";
 import { compare } from "bcryptjs";
-import { Resolvers } from "../../../types/types";
-import {
-  confirmEmailError,
-  forgotPasswordLockedError,
-  invalidLogin,
-} from "./errorMessages";
-import { userSessionIdPrefix } from "../../../utils/constants";
+import { loginSchema } from "@airbnb-clone/common";
 
-const errorResponse = [
-  {
-    path: "email",
-    message: invalidLogin,
-  },
-];
+import { User } from "../../../entity/User";
+import { Resolvers } from "../../../types/types";
+import { confirmEmailError, invalidCredentails } from "./errorMessages";
+import { userSessionIdPrefix } from "../../../utils/constants";
+import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
+import formatYupError from "../../shared/utils/formatYupError";
 
 export const resolvers: Resolvers = {
   Mutation: {
-    login: async (_, { email, password }, { redis, req }) => {
-      let user;
-      if (email) {
-        user = await User.findOne({ where: { email: email.toLowerCase() } });
+    login: async (_, args, { redis, req }) => {
+      try {
+        // yup validation
+        await loginSchema.validate(args);
+      } catch (error) {
+        return {
+          __typename: "ValidationError",
+          ...formatYupError(error as ValidationError),
+        };
       }
 
+      const { email, password } = args;
+
+      const user = await User.findOne({
+        where: { email: email.toLowerCase() },
+      });
+
       if (!user) {
-        return { errors: errorResponse };
+        return formatGraphQLYogaError(invalidCredentails);
       }
 
       if (!user.confirmed) {
-        return {
-          errors: [
-            {
-              path: "email",
-              message: confirmEmailError,
-            },
-          ],
-        };
-      }
-
-      if (user.forgotPasswordLocked) {
-        return {
-          errors: [
-            {
-              path: "email",
-              message: forgotPasswordLockedError,
-            },
-          ],
-        };
+        return formatGraphQLYogaError(confirmEmailError);
       }
 
       const validPassword = await compare(password, user.password as string);
       if (!validPassword) {
-        return { errors: errorResponse };
+        return formatGraphQLYogaError(invalidCredentails);
       }
 
       // login now succesful
@@ -60,7 +47,7 @@ export const resolvers: Resolvers = {
         await redis.lpush(`${userSessionIdPrefix}${user.id}`, req.sessionID);
       }
 
-      return { sessionId: req.sessionID };
+      return { __typename: "SuccessResponse", success: true };
     },
   },
 };

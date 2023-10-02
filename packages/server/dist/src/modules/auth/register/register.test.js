@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../../../entity/User");
 const createTypeormConnection_1 = require("../../../utils/createTypeormConnection");
 const TestClient_1 = require("../../shared/test-utils/TestClient");
-const errorMessages_1 = require("./utils/errorMessages");
+const errorMessages_1 = require("./errorMessages");
 const common_1 = require("@airbnb-clone/common");
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, createTypeormConnection_1.createTypeormConnection)();
@@ -24,7 +24,7 @@ describe("Register user", () => {
     const client = new TestClient_1.TestClient("graphql");
     test("registers a user", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.register(email, password, firstName);
-        expect(response.data).toEqual({ register: null });
+        expect(response.data.register.success).toEqual(true);
         const users = yield User_1.User.find({ where: { email } });
         expect(users).toHaveLength(1);
         const user = users[0];
@@ -33,47 +33,35 @@ describe("Register user", () => {
     }));
     test("attempt to sign up with duplicate email", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.register(email, password, firstName);
-        expect(response.data.register).toHaveLength(1);
-        expect(response.data.register[0]).toEqual({
-            path: "email",
-            message: errorMessages_1.duplicateEmail,
-        });
+        expect(response.errors[0].message).toEqual(errorMessages_1.duplicateEmail);
+        expect(response.data).toBeNull();
     }));
     test("checks for bad email", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.register("b", password, firstName);
         expect(response.data).toEqual({
-            register: [
-                {
-                    path: "email",
-                    message: common_1.invalidEmail,
-                },
-            ],
+            register: {
+                message: common_1.invalidEmail,
+                field: "email",
+            },
         });
     }));
     test("checks for bad password", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.register(email, "asdsd", firstName);
         expect(response.data).toEqual({
-            register: [
-                {
-                    path: "password",
-                    message: common_1.passwordNotLongEnough,
-                },
-            ],
+            register: {
+                message: common_1.passwordNotLongEnough,
+                field: "password",
+            },
         });
     }));
-    test("checks for bad email and password", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield client.register("bo", "asdsd", firstName);
+    test("checks for bad firstName", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield client.register(email, password, "q");
+        console.log(response);
         expect(response.data).toEqual({
-            register: [
-                {
-                    path: "email",
-                    message: common_1.invalidEmail,
-                },
-                {
-                    path: "password",
-                    message: common_1.passwordNotLongEnough,
-                },
-            ],
+            register: {
+                message: common_1.nameNotLongEnough,
+                field: "firstName",
+            },
         });
     }));
 });

@@ -8,23 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const User_1 = require("../../../entity/User");
 const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaError");
 const common_1 = require("@airbnb-clone/common");
+const formatYupError_1 = __importDefault(require("../../shared/utils/formatYupError"));
 exports.resolvers = {
     Query: {
         checkEmail: (_, { email }) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                yield common_1.checkEmailSchema.validate({ email }, { abortEarly: false });
+                yield common_1.checkEmailSchema.validate({ email });
             }
             catch (error) {
-                const formatYupError = (error) => {
-                    const { message, path } = error.inner[0];
-                    return { message, field: path };
-                };
-                return Object.assign({ __typename: "BadCredentialsError" }, formatYupError(error));
+                return Object.assign({ __typename: "ValidationError" }, (0, formatYupError_1.default)(error));
             }
             const user = yield User_1.User.findOne({
                 where: { email: email.toLowerCase() },

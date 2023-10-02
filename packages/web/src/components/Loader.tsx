@@ -5,8 +5,10 @@ import CircularProgress, {
 
 export const Loader = ({
   color,
+  size,
 }: {
   color?: CircularProgressProps["color"];
+  size?: CircularProgressProps["size"];
 }) => {
   return (
     <Box
@@ -18,7 +20,7 @@ export const Loader = ({
         height: "100%",
       }}
     >
-      <CircularProgress color={color} />
+      <CircularProgress color={color} size={size} />
     </Box>
   );
 };

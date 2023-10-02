@@ -79,11 +79,13 @@ export const UserMenu = () => {
           </MenuList>
         ) : (
           <MenuList sx={{ width: 200 }}>
-            <Link to="/register">
-              <MenuItem sx={{ color: "initial" }}>Sign up</MenuItem>
+            <Link to="/login">
+              <MenuItem sx={{ color: "initial", fontWeight: 600 }}>
+                Log in
+              </MenuItem>
             </Link>
             <Link to="/login">
-              <MenuItem sx={{ color: "initial" }}>Log in</MenuItem>
+              <MenuItem sx={{ color: "initial" }}>Sign up</MenuItem>
             </Link>
           </MenuList>
         )}

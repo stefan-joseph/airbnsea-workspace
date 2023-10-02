@@ -1,8 +1,5 @@
-type LoginResponse {
-  errors: [Error!]
-  sessionId: String
+type Mutation {
+  login(email: String!, password: String!): LoginPayload!
 }
 
-type Mutation {
-  login(email: String!, password: String!): LoginResponse!
-}
+union LoginPayload = ValidationError | SuccessResponse

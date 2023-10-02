@@ -24,7 +24,7 @@ export const resolvers: Resolvers = {
         );
       }
 
-      return { sessionId: req.sessionID };
+      return true;
     },
   },
 };

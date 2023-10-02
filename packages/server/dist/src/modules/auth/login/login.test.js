@@ -16,38 +16,31 @@ const errorMessages_1 = require("./errorMessages");
 const email = "bob@bob.com";
 const password = "dsjkvd";
 const firstName = "Bob";
-const loginExpectError = (client, e, p, errMsg) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield client.login(e, p);
-    expect(response.data.login).toEqual({
-        errors: [
-            {
-                path: "email",
-                message: errMsg,
-            },
-        ],
-        sessionId: null,
-    });
-});
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, createTypeormConnection_1.createTypeormConnection)();
 }));
 describe("login", () => {
     const client = new TestClient_1.TestClient("graphql");
     test("email not in use", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield loginExpectError(client, "john@john.com", password, errorMessages_1.invalidLogin);
+        const response = yield client.login("john@john.com", password);
+        expect(response.errors[0].message).toEqual(errorMessages_1.invalidCredentails);
+        expect(response.data).toBeNull();
     }));
     test("email not confirmed", () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.register(email, password, firstName);
-        yield loginExpectError(client, email, password, errorMessages_1.confirmEmailError);
+        const response = yield client.login(email, password);
+        expect(response.errors[0].message).toEqual(errorMessages_1.confirmEmailError);
+        expect(response.data).toBeNull();
     }));
     test("incorrect password", () => __awaiter(void 0, void 0, void 0, function* () {
         yield User_1.User.update({ email }, { confirmed: true });
-        yield loginExpectError(client, email, "fawdajnf", errorMessages_1.invalidLogin);
+        const response = yield client.login(email, "fawdajnf");
+        expect(response.errors[0].message).toEqual(errorMessages_1.invalidCredentails);
+        expect(response.data).toBeNull();
     }));
     test("login successful", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.login(email, password);
-        expect(response.data.login.errors).toBeNull();
-        expect(response.data.login.sessionId).toBeTruthy();
+        expect(response.data.login.success).toEqual(true);
     }));
 });
 //# sourceMappingURL=login.test.js.map

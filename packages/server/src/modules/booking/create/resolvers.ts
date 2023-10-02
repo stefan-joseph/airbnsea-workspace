@@ -8,7 +8,7 @@ import { ValidationError } from "yup";
 import { Booking } from "../../../entity/Booking";
 import { Resolvers } from "../../../types/types";
 import { getTypeormConnection } from "../../../utils/getTypeormConnection";
-import { formatYupError } from "../../shared/utils/formatYupError";
+import { formatYupGraphQLError } from "../../shared/utils/formatYupError";
 import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
 import { Listing } from "../../../entity/Listing";
 import { cannotBookOwnListing, datesUnavailable } from "./utils/errorMessages";
@@ -32,7 +32,7 @@ export const resolvers: Resolvers = {
       try {
         await bookingSchema.validate(input);
       } catch (error) {
-        return formatYupError(error as ValidationError);
+        return formatYupGraphQLError(error as ValidationError);
       }
 
       const listing = await Listing.findOne({ where: { id: listingId } });

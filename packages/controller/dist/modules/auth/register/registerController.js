@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegisterController = void 0;
 const graphql_hooks_1 = require("../../../generated/graphql-hooks");
-const normalizeErrors_1 = require("../../../utils/normalizeErrors");
 const RegisterController = (props) => {
     const [registerUserMutation] = (0, graphql_hooks_1.useRegisterUserMutation)();
     const submit = (values) => __awaiter(void 0, void 0, void 0, function* () {
@@ -19,7 +18,6 @@ const RegisterController = (props) => {
         const { data } = yield registerUserMutation({ variables: values });
         console.log(data === null || data === void 0 ? void 0 : data.register);
         if (data === null || data === void 0 ? void 0 : data.register) {
-            return (0, normalizeErrors_1.normalizeErrors)(data.register);
         }
         return null;
     });

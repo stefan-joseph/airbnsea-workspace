@@ -7,12 +7,18 @@ export const TextInput2: React.FC<
     placeholder: string;
     type: string;
   }
-> = ({ field: { ...field }, form: { touched, errors }, ...props }) => {
+> = ({
+  field: { ...field },
+  form: { touched, errors, setFieldValue },
+  ...props
+}) => {
   const errorMsg = touched[field.name] && errors[field.name];
   return (
     <TextField
       {...field}
       {...props}
+      // always trim leading and trailing whitespace
+      onBlur={() => setFieldValue(field.name, field.value.trim())}
       error={!!errorMsg}
       helperText={errorMsg as ReactNode}
       sx={{ mt: 1.2 }}

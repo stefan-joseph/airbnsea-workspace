@@ -26,8 +26,13 @@ class TestClient {
                     query: `
           mutation {
             register (email: "${email}", password: "${password}", firstName: "${firstName}") {
-              path
-              message
+              ...on ValidationError {
+                message
+                field
+              }
+              ...on SuccessResponse {
+                success
+              }
             } 
           }
         `,
@@ -40,11 +45,13 @@ class TestClient {
                     query: `
           mutation {
             login(email: "${email}", password: "${password}") {
-              errors {
-                path
+              ...on ValidationError {
                 message
+                field
               }
-              sessionId
+              ...on SuccessResponse {
+                success
+              }
             }
           }
         `,

@@ -4,8 +4,8 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { AuthorizationServer } from "@airbnb-clone/controller";
 
-import OauthLink from "./OauthLink";
-import AuthFormContainer from "./AuthFormContainer";
+import OauthLink from "../components/OauthLink";
+import AuthFormContainer from "../components/AuthFormContainer";
 import { Steps, User } from "../Auth";
 
 export default function OAuthReminder({
@@ -35,7 +35,7 @@ export default function OAuthReminder({
   };
   return (
     <AuthFormContainer
-      title={`Welcome back, ${firstName}`}
+      header={`Welcome back, ${firstName}`}
       setAuthStep={setAuthStep}
     >
       <Stack alignItems="center" width="100%" mt={2}>

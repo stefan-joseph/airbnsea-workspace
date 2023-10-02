@@ -1,0 +1,4 @@
+type ValidationError {
+  message: String!
+  field: String!
+}
