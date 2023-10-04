@@ -1,12 +1,12 @@
 import { useContext, useEffect } from "react";
 import { useLogoutUserMutation } from "@airbnb-clone/controller";
 import { useNavigate } from "react-router-dom";
+import { Stack } from "@mui/material";
 
 import { AppContext } from "../../../context/context";
-import { AuthPageContainer } from "../components/AuthPageContainer";
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 
-export const Logout = () => {
+export default function Logout() {
   const navigate = useNavigate();
   const { dispatch } = useContext(AppContext);
   const [logoutUserMutation, { client }] = useLogoutUserMutation();
@@ -25,8 +25,8 @@ export const Logout = () => {
   }, []);
 
   return (
-    <AuthPageContainer>
+    <Stack justifyContent="center" alignItems="center">
       <Loader />
-    </AuthPageContainer>
+    </Stack>
   );
-};
+}

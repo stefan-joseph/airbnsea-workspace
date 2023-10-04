@@ -9,7 +9,7 @@ import {
   bottomNavbarHeight,
   searchBarHeightMobile,
 } from "../../../constants/constants";
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 import Marker from "./Marker";
 import { mapStyles } from "./MapStyles";
 import { renderGoogleConnection } from "../../../utils/renderGoogleConnection";

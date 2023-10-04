@@ -15,7 +15,7 @@ import { BookingProps } from "../Booking";
 import { Receipt } from "./Receipt";
 import { Rating } from "../../../components/Rating";
 import { useState } from "react";
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 import { CompletionOfBooking } from "./CompletionOfBooking";
 import { RequestErrorMessage } from "../../../components/RequestErrorMessage";
 import { useLoadingDelay } from "../../../components/hooks/useLoadingDelay";

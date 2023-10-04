@@ -5,22 +5,27 @@ import { useRegisterUserMutation } from "@airbnb-clone/controller";
 import { registerUserSchema } from "@airbnb-clone/common";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
-import { Steps } from "../Auth";
+import { Steps, User } from "../Auth";
 import AuthFormContainer from "../components/AuthFormContainer";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { theme } from "../../../MuiTheme";
 import LoadingButton from "../../../components/LoadingButton";
+import useSetUserAndRedirect from "../../../hooks/useSetUserAndRedirect";
 
 export default function SignUpForm({
   email,
+  setUser,
   setAuthStep,
 }: {
   email: string;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
   setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
   const [signUpComplete, setSignUpComplete] = useState(false);
 
   const [registerUserMutation, { error, loading }] = useRegisterUserMutation();
+
+  const setUserAndRedirect = useSetUserAndRedirect();
 
   if (signUpComplete) {
     return (
@@ -30,7 +35,6 @@ export default function SignUpForm({
           <IoCheckmarkCircle size={26} color={theme.palette.success.main} />
         }
         title="Please confirm your email"
-        setAuthStep={setAuthStep}
       >
         <Typography>
           An email has been sent to the email address provided.
@@ -55,7 +59,6 @@ export default function SignUpForm({
       header="Finish signing up"
       setAuthStep={setAuthStep}
       error={error?.message}
-      back
     >
       <Formik
         initialValues={{
@@ -68,8 +71,6 @@ export default function SignUpForm({
         validateOnChange={false}
         onSubmit={async (values, { setFieldError }) => {
           const { data } = await registerUserMutation({ variables: values });
-          console.log("data", data);
-          console.log("error", error);
 
           if (!data) return;
           const { register } = data;
@@ -80,6 +81,25 @@ export default function SignUpForm({
             setFieldError(field, message);
           } else if (__typename === "SuccessResponse") {
             register.success && setSignUpComplete(true);
+          } else if (__typename === "UserLogin") {
+            register.success && setUserAndRedirect();
+          } else if (__typename === "EmailExistsWithOAuth") {
+            const { authorizationServer, email, firstName, avatar } = register;
+            setAuthStep(Steps.OAUTH);
+            setUser({
+              email,
+              firstName,
+              avatar: avatar || "",
+              authorizationServer,
+            });
+          } else if (__typename === "EmailExistsWithIncorrectPassword") {
+            const { email, firstName, avatar } = register;
+            setAuthStep(Steps.EXISTS);
+            setUser({
+              email,
+              firstName,
+              avatar: avatar || "",
+            });
           }
         }}
       >

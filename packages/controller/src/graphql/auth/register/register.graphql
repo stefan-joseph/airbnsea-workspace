@@ -7,6 +7,20 @@ mutation RegisterUser(
     ... on SuccessResponse {
       success
     }
+    ... on UserLogin {
+      success
+    }
+    ... on EmailExistsWithOAuth {
+      authorizationServer
+      email
+      firstName
+      avatar
+    }
+    ... on EmailExistsWithIncorrectPassword {
+      email
+      firstName
+      avatar
+    }
     ... on ValidationError {
       field
       message

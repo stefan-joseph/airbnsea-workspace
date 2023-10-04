@@ -98,7 +98,15 @@ function useConfirmEmailMutation(baseOptions) {
 exports.useConfirmEmailMutation = useConfirmEmailMutation;
 exports.SendForgotPasswordEmailDocument = (0, client_1.gql) `
     mutation SendForgotPasswordEmail($email: String!) {
-  sendForgotPasswordEmail(email: $email)
+  sendForgotPasswordEmail(email: $email) {
+    ... on ForgotPasswordEmailSuccessResponse {
+      email
+    }
+    ... on ValidationError {
+      message
+      field
+    }
+  }
 }
     `;
 function useSendForgotPasswordEmailMutation(baseOptions) {
@@ -178,6 +186,20 @@ exports.RegisterUserDocument = (0, client_1.gql) `
     ... on SuccessResponse {
       success
     }
+    ... on UserLogin {
+      success
+    }
+    ... on EmailExistsWithOAuth {
+      authorizationServer
+      email
+      firstName
+      avatar
+    }
+    ... on EmailExistsWithIncorrectPassword {
+      email
+      firstName
+      avatar
+    }
     ... on ValidationError {
       field
       message
@@ -193,8 +215,13 @@ exports.useRegisterUserMutation = useRegisterUserMutation;
 exports.ResetPasswordDocument = (0, client_1.gql) `
     mutation ResetPassword($newPassword: String!, $key: String!) {
   resetPassword(newPassword: $newPassword, key: $key) {
-    path
-    message
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      message
+      field
+    }
   }
 }
     `;

@@ -11,7 +11,7 @@ import {
   useAuthenticateUserWithLinkedinMutation,
 } from "@airbnb-clone/controller";
 
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 import { useEffect } from "react";
 import useSetUserAndRedirect from "../../../hooks/useSetUserAndRedirect";
 import { AppContainer } from "../../../components/AppContainer";

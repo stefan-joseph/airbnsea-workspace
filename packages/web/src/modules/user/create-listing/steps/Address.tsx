@@ -5,7 +5,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 import { CountrySelect } from "../../../../components/fields/CountrySelect";
 import { GoogleLocationAutoComplete } from "../../../../components/fields/GoogleLocationAutoComplete";
-import { Loader } from "../../../../components/Loader";
+import Loader from "../../../../components/Loader";
 import { TextInput } from "../../../../components/fields/TextInput";
 
 interface Props {

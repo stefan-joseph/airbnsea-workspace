@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResetPasswordController = void 0;
 const graphql_hooks_1 = require("../../../generated/graphql-hooks");
-const normalizeErrors_1 = require("../../../utils/normalizeErrors");
 const ResetPasswordController = (props) => {
     const [resetPasswordMutation] = (0, graphql_hooks_1.useResetPasswordMutation)();
     const submit = (values) => __awaiter(void 0, void 0, void 0, function* () {
@@ -20,9 +19,6 @@ const ResetPasswordController = (props) => {
             variables: values,
         });
         console.log("response:", data);
-        if (data === null || data === void 0 ? void 0 : data.resetPassword) {
-            return (0, normalizeErrors_1.normalizeErrors)(data.resetPassword);
-        }
         return null;
     });
     return props.children({ submit });

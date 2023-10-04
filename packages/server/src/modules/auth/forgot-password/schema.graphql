@@ -1,4 +1,14 @@
 type Mutation {
-  sendForgotPasswordEmail(email: String!): Boolean
-  resetPassword(newPassword: String!, key: String!): [Error!]
+  sendForgotPasswordEmail(email: String!): SendForgotPasswordEmailPayload!
+  resetPassword(newPassword: String!, key: String!): ResetPasswordPayload!
+}
+
+union ResetPasswordPayload = ValidationError | SuccessResponse
+
+union SendForgotPasswordEmailPayload =
+    ValidationError
+  | ForgotPasswordEmailSuccessResponse
+
+type ForgotPasswordEmailSuccessResponse {
+  email: String!
 }

@@ -11,7 +11,7 @@ import { useCreateConversationMutation } from "@airbnb-clone/controller";
 import { messageSchema } from "@airbnb-clone/common";
 
 import { OutlinedButton } from "../../../components/OutlinedButton";
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 import { desktopMinWidth } from "../../../constants/constants";
 import { ConversationSuccessMessage } from "./ConversationSuccessMessage";
 import { RequestErrorMessage } from "../../../components/RequestErrorMessage";

@@ -26,7 +26,9 @@ export default function EmailForm({
   setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
   const { state } = useLocation();
-  const [checkEmailLazyQuery, { error, loading }] = useCheckEmailLazyQuery();
+  const [checkEmailLazyQuery, { error, loading }] = useCheckEmailLazyQuery({
+    fetchPolicy: "no-cache",
+  });
 
   const [loginAsRandomUserMutation, { error: error2, loading: loading2 }] =
     useLoginAsRandomUserMutation();
@@ -42,7 +44,6 @@ export default function EmailForm({
           account.
         </Typography>
       }
-      setAuthStep={setAuthStep}
       error={error?.message || error2?.message || state?.message}
     >
       <Formik

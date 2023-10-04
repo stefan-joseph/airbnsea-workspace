@@ -102,6 +102,13 @@ export type Draft = {
   zipcode?: Maybe<Scalars['String']>;
 };
 
+export type EmailExistsWithIncorrectPassword = {
+  __typename?: 'EmailExistsWithIncorrectPassword';
+  avatar?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+};
+
 export type EmailExistsWithOAuth = {
   __typename?: 'EmailExistsWithOAuth';
   authorizationServer: AuthorizationServer;
@@ -120,6 +127,11 @@ export type Error = {
   __typename?: 'Error';
   message: Scalars['String'];
   path: Scalars['String'];
+};
+
+export type ForgotPasswordEmailSuccessResponse = {
+  __typename?: 'ForgotPasswordEmailSuccessResponse';
+  email: Scalars['String'];
 };
 
 export type InboxMessage = {
@@ -194,8 +206,8 @@ export type Mutation = {
   loginAsRandomUser: Scalars['Boolean'];
   logout?: Maybe<Scalars['Boolean']>;
   register: RegisterPayload;
-  resetPassword?: Maybe<Array<Error>>;
-  sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
+  resetPassword: ResetPasswordPayload;
+  sendForgotPasswordEmail: SendForgotPasswordEmailPayload;
   updateListing?: Maybe<Scalars['ID']>;
 };
 
@@ -353,7 +365,9 @@ export type Redirect = {
   redirect: Scalars['String'];
 };
 
-export type RegisterPayload = SuccessResponse | ValidationError;
+export type RegisterPayload = EmailExistsWithIncorrectPassword | EmailExistsWithOAuth | SuccessResponse | UserLogin | ValidationError;
+
+export type ResetPasswordPayload = SuccessResponse | ValidationError;
 
 export type SearchListingResult = {
   __typename?: 'SearchListingResult';
@@ -393,6 +407,8 @@ export type SearchLocation = {
   lng: Scalars['Float'];
 };
 
+export type SendForgotPasswordEmailPayload = ForgotPasswordEmailSuccessResponse | ValidationError;
+
 export enum Status {
   Active = 'active',
   Inactive = 'inactive'
@@ -426,6 +442,11 @@ export type User = {
   avatar?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
+};
+
+export type UserLogin = {
+  __typename?: 'UserLogin';
+  success: Scalars['Boolean'];
 };
 
 export type UserNotConfirmed = {
@@ -468,7 +489,7 @@ export type SendForgotPasswordEmailMutationVariables = Exact<{
 }>;
 
 
-export type SendForgotPasswordEmailMutation = { __typename?: 'Mutation', sendForgotPasswordEmail?: boolean | null };
+export type SendForgotPasswordEmailMutation = { __typename?: 'Mutation', sendForgotPasswordEmail: { __typename?: 'ForgotPasswordEmailSuccessResponse', email: string } | { __typename?: 'ValidationError', message: string, field: string } };
 
 export type LoginUserMutationVariables = Exact<{
   email: Scalars['String'];
@@ -509,7 +530,7 @@ export type RegisterUserMutationVariables = Exact<{
 }>;
 
 
-export type RegisterUserMutation = { __typename?: 'Mutation', register: { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'ValidationError', field: string, message: string } };
+export type RegisterUserMutation = { __typename?: 'Mutation', register: { __typename?: 'EmailExistsWithIncorrectPassword', email: string, firstName: string, avatar?: string | null } | { __typename?: 'EmailExistsWithOAuth', authorizationServer: AuthorizationServer, email: string, firstName: string, avatar?: string | null } | { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'UserLogin', success: boolean } | { __typename?: 'ValidationError', field: string, message: string } };
 
 export type ResetPasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -517,7 +538,7 @@ export type ResetPasswordMutationVariables = Exact<{
 }>;
 
 
-export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword?: Array<{ __typename?: 'Error', path: string, message: string }> | null };
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'ValidationError', message: string, field: string } };
 
 export type LoginAsRandomUserMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -702,7 +723,15 @@ export type ConfirmEmailMutationResult = Apollo.MutationResult<ConfirmEmailMutat
 export type ConfirmEmailMutationOptions = Apollo.BaseMutationOptions<ConfirmEmailMutation, ConfirmEmailMutationVariables>;
 export const SendForgotPasswordEmailDocument = gql`
     mutation SendForgotPasswordEmail($email: String!) {
-  sendForgotPasswordEmail(email: $email)
+  sendForgotPasswordEmail(email: $email) {
+    ... on ForgotPasswordEmailSuccessResponse {
+      email
+    }
+    ... on ValidationError {
+      message
+      field
+    }
+  }
 }
     `;
 export type SendForgotPasswordEmailMutationFn = Apollo.MutationFunction<SendForgotPasswordEmailMutation, SendForgotPasswordEmailMutationVariables>;
@@ -904,6 +933,20 @@ export const RegisterUserDocument = gql`
     ... on SuccessResponse {
       success
     }
+    ... on UserLogin {
+      success
+    }
+    ... on EmailExistsWithOAuth {
+      authorizationServer
+      email
+      firstName
+      avatar
+    }
+    ... on EmailExistsWithIncorrectPassword {
+      email
+      firstName
+      avatar
+    }
     ... on ValidationError {
       field
       message
@@ -942,8 +985,13 @@ export type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUse
 export const ResetPasswordDocument = gql`
     mutation ResetPassword($newPassword: String!, $key: String!) {
   resetPassword(newPassword: $newPassword, key: $key) {
-    path
-    message
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      message
+      field
+    }
   }
 }
     `;

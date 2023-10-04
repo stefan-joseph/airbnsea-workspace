@@ -1,18 +1,18 @@
 import { createBrowserRouter } from "react-router-dom";
 import ErrorPage from "../components/ErrorPage";
-import { ForgotPasswordConnector } from "../modules/auth/forgotPassword/ForgotPasswordConnector";
-import { ResetPasswordConnector } from "../modules/auth/resetPassword/ResetPasswordConnector";
-import { TextPage } from "../modules/textPage/TextPage";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { Logout } from "../modules/auth/logout/Logout";
 import { Listing } from "../modules/listing/Listing";
 import { CreateListing } from "../modules/user/create-listing/CreateListing";
 import { Search } from "../modules/search/Search";
 import { Message } from "../modules/message/Message";
 import { BookingConfirmationPage } from "../modules/booking/components/ComfirmationPage";
-import ConfirmEmail from "../modules/auth/confirmEmail/confirmEmail";
 import Auth from "../modules/newauth/Auth";
 import OauthCallback from "../modules/newauth/components/OauthCallback";
+import EmailConfirmed from "../modules/newauth/components/EmailConfirmed";
+import ConfirmEmailPath from "../modules/newauth/components/ConfirmEmailPath";
+import ForgotPasswordForm from "../modules/newauth/components/ForgotPasswordForm";
+import ResetPasswordForm from "../modules/newauth/components/ResetPasswordForm";
+import Logout from "../modules/newauth/components/Logout";
 
 export const router = createBrowserRouter([
   {
@@ -30,15 +30,19 @@ export const router = createBrowserRouter([
   },
   {
     path: "/confirm-email/:key",
-    element: <ConfirmEmail />,
+    element: <ConfirmEmailPath />,
+  },
+  {
+    path: "/email-confirmed",
+    element: <EmailConfirmed />,
   },
   {
     path: "/forgot-password",
-    element: <ForgotPasswordConnector />,
+    element: <ForgotPasswordForm />,
   },
   {
     path: "/reset-password/:key",
-    element: <ResetPasswordConnector />,
+    element: <ResetPasswordForm />,
   },
   {
     path: "auth/:authServer",
@@ -55,10 +59,6 @@ export const router = createBrowserRouter([
         <BookingConfirmationPage />
       </ProtectedRoute>
     ),
-  },
-  {
-    path: "/message/*",
-    element: <TextPage />,
   },
   {
     path: "/create-listing",

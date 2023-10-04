@@ -7,21 +7,6 @@ const email = "bob@bob.com";
 const password = "dsjkvd";
 const firstName = "Bob";
 
-// const loginExpectError = async (
-//   client: TestClient,
-//   e: string,
-//   p: string,
-//   errMsg: string
-// ) => {
-//   console.log("errMsge", errMsg);
-//   const response = await client.login(e, p);
-//   console.log("response", response);
-//   expect(response.data.login).toEqual({
-//     message: invalidCredentails,
-//     field: "",
-//   });
-// };
-
 beforeAll(async () => {
   await createTypeormConnection();
 });

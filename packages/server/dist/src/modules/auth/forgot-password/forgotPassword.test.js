@@ -44,32 +44,22 @@ describe("forgot password", () => {
         key = urlChunks[urlChunks.length - 1];
         expect(yield client.resetPassword("short", key)).toEqual({
             data: {
-                resetPassword: [
-                    {
-                        path: "newPassword",
-                        message: common_1.passwordNotLongEnough,
-                    },
-                ],
+                resetPassword: {
+                    message: common_1.passwordNotLongEnough,
+                    field: "newPassword",
+                },
             },
         });
     }));
     test("change password is successful", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.resetPassword(newPassword, key);
         expect(response.data).toEqual({
-            resetPassword: null,
+            resetPassword: { success: true },
         });
     }));
     test("make sure redis key expires after password has been changed", () => __awaiter(void 0, void 0, void 0, function* () {
-        expect(yield client.resetPassword("tryAgain", key)).toEqual({
-            data: {
-                resetPassword: [
-                    {
-                        path: "newPassword",
-                        message: errorMessages_1.expiredKeyError,
-                    },
-                ],
-            },
-        });
+        const response = yield client.resetPassword("tryAgain", key);
+        expect(response.errors[0].message).toEqual(errorMessages_1.expiredKeyError);
     }));
     test("user can log in with new password", () => __awaiter(void 0, void 0, void 0, function* () {
         const { data } = yield client.login(email, newPassword);

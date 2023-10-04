@@ -34,12 +34,10 @@ describe("forgot password", () => {
     key = urlChunks[urlChunks.length - 1];
     expect(await client.resetPassword("short", key)).toEqual({
       data: {
-        resetPassword: [
-          {
-            path: "newPassword",
-            message: passwordNotLongEnough,
-          },
-        ],
+        resetPassword: {
+          message: passwordNotLongEnough,
+          field: "newPassword",
+        },
       },
     });
   });
@@ -47,21 +45,13 @@ describe("forgot password", () => {
   test("change password is successful", async () => {
     const response = await client.resetPassword(newPassword, key);
     expect(response.data).toEqual({
-      resetPassword: null,
+      resetPassword: { success: true },
     });
   });
 
   test("make sure redis key expires after password has been changed", async () => {
-    expect(await client.resetPassword("tryAgain", key)).toEqual({
-      data: {
-        resetPassword: [
-          {
-            path: "newPassword",
-            message: expiredKeyError,
-          },
-        ],
-      },
-    });
+    const response = await client.resetPassword("tryAgain", key);
+    expect(response.errors[0].message).toEqual(expiredKeyError);
   });
 
   test("user can log in with new password", async () => {

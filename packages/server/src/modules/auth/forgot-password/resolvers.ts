@@ -4,22 +4,42 @@ import { Resolvers } from "../../../types/types";
 import { forgotPasswordPrefix } from "../../../utils/constants";
 import { createForgotPasswordLink } from "../../../utils/createForgotPasswordLink";
 import { expiredKeyError } from "./errorMessages";
-import * as yup from "yup";
-import { formatYupError } from "../../../utils/formatYupError";
+import { ValidationError } from "yup";
+
 import { sendEmail } from "../../../utils/sendEmail";
-import { resetPasswordSchema } from "@airbnb-clone/common";
+import {
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  // resetPasswordSchema,
+} from "@airbnb-clone/common";
 import { removeAllOfUsersSessions } from "../../../utils/removeAllOfUsersSessions";
+import formatYupError from "../../shared/utils/formatYupError";
+import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
 
 export const resolvers: Resolvers = {
   Mutation: {
-    sendForgotPasswordEmail: async (_, { email }, { redis }) => {
-      if (!email) return true; // 'undefined' email will still return first user in db
+    sendForgotPasswordEmail: async (_, args, { redis }) => {
+      const { email } = args;
+
+      // yup validation
+      try {
+        await forgotPasswordSchema.validate(args);
+      } catch (error) {
+        return {
+          __typename: "ValidationError",
+          ...formatYupError(error as ValidationError),
+        };
+      }
+
       const user = await User.findOne({
         where: { email: email.toLowerCase() },
       });
-      if (!user) return true;
-      // if no user with inputted email then return same response so as
-      // to not concede whether that email is associeted with a user
+
+      if (!user) {
+        return formatGraphQLYogaError(
+          `No account exists for ${email}. Maybe you signed up using a different/incorrect email address.`
+        );
+      }
 
       // remove all sessions
       await removeAllOfUsersSessions(user.id, redis);
@@ -32,28 +52,28 @@ export const resolvers: Resolvers = {
 
       await sendEmail(email, url, "Click here to reset your password");
 
-      return true;
+      return { __typename: "ForgotPasswordEmailSuccessResponse", email };
     },
 
-    resetPassword: async (_, { newPassword, key }, { redis }) => {
+    resetPassword: async (_, args, { redis }) => {
+      const { newPassword, key } = args;
+
       const redisKey = `${forgotPasswordPrefix}${key}`;
+
       const userId = await redis.get(redisKey);
+
       if (!userId) {
-        return [
-          {
-            path: "newPassword",
-            message: expiredKeyError,
-          },
-        ];
+        return formatGraphQLYogaError(expiredKeyError);
       }
 
+      // yup validation
       try {
-        await resetPasswordSchema.validate(
-          { newPassword },
-          { abortEarly: false }
-        );
+        await resetPasswordSchema.validate(args);
       } catch (error) {
-        return formatYupError(error as yup.ValidationError);
+        return {
+          __typename: "ValidationError",
+          ...formatYupError(error as ValidationError),
+        };
       }
 
       const hashedPassword = await hash(newPassword, 10);
@@ -69,7 +89,7 @@ export const resolvers: Resolvers = {
 
       await Promise.all([updateUserPromise, deleteKeyPromise]);
 
-      return null;
+      return { __typename: "SuccessResponse", success: true };
     },
   },
 };

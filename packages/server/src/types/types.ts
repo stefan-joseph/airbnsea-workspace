@@ -101,6 +101,13 @@ export type Draft = {
   zipcode?: Maybe<Scalars['String']>;
 };
 
+export type EmailExistsWithIncorrectPassword = {
+  __typename?: 'EmailExistsWithIncorrectPassword';
+  avatar?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+};
+
 export type EmailExistsWithOAuth = {
   __typename?: 'EmailExistsWithOAuth';
   authorizationServer: AuthorizationServer;
@@ -119,6 +126,11 @@ export type Error = {
   __typename?: 'Error';
   message: Scalars['String'];
   path: Scalars['String'];
+};
+
+export type ForgotPasswordEmailSuccessResponse = {
+  __typename?: 'ForgotPasswordEmailSuccessResponse';
+  email: Scalars['String'];
 };
 
 export type InboxMessage = {
@@ -193,8 +205,8 @@ export type Mutation = {
   loginAsRandomUser: Scalars['Boolean'];
   logout?: Maybe<Scalars['Boolean']>;
   register: RegisterPayload;
-  resetPassword?: Maybe<Array<Error>>;
-  sendForgotPasswordEmail?: Maybe<Scalars['Boolean']>;
+  resetPassword: ResetPasswordPayload;
+  sendForgotPasswordEmail: SendForgotPasswordEmailPayload;
   updateListing?: Maybe<Scalars['ID']>;
 };
 
@@ -352,7 +364,9 @@ export type Redirect = {
   redirect: Scalars['String'];
 };
 
-export type RegisterPayload = SuccessResponse | ValidationError;
+export type RegisterPayload = EmailExistsWithIncorrectPassword | EmailExistsWithOAuth | SuccessResponse | UserLogin | ValidationError;
+
+export type ResetPasswordPayload = SuccessResponse | ValidationError;
 
 export type SearchListingResult = {
   __typename?: 'SearchListingResult';
@@ -392,6 +406,8 @@ export type SearchLocation = {
   lng: Scalars['Float'];
 };
 
+export type SendForgotPasswordEmailPayload = ForgotPasswordEmailSuccessResponse | ValidationError;
+
 export enum Status {
   Active = 'active',
   Inactive = 'inactive'
@@ -425,6 +441,11 @@ export type User = {
   avatar?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
+};
+
+export type UserLogin = {
+  __typename?: 'UserLogin';
+  success: Scalars['Boolean'];
 };
 
 export type UserNotConfirmed = {
@@ -529,11 +550,13 @@ export type ResolversTypes = {
   CreateConversationResponse: ResolversTypes['ConversationSuccess'] | ResolversTypes['Redirect'];
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Draft: ResolverTypeWrapper<Draft>;
+  EmailExistsWithIncorrectPassword: ResolverTypeWrapper<EmailExistsWithIncorrectPassword>;
   EmailExistsWithOAuth: ResolverTypeWrapper<EmailExistsWithOAuth>;
   EmailExistsWithPassword: ResolverTypeWrapper<EmailExistsWithPassword>;
   Error: ResolverTypeWrapper<Error>;
   File: ResolverTypeWrapper<Scalars['File']>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
+  ForgotPasswordEmailSuccessResponse: ResolverTypeWrapper<ForgotPasswordEmailSuccessResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Image: ResolverTypeWrapper<Scalars['Image']>;
   InboxMessage: ResolverTypeWrapper<InboxMessage>;
@@ -549,17 +572,20 @@ export type ResolversTypes = {
   PhotoUpdate: PhotoUpdate;
   Query: ResolverTypeWrapper<{}>;
   Redirect: ResolverTypeWrapper<Redirect>;
-  RegisterPayload: ResolversTypes['SuccessResponse'] | ResolversTypes['ValidationError'];
+  RegisterPayload: ResolversTypes['EmailExistsWithIncorrectPassword'] | ResolversTypes['EmailExistsWithOAuth'] | ResolversTypes['SuccessResponse'] | ResolversTypes['UserLogin'] | ResolversTypes['ValidationError'];
+  ResetPasswordPayload: ResolversTypes['SuccessResponse'] | ResolversTypes['ValidationError'];
   SearchListingResult: ResolverTypeWrapper<SearchListingResult>;
   SearchListingsInput: SearchListingsInput;
   SearchListingsResponse: ResolverTypeWrapper<SearchListingsResponse>;
   SearchLocation: ResolverTypeWrapper<SearchLocation>;
+  SendForgotPasswordEmailPayload: ResolversTypes['ForgotPasswordEmailSuccessResponse'] | ResolversTypes['ValidationError'];
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']>;
   Subscription: ResolverTypeWrapper<{}>;
   SuccessResponse: ResolverTypeWrapper<SuccessResponse>;
   UpdateListingFields: UpdateListingFields;
   User: ResolverTypeWrapper<User>;
+  UserLogin: ResolverTypeWrapper<UserLogin>;
   UserNotConfirmed: ResolverTypeWrapper<UserNotConfirmed>;
   ValidationError: ResolverTypeWrapper<ValidationError>;
   VesselType: VesselType;
@@ -579,11 +605,13 @@ export type ResolversParentTypes = {
   CreateConversationResponse: ResolversParentTypes['ConversationSuccess'] | ResolversParentTypes['Redirect'];
   Date: Scalars['Date'];
   Draft: Draft;
+  EmailExistsWithIncorrectPassword: EmailExistsWithIncorrectPassword;
   EmailExistsWithOAuth: EmailExistsWithOAuth;
   EmailExistsWithPassword: EmailExistsWithPassword;
   Error: Error;
   File: Scalars['File'];
   Float: Scalars['Float'];
+  ForgotPasswordEmailSuccessResponse: ForgotPasswordEmailSuccessResponse;
   ID: Scalars['ID'];
   Image: Scalars['Image'];
   InboxMessage: InboxMessage;
@@ -598,16 +626,19 @@ export type ResolversParentTypes = {
   PhotoUpdate: PhotoUpdate;
   Query: {};
   Redirect: Redirect;
-  RegisterPayload: ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['ValidationError'];
+  RegisterPayload: ResolversParentTypes['EmailExistsWithIncorrectPassword'] | ResolversParentTypes['EmailExistsWithOAuth'] | ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['UserLogin'] | ResolversParentTypes['ValidationError'];
+  ResetPasswordPayload: ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['ValidationError'];
   SearchListingResult: SearchListingResult;
   SearchListingsInput: SearchListingsInput;
   SearchListingsResponse: SearchListingsResponse;
   SearchLocation: SearchLocation;
+  SendForgotPasswordEmailPayload: ResolversParentTypes['ForgotPasswordEmailSuccessResponse'] | ResolversParentTypes['ValidationError'];
   String: Scalars['String'];
   Subscription: {};
   SuccessResponse: SuccessResponse;
   UpdateListingFields: UpdateListingFields;
   User: User;
+  UserLogin: UserLogin;
   UserNotConfirmed: UserNotConfirmed;
   ValidationError: ValidationError;
   VesselTypeInput: VesselTypeInput;
@@ -685,6 +716,13 @@ export type DraftResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EmailExistsWithIncorrectPasswordResolvers<ContextType = any, ParentType extends ResolversParentTypes['EmailExistsWithIncorrectPassword'] = ResolversParentTypes['EmailExistsWithIncorrectPassword']> = {
+  avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EmailExistsWithOAuthResolvers<ContextType = any, ParentType extends ResolversParentTypes['EmailExistsWithOAuth'] = ResolversParentTypes['EmailExistsWithOAuth']> = {
   authorizationServer?: Resolver<ResolversTypes['AuthorizationServer'], ParentType, ContextType>;
   avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -708,6 +746,11 @@ export type ErrorResolvers<ContextType = any, ParentType extends ResolversParent
 export interface FileScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['File'], any> {
   name: 'File';
 }
+
+export type ForgotPasswordEmailSuccessResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ForgotPasswordEmailSuccessResponse'] = ResolversParentTypes['ForgotPasswordEmailSuccessResponse']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export interface ImageScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Image'], any> {
   name: 'Image';
@@ -781,8 +824,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   loginAsRandomUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   register?: Resolver<ResolversTypes['RegisterPayload'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'firstName' | 'password'>>;
-  resetPassword?: Resolver<Maybe<Array<ResolversTypes['Error']>>, ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'key' | 'newPassword'>>;
-  sendForgotPasswordEmail?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendForgotPasswordEmailArgs, 'email'>>;
+  resetPassword?: Resolver<ResolversTypes['ResetPasswordPayload'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'key' | 'newPassword'>>;
+  sendForgotPasswordEmail?: Resolver<ResolversTypes['SendForgotPasswordEmailPayload'], ParentType, ContextType, RequireFields<MutationSendForgotPasswordEmailArgs, 'email'>>;
   updateListing?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationUpdateListingArgs, 'fields' | 'listingId'>>;
 };
 
@@ -818,6 +861,10 @@ export type RedirectResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type RegisterPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterPayload'] = ResolversParentTypes['RegisterPayload']> = {
+  __resolveType: TypeResolveFn<'EmailExistsWithIncorrectPassword' | 'EmailExistsWithOAuth' | 'SuccessResponse' | 'UserLogin' | 'ValidationError', ParentType, ContextType>;
+};
+
+export type ResetPasswordPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResetPasswordPayload'] = ResolversParentTypes['ResetPasswordPayload']> = {
   __resolveType: TypeResolveFn<'SuccessResponse' | 'ValidationError', ParentType, ContextType>;
 };
 
@@ -851,6 +898,10 @@ export type SearchLocationResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type SendForgotPasswordEmailPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['SendForgotPasswordEmailPayload'] = ResolversParentTypes['SendForgotPasswordEmailPayload']> = {
+  __resolveType: TypeResolveFn<'ForgotPasswordEmailSuccessResponse' | 'ValidationError', ParentType, ContextType>;
+};
+
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   newMessage?: SubscriptionResolver<ResolversTypes['ConversationMessage'], "newMessage", ParentType, ContextType, RequireFields<SubscriptionNewMessageArgs, 'conversationId'>>;
   updateInbox?: SubscriptionResolver<ResolversTypes['InboxMessage'], "updateInbox", ParentType, ContextType>;
@@ -865,6 +916,11 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserLoginResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserLogin'] = ResolversParentTypes['UserLogin']> = {
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -889,10 +945,12 @@ export type Resolvers<ContextType = any> = {
   CreateConversationResponse?: CreateConversationResponseResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Draft?: DraftResolvers<ContextType>;
+  EmailExistsWithIncorrectPassword?: EmailExistsWithIncorrectPasswordResolvers<ContextType>;
   EmailExistsWithOAuth?: EmailExistsWithOAuthResolvers<ContextType>;
   EmailExistsWithPassword?: EmailExistsWithPasswordResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   File?: GraphQLScalarType;
+  ForgotPasswordEmailSuccessResponse?: ForgotPasswordEmailSuccessResponseResolvers<ContextType>;
   Image?: GraphQLScalarType;
   InboxMessage?: InboxMessageResolvers<ContextType>;
   Listing?: ListingResolvers<ContextType>;
@@ -905,12 +963,15 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Redirect?: RedirectResolvers<ContextType>;
   RegisterPayload?: RegisterPayloadResolvers<ContextType>;
+  ResetPasswordPayload?: ResetPasswordPayloadResolvers<ContextType>;
   SearchListingResult?: SearchListingResultResolvers<ContextType>;
   SearchListingsResponse?: SearchListingsResponseResolvers<ContextType>;
   SearchLocation?: SearchLocationResolvers<ContextType>;
+  SendForgotPasswordEmailPayload?: SendForgotPasswordEmailPayloadResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   SuccessResponse?: SuccessResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserLogin?: UserLoginResolvers<ContextType>;
   UserNotConfirmed?: UserNotConfirmedResolvers<ContextType>;
   ValidationError?: ValidationErrorResolvers<ContextType>;
 };

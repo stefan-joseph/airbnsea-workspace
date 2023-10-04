@@ -3,7 +3,7 @@ import { borderRadius, searchBarBorderColor } from "../constants/constants";
 import { Field, FieldProps } from "formik";
 import { useContext } from "react";
 
-import { NavbarContext } from "../modules/navbar/Navbar";
+import { NavbarContext } from "../modules/auth/Navbar";
 import { ReactComponent as Mexico } from "../assets/svg/mexico.svg";
 import { ReactComponent as Canada } from "../assets/svg/canada.svg";
 import { ReactComponent as World } from "../assets/svg/world.svg";

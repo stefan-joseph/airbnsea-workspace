@@ -12,7 +12,7 @@ import { useGetListingUnavailabilityLazyQuery } from "@airbnb-clone/controller";
 
 import { requiredCalendarProps, universalCalendarProps } from "../utils/utils";
 import { ErrorMessage } from "./ErrorMessage";
-import { Loader } from "../../Loader";
+import Loader from "../../Loader";
 
 type Props = {
   start: string | null;

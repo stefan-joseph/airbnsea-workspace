@@ -22,6 +22,7 @@ export const TextInput2: React.FC<
       error={!!errorMsg}
       helperText={errorMsg as ReactNode}
       sx={{ mt: 1.2 }}
+      color="info"
       InputProps={{
         sx: {
           borderRadius: 2,

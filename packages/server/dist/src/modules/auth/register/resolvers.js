@@ -14,15 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const User_1 = require("../../../entity/User");
-const errorMessages_1 = require("./errorMessages");
 const createConfirmEmailLink_1 = require("../../../utils/createConfirmEmailLink");
 const sendEmail_1 = require("../../../utils/sendEmail");
 const common_1 = require("@airbnb-clone/common");
-const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaError");
 const formatYupError_1 = __importDefault(require("../../shared/utils/formatYupError"));
+const bcryptjs_1 = require("bcryptjs");
+const constants_1 = require("../../../utils/constants");
 exports.resolvers = {
     Mutation: {
-        register: (_, args, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
+        register: (_, args, { redis, req }) => __awaiter(void 0, void 0, void 0, function* () {
             const { email, password, firstName } = args;
             try {
                 yield common_1.registerUserSchema.validate(args);
@@ -32,10 +32,37 @@ exports.resolvers = {
             }
             const userAlreadyExists = yield User_1.User.findOne({
                 where: { email },
-                select: ["id"],
             });
             if (userAlreadyExists) {
-                return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.duplicateEmail);
+                const { oAuth, firstName, avatar } = userAlreadyExists;
+                if (oAuth) {
+                    return {
+                        __typename: "EmailExistsWithOAuth",
+                        authorizationServer: oAuth,
+                        email,
+                        firstName,
+                        avatar,
+                    };
+                }
+                const validPassword = yield (0, bcryptjs_1.compare)(password, userAlreadyExists.password);
+                if (validPassword) {
+                    req.session.userId = userAlreadyExists.id;
+                    if (req.sessionID) {
+                        yield redis.lpush(`${constants_1.userSessionIdPrefix}${userAlreadyExists.id}`, req.sessionID);
+                    }
+                    return {
+                        __typename: "UserLogin",
+                        success: true,
+                    };
+                }
+                else {
+                    return {
+                        __typename: "EmailExistsWithIncorrectPassword",
+                        email,
+                        firstName,
+                        avatar,
+                    };
+                }
             }
             const user = User_1.User.create({
                 email,

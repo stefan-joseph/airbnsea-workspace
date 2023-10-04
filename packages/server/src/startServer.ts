@@ -8,8 +8,6 @@ import Redis from "ioredis";
 // import rateLimit from "express-rate-limit";
 // import RateLimitRedisStore from "rate-limit-redis";
 
-// import passport = require("passport");
-// import { Strategy } from "passport-facebook";
 import cloudinary = require("cloudinary");
 import express = require("express");
 import { applyMiddleware } from "graphql-middleware";
@@ -121,66 +119,6 @@ export const startServer = async () => {
   // });
   // app.use(limiter);
 
-  // passport.use(
-  //   new Strategy(
-  //     {
-  //       clientID: process.env.FACEBOOK_APP_ID as string,
-  //       clientSecret: process.env.FACEBOOK_APP_SECRET as string,
-  //       callbackURL: "http://localhost:4000/auth/facebook/callback",
-  //     },
-  //     async (_, __, profile, cb) => {
-  //       console.log(profile);
-  //       const { id, emails } = profile;
-
-  //       const query = connection
-  //         .getRepository(User)
-  //         .createQueryBuilder("user")
-  //         .where('"user"."facebookId" = :id', { id });
-
-  //       let email: string | null = null;
-
-  //       if (emails) {
-  //         email = emails[0].value;
-  //         query?.orWhere("user.email = :email", { email });
-  //       }
-
-  //       let user = await query.getOne();
-
-  //       // registers user if need be
-  //       if (!user) {
-  //         user = await User.create({
-  //           facebookId: id,
-  //           email: email,
-  //         }).save();
-  //       } else if (!user.facebookId) {
-  //         // if reached, we have found user by email
-  //         // merge existing account with facebook login
-  //         user.facebookId = id;
-  //         await user.save();
-  //       } else {
-  //         // we have a twitterId and email
-  //         // proceed to login
-  //       }
-
-  //       return cb(null, { id: user.id });
-  //     }
-  //   )
-  // );
-
-  // app.use(passport.initialize());
-
-  // app.get("/auth/facebook", passport.authenticate("facebook"));
-
-  // app.get(
-  //   "/auth/facebook/callback",
-  //   passport.authenticate("facebook", { session: false }),
-  //   (req: any, res: any) => {
-  //     req.session.userId = req.user.id;
-  //     // @todo redirect to frontend
-  //     res.redirect("/graphql");
-  //   }
-  // );
-
   cloudinary.v2.config({
     cloud_name: process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -188,54 +126,6 @@ export const startServer = async () => {
   });
 
   app.set("trust proxy", 1);
-  // app.use("/images", express.static("images"));
-
-  // app.get("/auth/github", (_, res) => {
-  //   res.redirect(
-  //     `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_AUTH_CLIENT_ID}&scope=user:email`
-  //   );
-  // });
-
-  // app.get("/auth/github/callback", githubOauth);
-
-  // app.get("/auth/github/callback", (req, _) => {
-  //   axios
-  //     .post(
-  //       "https://github.com/login/oauth/access_token",
-  //       {
-  //         client_id: process.env.GITHUB_AUTH_CLIENT_ID,
-  //         client_secret: process.env.GITHUB_AUTH_CLIENT_SECRET,
-  //         code: req.query.code,
-  //       },
-  //       {
-  //         headers: {
-  //           Accept: "application/json",
-  //         },
-  //       }
-  //     )
-  //     .then((result) => {
-  //       console.log("result", result);
-  //       console.log("result.data.access_token", result.data.access_token);
-  //       // res.send("you are authorized " + result.data.access_token)
-  //       axios("https://api.github.com/user", {
-  //         headers: { Authorization: `Bearer ${result.data.access_token}` },
-  //       })
-  //         .then((result) => {
-  //           console.log("1st api call result", result.data);
-  //         })
-  //         .catch((err) => console.log(err));
-  //       axios("https://api.github.com/user/emails", {
-  //         headers: { Authorization: `Bearer ${result.data.access_token}` },
-  //       })
-  //         .then((result) => {
-  //           console.log("2nd api call result", result.data);
-  //         })
-  //         .catch((err) => console.log(err));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // });
 
   app.get("/", (_, res) => res.redirect("/graphql"));
 

@@ -14,7 +14,7 @@ import {
   VesselType,
 } from "@airbnb-clone/controller";
 import { View } from "./View";
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 
 interface Props {
   // useMutationHook: (values: any) => void;

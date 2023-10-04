@@ -15,13 +15,14 @@ export enum Steps {
   SIGNUP = "sign up",
   OAUTH = "oauth",
   CONFIRM = "confirm",
+  EXISTS = "exists",
 }
 
 export type User = {
   email: string;
   firstName: string;
   avatar: string;
-  authorizationServer: AuthorizationServer;
+  authorizationServer?: AuthorizationServer;
 };
 
 export default function Auth() {
@@ -30,25 +31,30 @@ export default function Auth() {
     email: "",
     firstName: "",
     avatar: "",
-    authorizationServer: AuthorizationServer["Linkedin"],
+    // authorizationServer: AuthorizationServer["Linkedin"],
   });
 
   const AuthStepConfigs: Record<Steps, JSX.Element> = {
     [Steps.DEFAULT]: (
       <EmailForm user={user} setAuthStep={setAuthStep} setUser={setUser} />
     ),
-    [Steps.PASSWORD]: (
-      <PasswordForm setAuthStep={setAuthStep} email={user.email} />
+    [Steps.PASSWORD]: <PasswordForm setAuthStep={setAuthStep} user={user} />,
+    [Steps.SIGNUP]: (
+      <SignUpForm
+        setAuthStep={setAuthStep}
+        setUser={setUser}
+        email={user.email}
+      />
     ),
-    [Steps.SIGNUP]: <SignUpForm setAuthStep={setAuthStep} email={user.email} />,
     [Steps.OAUTH]: <OAuthReminder setAuthStep={setAuthStep} user={user} />,
     [Steps.CONFIRM]: (
       <ConfirmEmailReminder setAuthStep={setAuthStep} user={user} />
     ),
+    [Steps.EXISTS]: (
+      <PasswordForm setAuthStep={setAuthStep} user={user} alreadyExists />
+    ),
 
     // need to add 'email already in use' step
-
-    // neeed to add 'confirm email, resend?' step
   };
 
   return (

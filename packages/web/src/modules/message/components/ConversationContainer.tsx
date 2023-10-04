@@ -17,7 +17,7 @@ import {
 } from "react-router-dom";
 import { Conversation } from "@airbnb-clone/controller";
 
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 import { CreateMessage } from "./CreateMessage";
 import { desktopMinWidth, searchBarHeight } from "../../../constants/constants";
 

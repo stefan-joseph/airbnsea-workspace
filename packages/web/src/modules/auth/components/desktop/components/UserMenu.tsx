@@ -1,11 +1,12 @@
 import { useState, useRef, useContext } from "react";
-import { Avatar, Button, MenuItem, MenuList } from "@mui/material";
+import { Avatar, Button, MenuItem, MenuList, Typography } from "@mui/material";
 import { IoMenuOutline } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 import { PopperMenu } from "../../../../../components/PopperMenu";
 import { AppContext } from "../../../../../context/context";
+import { theme } from "../../../../../MuiTheme";
 
 export const UserMenu = () => {
   const buttonRef = useRef(null);
@@ -46,12 +47,16 @@ export const UserMenu = () => {
               width: 30,
               height: 30,
               marginLeft: -1,
+              fontSize: 10,
               color: authenticated && firstName ? "#FFF" : "grey.600",
-              backgroundColor: authenticated && firstName ? "grey.600" : "#FFF",
+              backgroundColor:
+                authenticated && firstName ? theme.palette.info.main : "#FFF",
             }}
           >
             {authenticated && firstName ? (
-              Array.from(firstName)[0]
+              <Typography color="#FFF" mt={0.4} fontSize={18}>
+                {Array.from(firstName)[0]}
+              </Typography>
             ) : (
               <FaUserCircle size={28} />
             )}

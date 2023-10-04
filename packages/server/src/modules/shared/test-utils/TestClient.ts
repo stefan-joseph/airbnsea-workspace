@@ -32,6 +32,20 @@ export class TestClient {
               ...on SuccessResponse {
                 success
               }
+              ... on EmailExistsWithIncorrectPassword {
+                email
+                firstName
+                avatar
+              }
+              ... on EmailExistsWithOAuth {
+                authorizationServer
+                email
+                firstName
+                avatar
+              }
+              ... on UserLogin {
+                success
+              }
             } 
           }
         `,
@@ -80,8 +94,13 @@ export class TestClient {
         query: `
           mutation {
             resetPassword(newPassword: "${newPassword}", key: "${key}") {
-              path
-              message
+              ...on ValidationError {
+                field
+                message
+              }
+              ...on SuccessResponse {
+                success
+              }
             }
           }
         `,

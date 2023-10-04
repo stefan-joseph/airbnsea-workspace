@@ -17,7 +17,7 @@ import { searchBarBorderColor } from "../../../constants/constants";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { BookingHeader } from "../../../components/calendar/components/BookingHeader";
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 import { CompletionOfBooking } from "./CompletionOfBooking";
 import { RequestErrorMessage } from "../../../components/RequestErrorMessage";
 import { useLoadingDelay } from "../../../components/hooks/useLoadingDelay";

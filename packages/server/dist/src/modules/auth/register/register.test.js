@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../../../entity/User");
 const createTypeormConnection_1 = require("../../../utils/createTypeormConnection");
 const TestClient_1 = require("../../shared/test-utils/TestClient");
-const errorMessages_1 = require("./errorMessages");
 const common_1 = require("@airbnb-clone/common");
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, createTypeormConnection_1.createTypeormConnection)();
@@ -33,8 +32,7 @@ describe("Register user", () => {
     }));
     test("attempt to sign up with duplicate email", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.register(email, password, firstName);
-        expect(response.errors[0].message).toEqual(errorMessages_1.duplicateEmail);
-        expect(response.data).toBeNull();
+        expect(response.data.register.success).toEqual(true);
     }));
     test("checks for bad email", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.register("b", password, firstName);

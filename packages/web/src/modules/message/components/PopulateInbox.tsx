@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 import { Interlocutor } from "./Interlocutor";
 import { NavigateToFirstConversation } from "./NavigateToFirstConversation";
-import { Loader } from "../../../components/Loader";
+import Loader from "../../../components/Loader";
 import { ErrorMessage } from "./ErrorMessage";
 
 const UpdateInboxSubscriptionDocument = gql`

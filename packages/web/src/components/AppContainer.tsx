@@ -5,7 +5,7 @@ import {
   desktopMinWidth,
   searchBarHeight,
 } from "../constants/constants";
-import { Navbar } from "../modules/navbar/Navbar";
+import { Navbar } from "../modules/auth/Navbar";
 import { BottomNavbar } from "./BottomNavbar";
 import { SiteMap } from "./SiteMap";
 

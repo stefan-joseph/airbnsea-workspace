@@ -6,4 +6,19 @@ type Mutation {
   ): RegisterPayload!
 }
 
-union RegisterPayload = ValidationError | SuccessResponse
+union RegisterPayload =
+    SuccessResponse
+  | EmailExistsWithIncorrectPassword
+  | EmailExistsWithOAuth
+  | UserLogin
+  | ValidationError
+
+type UserLogin {
+  success: Boolean!
+}
+
+type EmailExistsWithIncorrectPassword {
+  email: String!
+  firstName: String!
+  avatar: String
+}

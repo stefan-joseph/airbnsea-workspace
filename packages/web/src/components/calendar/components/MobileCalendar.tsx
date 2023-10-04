@@ -9,7 +9,7 @@ import { requiredCalendarProps, universalCalendarProps } from "../utils/utils";
 import { OutlinedButton } from "../../OutlinedButton";
 import { Box, Stack } from "@mui/material";
 import { ErrorMessage } from "./ErrorMessage";
-import { Loader } from "../../Loader";
+import Loader from "../../Loader";
 
 type Props = {
   start: string | null;

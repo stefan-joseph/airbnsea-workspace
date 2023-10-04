@@ -11,7 +11,6 @@ export default function AuthFormContainer({
   HeaderIcon,
   title,
   subtitle,
-  back,
   error,
   setAuthStep,
 }: {
@@ -20,9 +19,8 @@ export default function AuthFormContainer({
   HeaderIcon?: JSX.Element;
   title?: string;
   subtitle?: JSX.Element;
-  back?: boolean;
   error?: string;
-  setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
+  setAuthStep?: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
   return (
     <Stack
@@ -33,7 +31,7 @@ export default function AuthFormContainer({
     >
       <Stack pl={3} pr={3} minHeight={64} borderBottom="1px solid #EBEBEB">
         <Stack position="relative" mt="auto" mb="auto" justifyContent="center">
-          {back && (
+          {setAuthStep && (
             <IconButton
               aria-label="back"
               onClick={() => setAuthStep(Steps.DEFAULT)}

@@ -33,10 +33,12 @@ export const resolvers: Resolvers = {
             user.id,
             redis
           );
+
           if (process.env.NODE_ENV !== "test") {
             // resend confirmation email
             await sendEmail(email, url, "Click here to confirm your email");
           }
+
           return {
             __typename: "UserNotConfirmed",
             email,

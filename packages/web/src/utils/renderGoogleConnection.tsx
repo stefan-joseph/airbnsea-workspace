@@ -1,7 +1,7 @@
 import { Status } from "@googlemaps/react-wrapper";
 import { ReactElement } from "react";
 import { Box } from "@mui/material";
-import { Loader } from "../components/Loader";
+import Loader from "../components/Loader";
 
 export const renderGoogleConnection = (status: Status): ReactElement => {
   if (status === Status.FAILURE)

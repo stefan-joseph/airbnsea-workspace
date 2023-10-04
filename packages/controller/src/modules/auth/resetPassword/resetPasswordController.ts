@@ -3,7 +3,7 @@ import {
   useResetPasswordMutation,
 } from "../../../generated/graphql-hooks";
 import { NormalizedErrorMap } from "../../../types/NormalizedErrorMap";
-import { normalizeErrors } from "../../../utils/normalizeErrors";
+// import { normalizeErrors } from "../../../utils/normalizeErrors";
 
 interface Props {
   children: (data: {
@@ -25,9 +25,9 @@ export const ResetPasswordController = (props: Props) => {
 
     console.log("response:", data);
 
-    if (data?.resetPassword) {
-      return normalizeErrors(data.resetPassword);
-    }
+    // if (data?.resetPassword) {
+    //   return normalizeErrors(data.resetPassword);
+    // }
 
     return null;
   };

@@ -18,7 +18,6 @@ export default function ConfirmEmailReminder({
       header="Confirm email"
       title="Please confirm your email"
       setAuthStep={setAuthStep}
-      back
       HeaderIcon={
         <IoAlertCircleOutline size={26} color={theme.palette.error.main} />
       }

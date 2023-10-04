@@ -1,7 +1,6 @@
 import { User } from "../../../entity/User";
 import { createTypeormConnection } from "../../../utils/createTypeormConnection";
 import { TestClient } from "../../shared/test-utils/TestClient";
-import { duplicateEmail } from "./errorMessages";
 import {
   invalidEmail,
   nameNotLongEnough,
@@ -30,8 +29,7 @@ describe("Register user", () => {
 
   test("attempt to sign up with duplicate email", async () => {
     const response = await client.register(email, password, firstName);
-    expect(response.errors[0].message).toEqual(duplicateEmail);
-    expect(response.data).toBeNull();
+    expect(response.data.register.success).toEqual(true);
   });
 
   test("checks for bad email", async () => {

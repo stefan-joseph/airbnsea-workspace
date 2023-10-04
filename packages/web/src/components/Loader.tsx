@@ -3,13 +3,13 @@ import CircularProgress, {
   CircularProgressProps,
 } from "@mui/material/CircularProgress";
 
-export const Loader = ({
+export default function Loader({
   color,
   size,
 }: {
   color?: CircularProgressProps["color"];
   size?: CircularProgressProps["size"];
-}) => {
+}) {
   return (
     <Box
       sx={{
@@ -23,4 +23,4 @@ export const Loader = ({
       <CircularProgress color={color} size={size} />
     </Box>
   );
-};
+}

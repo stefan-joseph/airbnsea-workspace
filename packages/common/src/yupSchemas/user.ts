@@ -20,11 +20,11 @@ const password = string()
   .min(6, passwordNotLongEnough)
   .max(255, "Password must not exceed 255 characters.");
 
-const password2 = string().test(
+const newPassword2 = string().test(
   "matches_password",
   "Passwords must match.",
   function (value) {
-    return value === this.parent.password;
+    return value === this.parent.newPassword;
   }
 );
 
@@ -40,25 +40,22 @@ export const registerUserSchema = object().shape({
   firstName,
 });
 
-export const registerUserSchemaWithPassword2 = object().shape({
-  email,
-  password,
-  password2,
-  firstName,
-});
-
 export const registerOAuthUserSchema = object().shape({
   email,
   firstName,
 });
 
 export const forgotPasswordSchema = object().shape({
-  email: string().email(invalidEmail),
+  email,
 });
 
 export const resetPasswordSchema = object().shape({
   newPassword: password,
-  newPassword2: password2,
+});
+
+export const resetPasswordSchemaWithPassword2 = object().shape({
+  newPassword: password,
+  newPassword2,
 });
 
 export const loginSchema = object().shape({
