@@ -1,3 +1,7 @@
 mutation AuthenticateUserWithOauth($code: String!) {
   authenticateUserWithOauth(code: $code)
 }
+
+mutation AuthenticateUserWithLinkedin($code: String!) {
+  authenticateUserWithLinkedin(code: $code)
+}

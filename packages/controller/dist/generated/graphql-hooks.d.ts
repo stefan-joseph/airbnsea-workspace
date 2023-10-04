@@ -32,7 +32,7 @@ export declare type Address = {
 };
 export declare enum AuthorizationServer {
     Github = "GITHUB",
-    Google = "GOOGLE"
+    Linkedin = "LINKEDIN"
 }
 export declare type Booking = {
     __typename?: 'Booking';
@@ -51,7 +51,7 @@ export declare type BookingInput = {
     guests: Scalars['Int'];
     start: Scalars['String'];
 };
-export declare type CheckEmailPayload = EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail | ValidationError;
+export declare type CheckEmailPayload = EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail | UserNotConfirmed | ValidationError;
 export declare type Conversation = {
     __typename?: 'Conversation';
     conversationId: Scalars['ID'];
@@ -167,6 +167,7 @@ export declare type Me = {
 export declare type Mutation = {
     __typename?: 'Mutation';
     addFruit: Scalars['Boolean'];
+    authenticateUserWithLinkedin: Scalars['Boolean'];
     authenticateUserWithOauth: Scalars['Boolean'];
     confirmEmail: Scalars['Boolean'];
     createBooking: Booking;
@@ -184,6 +185,9 @@ export declare type Mutation = {
 };
 export declare type MutationAddFruitArgs = {
     fruit: Scalars['String'];
+};
+export declare type MutationAuthenticateUserWithLinkedinArgs = {
+    code: Scalars['String'];
 };
 export declare type MutationAuthenticateUserWithOauthArgs = {
     code: Scalars['String'];
@@ -349,6 +353,11 @@ export declare type User = {
     firstName?: Maybe<Scalars['String']>;
     lastName?: Maybe<Scalars['String']>;
 };
+export declare type UserNotConfirmed = {
+    __typename?: 'UserNotConfirmed';
+    email: Scalars['String'];
+    userExists: Scalars['Boolean'];
+};
 export declare type ValidationError = {
     __typename?: 'ValidationError';
     field: Scalars['String'];
@@ -378,6 +387,10 @@ export declare type CheckEmailQuery = {
         userExists: boolean;
     } | {
         __typename?: 'NoUserWithThisEmail';
+        email: string;
+        userExists: boolean;
+    } | {
+        __typename?: 'UserNotConfirmed';
         email: string;
         userExists: boolean;
     } | {
@@ -439,6 +452,13 @@ export declare type AuthenticateUserWithOauthMutationVariables = Exact<{
 export declare type AuthenticateUserWithOauthMutation = {
     __typename?: 'Mutation';
     authenticateUserWithOauth: boolean;
+};
+export declare type AuthenticateUserWithLinkedinMutationVariables = Exact<{
+    code: Scalars['String'];
+}>;
+export declare type AuthenticateUserWithLinkedinMutation = {
+    __typename?: 'Mutation';
+    authenticateUserWithLinkedin: boolean;
 };
 export declare type RegisterUserMutationVariables = Exact<{
     email: Scalars['String'];
@@ -755,6 +775,14 @@ export declare function useAuthenticateUserWithOauthMutation(baseOptions?: Apoll
 export declare type AuthenticateUserWithOauthMutationHookResult = ReturnType<typeof useAuthenticateUserWithOauthMutation>;
 export declare type AuthenticateUserWithOauthMutationResult = Apollo.MutationResult<AuthenticateUserWithOauthMutation>;
 export declare type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
+export declare const AuthenticateUserWithLinkedinDocument: Apollo.DocumentNode;
+export declare type AuthenticateUserWithLinkedinMutationFn = Apollo.MutationFunction<AuthenticateUserWithLinkedinMutation, AuthenticateUserWithLinkedinMutationVariables>;
+export declare function useAuthenticateUserWithLinkedinMutation(baseOptions?: Apollo.MutationHookOptions<AuthenticateUserWithLinkedinMutation, AuthenticateUserWithLinkedinMutationVariables>): Apollo.MutationTuple<AuthenticateUserWithLinkedinMutation, Exact<{
+    code: string;
+}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+export declare type AuthenticateUserWithLinkedinMutationHookResult = ReturnType<typeof useAuthenticateUserWithLinkedinMutation>;
+export declare type AuthenticateUserWithLinkedinMutationResult = Apollo.MutationResult<AuthenticateUserWithLinkedinMutation>;
+export declare type AuthenticateUserWithLinkedinMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithLinkedinMutation, AuthenticateUserWithLinkedinMutationVariables>;
 export declare const RegisterUserDocument: Apollo.DocumentNode;
 export declare type RegisterUserMutationFn = Apollo.MutationFunction<RegisterUserMutation, RegisterUserMutationVariables>;
 export declare function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserMutation, RegisterUserMutationVariables>): Apollo.MutationTuple<RegisterUserMutation, Exact<{

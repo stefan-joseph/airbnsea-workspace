@@ -3,7 +3,7 @@ import { createServer, createPubSub } from "@graphql-yoga/node";
 import { createRedisEventTarget } from "@graphql-yoga/redis-event-target";
 import Redis from "ioredis";
 
-import { runSeeders } from "typeorm-extension";
+// import { runSeeders } from "typeorm-extension";
 
 // import rateLimit from "express-rate-limit";
 // import RateLimitRedisStore from "rate-limit-redis";
@@ -74,12 +74,11 @@ export const startServer = async () => {
     newInboxUpdate: [payload: InboxMessage];
   }>({ eventTarget });
 
-  await getTypeormConnection()
-    .initialize()
-    .then(async () => {
-      await getTypeormConnection().synchronize(true);
-      await runSeeders(getTypeormConnection());
-    });
+  await getTypeormConnection().initialize();
+  // .then(async () => {
+  //   await getTypeormConnection().synchronize(true);
+  //   await runSeeders(getTypeormConnection());
+  // });
 
   // clear cache
   // await redis.del(listingCacheKey);

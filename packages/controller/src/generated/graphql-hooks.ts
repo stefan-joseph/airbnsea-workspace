@@ -29,7 +29,7 @@ export type Address = {
 
 export enum AuthorizationServer {
   Github = 'GITHUB',
-  Google = 'GOOGLE'
+  Linkedin = 'LINKEDIN'
 }
 
 export type Booking = {
@@ -51,7 +51,7 @@ export type BookingInput = {
   start: Scalars['String'];
 };
 
-export type CheckEmailPayload = EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail | ValidationError;
+export type CheckEmailPayload = EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail | UserNotConfirmed | ValidationError;
 
 export type Conversation = {
   __typename?: 'Conversation';
@@ -182,6 +182,7 @@ export type Me = {
 export type Mutation = {
   __typename?: 'Mutation';
   addFruit: Scalars['Boolean'];
+  authenticateUserWithLinkedin: Scalars['Boolean'];
   authenticateUserWithOauth: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
   createBooking: Booking;
@@ -201,6 +202,11 @@ export type Mutation = {
 
 export type MutationAddFruitArgs = {
   fruit: Scalars['String'];
+};
+
+
+export type MutationAuthenticateUserWithLinkedinArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -422,6 +428,12 @@ export type User = {
   lastName?: Maybe<Scalars['String']>;
 };
 
+export type UserNotConfirmed = {
+  __typename?: 'UserNotConfirmed';
+  email: Scalars['String'];
+  userExists: Scalars['Boolean'];
+};
+
 export type ValidationError = {
   __typename?: 'ValidationError';
   field: Scalars['String'];
@@ -442,7 +454,7 @@ export type CheckEmailQueryVariables = Exact<{
 }>;
 
 
-export type CheckEmailQuery = { __typename?: 'Query', checkEmail: { __typename?: 'EmailExistsWithOAuth', authorizationServer: AuthorizationServer, email: string, firstName: string, avatar?: string | null } | { __typename?: 'EmailExistsWithPassword', email: string, userExists: boolean } | { __typename?: 'NoUserWithThisEmail', email: string, userExists: boolean } | { __typename?: 'ValidationError', field: string, message: string } };
+export type CheckEmailQuery = { __typename?: 'Query', checkEmail: { __typename?: 'EmailExistsWithOAuth', authorizationServer: AuthorizationServer, email: string, firstName: string, avatar?: string | null } | { __typename?: 'EmailExistsWithPassword', email: string, userExists: boolean } | { __typename?: 'NoUserWithThisEmail', email: string, userExists: boolean } | { __typename?: 'UserNotConfirmed', email: string, userExists: boolean } | { __typename?: 'ValidationError', field: string, message: string } };
 
 export type ConfirmEmailMutationVariables = Exact<{
   id: Scalars['String'];
@@ -482,6 +494,13 @@ export type AuthenticateUserWithOauthMutationVariables = Exact<{
 
 
 export type AuthenticateUserWithOauthMutation = { __typename?: 'Mutation', authenticateUserWithOauth: boolean };
+
+export type AuthenticateUserWithLinkedinMutationVariables = Exact<{
+  code: Scalars['String'];
+}>;
+
+
+export type AuthenticateUserWithLinkedinMutation = { __typename?: 'Mutation', authenticateUserWithLinkedin: boolean };
 
 export type RegisterUserMutationVariables = Exact<{
   email: Scalars['String'];
@@ -606,6 +625,10 @@ export const CheckEmailDocument = gql`
       email
       firstName
       avatar
+    }
+    ... on UserNotConfirmed {
+      email
+      userExists
     }
     ... on NoUserWithThisEmail {
       email
@@ -844,6 +867,37 @@ export function useAuthenticateUserWithOauthMutation(baseOptions?: Apollo.Mutati
 export type AuthenticateUserWithOauthMutationHookResult = ReturnType<typeof useAuthenticateUserWithOauthMutation>;
 export type AuthenticateUserWithOauthMutationResult = Apollo.MutationResult<AuthenticateUserWithOauthMutation>;
 export type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
+export const AuthenticateUserWithLinkedinDocument = gql`
+    mutation AuthenticateUserWithLinkedin($code: String!) {
+  authenticateUserWithLinkedin(code: $code)
+}
+    `;
+export type AuthenticateUserWithLinkedinMutationFn = Apollo.MutationFunction<AuthenticateUserWithLinkedinMutation, AuthenticateUserWithLinkedinMutationVariables>;
+
+/**
+ * __useAuthenticateUserWithLinkedinMutation__
+ *
+ * To run a mutation, you first call `useAuthenticateUserWithLinkedinMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthenticateUserWithLinkedinMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authenticateUserWithLinkedinMutation, { data, loading, error }] = useAuthenticateUserWithLinkedinMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useAuthenticateUserWithLinkedinMutation(baseOptions?: Apollo.MutationHookOptions<AuthenticateUserWithLinkedinMutation, AuthenticateUserWithLinkedinMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AuthenticateUserWithLinkedinMutation, AuthenticateUserWithLinkedinMutationVariables>(AuthenticateUserWithLinkedinDocument, options);
+      }
+export type AuthenticateUserWithLinkedinMutationHookResult = ReturnType<typeof useAuthenticateUserWithLinkedinMutation>;
+export type AuthenticateUserWithLinkedinMutationResult = Apollo.MutationResult<AuthenticateUserWithLinkedinMutation>;
+export type AuthenticateUserWithLinkedinMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithLinkedinMutation, AuthenticateUserWithLinkedinMutationVariables>;
 export const RegisterUserDocument = gql`
     mutation RegisterUser($email: String!, $password: String!, $firstName: String!) {
   register(email: $email, password: $password, firstName: $firstName) {

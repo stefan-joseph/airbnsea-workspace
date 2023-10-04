@@ -1,13 +1,14 @@
 import { ValidationError } from "yup";
 import { User } from "../../../entity/User";
 import { Resolvers } from "../../../types/types";
-import { formatGraphQLYogaError } from "../../shared/utils/formatGraphQLYogaError";
 import { checkEmailSchema } from "@airbnb-clone/common";
 import formatYupError from "../../shared/utils/formatYupError";
+import { createConfirmEmailLink } from "../../../utils/createConfirmEmailLink";
+import { sendEmail } from "../../../utils/sendEmail";
 
 export const resolvers: Resolvers = {
   Query: {
-    checkEmail: async (_, { email }) => {
+    checkEmail: async (_, { email }, { redis }) => {
       // yup validation
       try {
         await checkEmailSchema.validate({ email });
@@ -23,14 +24,28 @@ export const resolvers: Resolvers = {
       });
 
       if (user) {
-        // check if user is confirmed
-        if (!user.confirmed) {
-          return formatGraphQLYogaError("Your email has not been confirmed");
+        const { email, firstName, avatar, oAuth, confirmed } = user;
+
+        // if user email not confirmed, must do this first
+        if (!confirmed) {
+          const url = await createConfirmEmailLink(
+            process.env.FRONTEND_HOST as string,
+            user.id,
+            redis
+          );
+          if (process.env.NODE_ENV !== "test") {
+            // resend confirmation email
+            await sendEmail(email, url, "Click here to confirm your email");
+          }
+          return {
+            __typename: "UserNotConfirmed",
+            email,
+            userExists: true,
+          };
         }
 
-        const { email, firstName, avatar, oAuth } = user;
+        // if user has password, they should sign in with it
         if (user.password) {
-          // if user has password, they must sign in with it
           return {
             __typename: "EmailExistsWithPassword",
             email,
@@ -47,28 +62,6 @@ export const resolvers: Resolvers = {
           avatar,
         };
       }
-
-      // if (!user.confirmed) {
-      //   return {
-      //     errors: [
-      //       {
-      //         path: "email",
-      //         message: confirmEmailError,
-      //       },
-      //     ],
-      //   };
-      // }
-
-      // if (user.forgotPasswordLocked) {
-      //   return {
-      //     errors: [
-      //       {
-      //         path: "email",
-      //         message: forgotPasswordLockedError,
-      //       },
-      //     ],
-      //   };
-      // }
 
       // email does not exist in db, continue to finish sign up process
       return { __typename: "NoUserWithThisEmail", email, userExists: false };

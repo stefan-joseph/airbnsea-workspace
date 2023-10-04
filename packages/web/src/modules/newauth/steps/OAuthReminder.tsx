@@ -18,18 +18,20 @@ export default function OAuthReminder({
   const { email, firstName, avatar, authorizationServer } = user;
 
   const AuthServerConfigs: Record<AuthorizationServer, JSX.Element> = {
-    [AuthorizationServer.Google]: (
+    [AuthorizationServer.Linkedin]: (
       <OauthLink
         href="https://google.com"
-        text="Continue with Google"
-        Icon={FcGoogle}
+        text="Continue with LinkedIn"
+        Icon={<FcGoogle />}
+        handleClick={() => {}}
       />
     ),
     [AuthorizationServer.Github]: (
       <OauthLink
         href="https://github.com/login/oauth/authorize"
         text="Continue with Github"
-        Icon={FaGithub}
+        Icon={<FaGithub />}
+        handleClick={() => {}}
       />
     ),
   };

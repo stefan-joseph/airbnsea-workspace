@@ -28,7 +28,7 @@ export type Address = {
 
 export enum AuthorizationServer {
   Github = 'GITHUB',
-  Google = 'GOOGLE'
+  Linkedin = 'LINKEDIN'
 }
 
 export type Booking = {
@@ -50,7 +50,7 @@ export type BookingInput = {
   start: Scalars['String'];
 };
 
-export type CheckEmailPayload = EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail | ValidationError;
+export type CheckEmailPayload = EmailExistsWithOAuth | EmailExistsWithPassword | NoUserWithThisEmail | UserNotConfirmed | ValidationError;
 
 export type Conversation = {
   __typename?: 'Conversation';
@@ -181,6 +181,7 @@ export type Me = {
 export type Mutation = {
   __typename?: 'Mutation';
   addFruit: Scalars['Boolean'];
+  authenticateUserWithLinkedin: Scalars['Boolean'];
   authenticateUserWithOauth: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
   createBooking: Booking;
@@ -200,6 +201,11 @@ export type Mutation = {
 
 export type MutationAddFruitArgs = {
   fruit: Scalars['String'];
+};
+
+
+export type MutationAuthenticateUserWithLinkedinArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -421,6 +427,12 @@ export type User = {
   lastName?: Maybe<Scalars['String']>;
 };
 
+export type UserNotConfirmed = {
+  __typename?: 'UserNotConfirmed';
+  email: Scalars['String'];
+  userExists: Scalars['Boolean'];
+};
+
 export type ValidationError = {
   __typename?: 'ValidationError';
   field: Scalars['String'];
@@ -510,7 +522,7 @@ export type ResolversTypes = {
   Booking: ResolverTypeWrapper<Booking>;
   BookingInput: BookingInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  CheckEmailPayload: ResolversTypes['EmailExistsWithOAuth'] | ResolversTypes['EmailExistsWithPassword'] | ResolversTypes['NoUserWithThisEmail'] | ResolversTypes['ValidationError'];
+  CheckEmailPayload: ResolversTypes['EmailExistsWithOAuth'] | ResolversTypes['EmailExistsWithPassword'] | ResolversTypes['NoUserWithThisEmail'] | ResolversTypes['UserNotConfirmed'] | ResolversTypes['ValidationError'];
   Conversation: ResolverTypeWrapper<Conversation>;
   ConversationMessage: ResolverTypeWrapper<ConversationMessage>;
   ConversationSuccess: ResolverTypeWrapper<ConversationSuccess>;
@@ -548,6 +560,7 @@ export type ResolversTypes = {
   SuccessResponse: ResolverTypeWrapper<SuccessResponse>;
   UpdateListingFields: UpdateListingFields;
   User: ResolverTypeWrapper<User>;
+  UserNotConfirmed: ResolverTypeWrapper<UserNotConfirmed>;
   ValidationError: ResolverTypeWrapper<ValidationError>;
   VesselType: VesselType;
   VesselTypeInput: VesselTypeInput;
@@ -559,7 +572,7 @@ export type ResolversParentTypes = {
   Booking: Booking;
   BookingInput: BookingInput;
   Boolean: Scalars['Boolean'];
-  CheckEmailPayload: ResolversParentTypes['EmailExistsWithOAuth'] | ResolversParentTypes['EmailExistsWithPassword'] | ResolversParentTypes['NoUserWithThisEmail'] | ResolversParentTypes['ValidationError'];
+  CheckEmailPayload: ResolversParentTypes['EmailExistsWithOAuth'] | ResolversParentTypes['EmailExistsWithPassword'] | ResolversParentTypes['NoUserWithThisEmail'] | ResolversParentTypes['UserNotConfirmed'] | ResolversParentTypes['ValidationError'];
   Conversation: Conversation;
   ConversationMessage: ConversationMessage;
   ConversationSuccess: ConversationSuccess;
@@ -595,6 +608,7 @@ export type ResolversParentTypes = {
   SuccessResponse: SuccessResponse;
   UpdateListingFields: UpdateListingFields;
   User: User;
+  UserNotConfirmed: UserNotConfirmed;
   ValidationError: ValidationError;
   VesselTypeInput: VesselTypeInput;
 };
@@ -613,7 +627,7 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type CheckEmailPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CheckEmailPayload'] = ResolversParentTypes['CheckEmailPayload']> = {
-  __resolveType: TypeResolveFn<'EmailExistsWithOAuth' | 'EmailExistsWithPassword' | 'NoUserWithThisEmail' | 'ValidationError', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'EmailExistsWithOAuth' | 'EmailExistsWithPassword' | 'NoUserWithThisEmail' | 'UserNotConfirmed' | 'ValidationError', ParentType, ContextType>;
 };
 
 export type ConversationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Conversation'] = ResolversParentTypes['Conversation']> = {
@@ -755,6 +769,7 @@ export type MeResolvers<ContextType = any, ParentType extends ResolversParentTyp
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addFruit?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddFruitArgs, 'fruit'>>;
+  authenticateUserWithLinkedin?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAuthenticateUserWithLinkedinArgs, 'code'>>;
   authenticateUserWithOauth?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAuthenticateUserWithOauthArgs, 'code'>>;
   confirmEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationConfirmEmailArgs, 'id'>>;
   createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input' | 'listingId'>>;
@@ -853,6 +868,12 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserNotConfirmedResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserNotConfirmed'] = ResolversParentTypes['UserNotConfirmed']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userExists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ValidationErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['ValidationError'] = ResolversParentTypes['ValidationError']> = {
   field?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -890,6 +911,7 @@ export type Resolvers<ContextType = any> = {
   Subscription?: SubscriptionResolvers<ContextType>;
   SuccessResponse?: SuccessResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserNotConfirmed?: UserNotConfirmedResolvers<ContextType>;
   ValidationError?: ValidationErrorResolvers<ContextType>;
 };
 

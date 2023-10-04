@@ -56,7 +56,6 @@ describe("Register user", () => {
     }));
     test("checks for bad firstName", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.register(email, password, "q");
-        console.log(response);
         expect(response.data).toEqual({
             register: {
                 message: common_1.nameNotLongEnough,

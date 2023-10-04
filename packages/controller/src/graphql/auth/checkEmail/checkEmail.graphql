@@ -10,6 +10,10 @@ query CheckEmail($email: String!) {
       firstName
       avatar
     }
+    ... on UserNotConfirmed {
+      email
+      userExists
+    }
     ... on NoUserWithThisEmail {
       email
       userExists

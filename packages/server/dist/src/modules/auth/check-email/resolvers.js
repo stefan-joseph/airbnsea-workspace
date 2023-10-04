@@ -14,12 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const User_1 = require("../../../entity/User");
-const formatGraphQLYogaError_1 = require("../../shared/utils/formatGraphQLYogaError");
 const common_1 = require("@airbnb-clone/common");
 const formatYupError_1 = __importDefault(require("../../shared/utils/formatYupError"));
+const createConfirmEmailLink_1 = require("../../../utils/createConfirmEmailLink");
+const sendEmail_1 = require("../../../utils/sendEmail");
 exports.resolvers = {
     Query: {
-        checkEmail: (_, { email }) => __awaiter(void 0, void 0, void 0, function* () {
+        checkEmail: (_, { email }, { redis }) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 yield common_1.checkEmailSchema.validate({ email });
             }
@@ -30,10 +31,18 @@ exports.resolvers = {
                 where: { email: email.toLowerCase() },
             });
             if (user) {
-                if (!user.confirmed) {
-                    return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)("Your email has not been confirmed");
+                const { email, firstName, avatar, oAuth, confirmed } = user;
+                if (!confirmed) {
+                    const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)(process.env.FRONTEND_HOST, user.id, redis);
+                    if (process.env.NODE_ENV !== "test") {
+                        yield (0, sendEmail_1.sendEmail)(email, url, "Click here to confirm your email");
+                    }
+                    return {
+                        __typename: "UserNotConfirmed",
+                        email,
+                        userExists: true,
+                    };
                 }
-                const { email, firstName, avatar, oAuth } = user;
                 if (user.password) {
                     return {
                         __typename: "EmailExistsWithPassword",

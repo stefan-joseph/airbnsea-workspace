@@ -6,6 +6,7 @@ union CheckEmailPayload =
     EmailExistsWithPassword
   | EmailExistsWithOAuth
   | NoUserWithThisEmail
+  | UserNotConfirmed
   | ValidationError
 
 type EmailExistsWithPassword {
@@ -22,10 +23,15 @@ type EmailExistsWithOAuth {
 
 enum AuthorizationServer {
   GITHUB
-  GOOGLE
+  LINKEDIN
 }
 
 type NoUserWithThisEmail {
+  email: String!
+  userExists: Boolean!
+}
+
+type UserNotConfirmed {
   email: String!
   userExists: Boolean!
 }

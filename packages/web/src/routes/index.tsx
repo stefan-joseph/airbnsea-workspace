@@ -1,8 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import ErrorPage from "../components/ErrorPage";
 import { ForgotPasswordConnector } from "../modules/auth/forgotPassword/ForgotPasswordConnector";
-import { LoginConnector } from "../modules/auth/login/LoginConnector";
-import { RegisterConnector } from "../modules/auth/register/RegisterController";
 import { ResetPasswordConnector } from "../modules/auth/resetPassword/ResetPasswordConnector";
 import { TextPage } from "../modules/textPage/TextPage";
 import { ProtectedRoute } from "./ProtectedRoute";
@@ -13,8 +11,8 @@ import { Search } from "../modules/search/Search";
 import { Message } from "../modules/message/Message";
 import { BookingConfirmationPage } from "../modules/booking/components/ComfirmationPage";
 import ConfirmEmail from "../modules/auth/confirmEmail/confirmEmail";
-import OauthGithub from "../modules/auth/oauth/OauthGithub";
 import Auth from "../modules/newauth/Auth";
+import OauthCallback from "../modules/newauth/components/OauthCallback";
 
 export const router = createBrowserRouter([
   {
@@ -43,8 +41,8 @@ export const router = createBrowserRouter([
     element: <ResetPasswordConnector />,
   },
   {
-    path: "auth/github",
-    element: <OauthGithub />,
+    path: "auth/:authServer",
+    element: <OauthCallback />,
   },
   {
     path: "/listing/:listingId/view",

@@ -6,31 +6,22 @@ export default function OauthLink({
   href,
   text,
   Icon,
+  handleClick,
 }: {
   href: string;
   text: string;
-  Icon: React.ElementType;
+  Icon: JSX.Element;
+  handleClick: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }) {
   return (
     <Button
+      component="a"
       variant="outlined"
       fullWidth
       size="large"
       href={href}
-      onClick={(e) => {
-        e.preventDefault();
-        const state = crypto.randomUUID();
-
-        localStorage.setItem("latestCSRFToken", state);
-
-        let link = href;
-        link += `?client_id=${process.env.REACT_APP_GITHUB_AUTH_CLIENT_ID}`;
-        link += `&scope=user:email`;
-        link += `&state=${state}`;
-
-        window.location.href = link;
-      }}
-      startIcon={<Icon style={{ marginRight: 6 }} />}
+      onClick={handleClick}
+      startIcon={<SvgIcon sx={{ mr: 1 }}>{Icon}</SvgIcon>}
       sx={{
         backgroundColor: "rgb(248 249 252)",
         borderColor: "rgb(215 223 233)",

@@ -1,12 +1,12 @@
 import { Stack, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import {
   useCheckEmailLazyQuery,
   useLoginAsRandomUserMutation,
 } from "@airbnb-clone/controller";
 import { checkEmailSchema } from "@airbnb-clone/common";
+import { useLocation } from "react-router-dom";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
 import OrDivider from "../components/OrDivider";
@@ -25,6 +25,7 @@ export default function EmailForm({
   setUser: React.Dispatch<React.SetStateAction<User>>;
   setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
+  const { state } = useLocation();
   const [checkEmailLazyQuery, { error, loading }] = useCheckEmailLazyQuery();
 
   const [loginAsRandomUserMutation, { error: error2, loading: loading2 }] =
@@ -37,12 +38,12 @@ export default function EmailForm({
       subtitle={
         <Typography fontSize={14}>
           If you'd like to try out the application without signing up, click{" "}
-          <b>Continue as test user</b> below to sign in to an auto-generated
+          <b>Continue as Test User</b> below to sign in to an auto-generated
           account.
         </Typography>
       }
       setAuthStep={setAuthStep}
-      error={error?.message || error2?.message}
+      error={error?.message || error2?.message || state?.message}
     >
       <Formik
         initialValues={{
@@ -51,9 +52,7 @@ export default function EmailForm({
         validationSchema={checkEmailSchema}
         validateOnBlur={false}
         validateOnChange={false}
-        onSubmit={async ({ email }, { setSubmitting, setFieldError }) => {
-          // setSubmitting(true);
-          // for (let step = 0; step < 9999999999; step++) {}
+        onSubmit={async ({ email }, { setFieldError }) => {
           const { data } = await checkEmailLazyQuery({
             variables: { email: email.trim() },
           });
@@ -83,6 +82,10 @@ export default function EmailForm({
             const { email } = checkEmail;
             setAuthStep(Steps.SIGNUP);
             setUser({ ...user, email });
+          } else if (__typename === "UserNotConfirmed") {
+            const { email } = checkEmail;
+            setAuthStep(Steps.CONFIRM);
+            setUser({ ...user, email });
           }
         }}
       >
@@ -96,14 +99,36 @@ export default function EmailForm({
       <OrDivider />
       <Stack gap={2}>
         <OauthLink
-          href="https://google.com"
-          text="Continue with Google"
-          Icon={FcGoogle}
+          href="https://www.linkedin.com/oauth/v2/authorization"
+          text="Continue with LinkedIn"
+          Icon={<FaLinkedin color="#0077B5" />}
+          handleClick={(e) => {
+            e.preventDefault();
+            const state = crypto.randomUUID();
+            localStorage.setItem("latestCSRFToken", state);
+            let link = (e.target as HTMLAnchorElement).href;
+            link += "?response_type=code";
+            link += `&client_id=${process.env.REACT_APP_LINKEDIN_AUTH_CLIENT_ID}`;
+            link += `&redirect_uri=${process.env.REACT_APP_CLIENT_URL}/auth/linkedin`;
+            link += `&state=${state}`;
+            link += "&scope=openid profile email";
+            window.location.href = link;
+          }}
         />
         <OauthLink
           href="https://github.com/login/oauth/authorize"
           text="Continue with Github"
-          Icon={FaGithub}
+          Icon={<FaGithub />}
+          handleClick={(e) => {
+            e.preventDefault();
+            const state = crypto.randomUUID();
+            localStorage.setItem("latestCSRFToken", state);
+            let link = (e.target as HTMLAnchorElement).href;
+            link += `?client_id=${process.env.REACT_APP_GITHUB_AUTH_CLIENT_ID}`;
+            link += `&scope=user:email`;
+            link += `&state=${state}`;
+            window.location.href = link;
+          }}
         />
         <TestUserButton handleClick={loginAsRandomUserMutation} />
       </Stack>

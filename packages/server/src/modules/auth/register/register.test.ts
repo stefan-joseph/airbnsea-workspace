@@ -56,7 +56,6 @@ describe("Register user", () => {
 
   test("checks for bad firstName", async () => {
     const response = await client.register(email, password, "q");
-    console.log(response);
 
     expect(response.data).toEqual({
       register: {

@@ -7,12 +7,14 @@ import PasswordForm from "./steps/PasswordForm";
 import SignUpForm from "./steps/SignUpForm";
 import OAuthReminder from "./steps/OAuthReminder";
 import { AuthorizationServer } from "@airbnb-clone/controller";
+import ConfirmEmailReminder from "./steps/ConfirmEmailReminder";
 
 export enum Steps {
   DEFAULT = "default",
   PASSWORD = "password",
   SIGNUP = "sign up",
   OAUTH = "oauth",
+  CONFIRM = "confirm",
 }
 
 export type User = {
@@ -28,7 +30,7 @@ export default function Auth() {
     email: "",
     firstName: "",
     avatar: "",
-    authorizationServer: AuthorizationServer["Google"],
+    authorizationServer: AuthorizationServer["Linkedin"],
   });
 
   const AuthStepConfigs: Record<Steps, JSX.Element> = {
@@ -38,10 +40,11 @@ export default function Auth() {
     [Steps.PASSWORD]: (
       <PasswordForm setAuthStep={setAuthStep} email={user.email} />
     ),
-
     [Steps.SIGNUP]: <SignUpForm setAuthStep={setAuthStep} email={user.email} />,
-
     [Steps.OAUTH]: <OAuthReminder setAuthStep={setAuthStep} user={user} />,
+    [Steps.CONFIRM]: (
+      <ConfirmEmailReminder setAuthStep={setAuthStep} user={user} />
+    ),
 
     // need to add 'email already in use' step
 

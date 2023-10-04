@@ -4,7 +4,7 @@ exports.VesselType = exports.Status = exports.InboxType = exports.AuthorizationS
 var AuthorizationServer;
 (function (AuthorizationServer) {
     AuthorizationServer["Github"] = "GITHUB";
-    AuthorizationServer["Google"] = "GOOGLE";
+    AuthorizationServer["Linkedin"] = "LINKEDIN";
 })(AuthorizationServer = exports.AuthorizationServer || (exports.AuthorizationServer = {}));
 var InboxType;
 (function (InboxType) {

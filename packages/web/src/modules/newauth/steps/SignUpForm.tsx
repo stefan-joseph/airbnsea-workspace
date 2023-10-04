@@ -75,10 +75,10 @@ export default function SignUpForm({
           const { register } = data;
           const { __typename } = register;
 
-          if (__typename == "ValidationError") {
+          if (__typename === "ValidationError") {
             const { field, message } = register;
             setFieldError(field, message);
-          } else if (__typename == "SuccessResponse") {
+          } else if (__typename === "SuccessResponse") {
             register.success && setSignUpComplete(true);
           }
         }}

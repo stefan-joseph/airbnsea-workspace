@@ -2,7 +2,6 @@ import { ValidationError } from "yup";
 import { formatGraphQLYogaError } from "./formatGraphQLYogaError";
 
 export default function formatYupError(error: ValidationError) {
-  console.log("yup error", error);
   const { errors, path } = error;
   return { message: errors[0], field: path as string };
 }

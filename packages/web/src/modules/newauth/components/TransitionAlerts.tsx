@@ -13,6 +13,8 @@ export default function TransitionAlerts({
 }) {
   const [open, setOpen] = useState(true);
 
+  // to clear state so error message doesn't persist through refresh
+  window.history.replaceState({}, "");
   return (
     <Collapse in={open}>
       <Alert
@@ -23,6 +25,7 @@ export default function TransitionAlerts({
         //     color="inherit"
         //     size="small"
         //     onClick={() => {
+        //       window.history.replaceState({}, "");
         //       setOpen(false);
         //     }}
         //   >

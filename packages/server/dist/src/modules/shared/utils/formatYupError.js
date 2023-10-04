@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.formatYupGraphQLError = void 0;
 const formatGraphQLYogaError_1 = require("./formatGraphQLYogaError");
 function formatYupError(error) {
-    console.log("yup error", error);
     const { errors, path } = error;
     return { message: errors[0], field: path };
 }

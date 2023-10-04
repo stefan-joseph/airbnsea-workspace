@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, SvgIcon } from "@mui/material";
 import { FaUserCircle } from "react-icons/fa";
 import useSetUserAndRedirect from "../../../hooks/useSetUserAndRedirect";
 
@@ -19,7 +19,11 @@ export default function TestUserButton({
           setUserAndRedirect();
         }
       }}
-      startIcon={<FaUserCircle style={{ marginRight: 6 }} color="#431407" />}
+      startIcon={
+        <SvgIcon sx={{ mr: 1 }}>
+          <FaUserCircle color="#431407" />
+        </SvgIcon>
+      }
       sx={{
         backgroundColor: "#fff7ed",
         borderColor: "rgb(215 223 233)",
@@ -30,7 +34,7 @@ export default function TestUserButton({
         },
       }}
     >
-      Continue as test user
+      Continue as Test User
     </Button>
   );
 }

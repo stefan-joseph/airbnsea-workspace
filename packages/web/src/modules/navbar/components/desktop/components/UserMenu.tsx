@@ -68,24 +68,34 @@ export const UserMenu = () => {
         {authenticated ? (
           <MenuList sx={{ width: 200 }}>
             <Link to="/inbox">
-              <MenuItem sx={{ color: "initial" }}>Messages</MenuItem>
+              <MenuItem sx={{ color: "initial", fontSize: 14 }}>
+                Messages
+              </MenuItem>
             </Link>
             <Link to="/create-listing">
-              <MenuItem sx={{ color: "initial" }}>Create Listing</MenuItem>
+              <MenuItem sx={{ color: "initial", fontSize: 14 }}>
+                Create Listing
+              </MenuItem>
             </Link>
             <Link to="/logout">
-              <MenuItem sx={{ color: "initial" }}>Log out</MenuItem>
+              <MenuItem sx={{ color: "initial", fontSize: 14 }}>
+                Log out
+              </MenuItem>
             </Link>
           </MenuList>
         ) : (
           <MenuList sx={{ width: 200 }}>
             <Link to="/login">
-              <MenuItem sx={{ color: "initial", fontWeight: 600 }}>
+              <MenuItem
+                sx={{ color: "initial", fontWeight: 600, fontSize: 14 }}
+              >
                 Log in
               </MenuItem>
             </Link>
             <Link to="/login">
-              <MenuItem sx={{ color: "initial" }}>Sign up</MenuItem>
+              <MenuItem sx={{ color: "initial", fontSize: 14 }}>
+                Sign up
+              </MenuItem>
             </Link>
           </MenuList>
         )}

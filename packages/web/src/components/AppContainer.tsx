@@ -23,8 +23,9 @@ export const AppContainer = ({
   return (
     <Stack
       flexDirection="column"
-      mt={!matches && withoutSearch ? undefined : `${searchBarHeight}px`}
-      mb={!matches ? `${bottomNavbarHeight}px` : "46.2px"}
+      pt={!matches && withoutSearch ? undefined : `${searchBarHeight}px`}
+      pb={!matches ? `${bottomNavbarHeight}px` : "46.2px"}
+      minHeight="100vh"
     >
       <Navbar withoutSearch={!!withoutSearch} />
       {children}

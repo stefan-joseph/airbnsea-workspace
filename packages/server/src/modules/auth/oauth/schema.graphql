@@ -1,3 +1,7 @@
 type Mutation {
   authenticateUserWithOauth(code: String!): Boolean!
 }
+
+type Mutation {
+  authenticateUserWithLinkedin(code: String!): Boolean!
+}
