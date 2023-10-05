@@ -102,6 +102,7 @@ export default function EmailForm({
         )}
       </Formik>
       <OrDivider />
+      <Stack></Stack>
       <Stack gap={2}>
         <OauthLink
           href="https://www.linkedin.com/oauth/v2/authorization"
