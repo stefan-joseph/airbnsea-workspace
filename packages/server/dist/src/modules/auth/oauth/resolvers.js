@@ -110,6 +110,7 @@ exports.resolvers = {
         }),
         authenticateUserWithOauth: (_, { code }, { redis, req }) => __awaiter(void 0, void 0, void 0, function* () {
             var _a;
+            console.log("1");
             let response;
             try {
                 const { data } = yield axios_1.default.post("https://github.com/login/oauth/access_token", {
@@ -132,6 +133,7 @@ exports.resolvers = {
             }
             let email;
             let response2;
+            console.log("2");
             try {
                 const { data } = yield (0, axios_1.default)("https://api.github.com/user", {
                     headers: { Authorization: `Bearer ${response.access_token}` },
@@ -143,6 +145,7 @@ exports.resolvers = {
             catch (_c) {
                 return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.badGithubOauthRequest);
             }
+            console.log("3");
             if (!email) {
                 try {
                     const { data } = yield (0, axios_1.default)("https://api.github.com/user/emails", {
@@ -156,7 +159,6 @@ exports.resolvers = {
                     return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.badGithubOauthRequest);
                 }
             }
-            console.log("email", email);
             if (!email) {
                 return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(`Cannot access the email associated with your Github account.
           Please use an alternative sign up method 

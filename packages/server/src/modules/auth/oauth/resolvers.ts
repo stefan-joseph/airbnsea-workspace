@@ -145,6 +145,7 @@ export const resolvers: Resolvers = {
       return true;
     },
     authenticateUserWithOauth: async (_, { code }, { redis, req }) => {
+      console.log("1");
       let response;
       try {
         const { data } = await axios.post(
@@ -171,7 +172,7 @@ export const resolvers: Resolvers = {
 
       let email;
       let response2: Endpoints["GET /user"]["response"]["data"];
-
+      console.log("2");
       try {
         const { data } = await axios("https://api.github.com/user", {
           headers: { Authorization: `Bearer ${response.access_token}` },
@@ -184,6 +185,7 @@ export const resolvers: Resolvers = {
       } catch {
         return formatGraphQLYogaError(badGithubOauthRequest);
       }
+      console.log("3");
 
       if (!email) {
         // github users email is set to private and needs to be called with more specific API endpoint
@@ -200,8 +202,6 @@ export const resolvers: Resolvers = {
           return formatGraphQLYogaError(badGithubOauthRequest);
         }
       }
-
-      console.log("email", email);
 
       if (!email) {
         // email is needed as unique identifier for sign up

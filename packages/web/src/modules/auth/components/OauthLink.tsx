@@ -1,6 +1,4 @@
 import { Button, SvgIcon } from "@mui/material";
-import { IconType } from "react-icons";
-import { FaGithub } from "react-icons/fa";
 
 export default function OauthLink({
   href,
@@ -25,7 +23,8 @@ export default function OauthLink({
         const state = crypto.randomUUID();
         localStorage.setItem("latestCSRFToken", state);
         const link = getLink((e.target as HTMLAnchorElement).href, state);
-        window.location.href = link;
+        console.log("link", link);
+        setTimeout(() => (window.location.href = link), 3000);
       }}
       startIcon={<SvgIcon sx={{ mr: 1 }}>{Icon}</SvgIcon>}
       sx={{

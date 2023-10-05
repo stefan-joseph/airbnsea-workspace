@@ -58,12 +58,15 @@ export default function OauthCallback() {
 
   useEffect(() => {
     if (error || error2) {
+      console.log("error", error);
+      console.log("error2", error2);
+
       // const { message } = error;
-      navigate("/login", {
-        state: {
-          message: error?.message || error2?.message,
-        },
-      });
+      // navigate("/login", {
+      //   state: {
+      //     message: error?.message || error2?.message,
+      //   },
+      // });
     } else if (data || data2) {
       setUserAndRedirect();
     }
