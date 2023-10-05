@@ -7,6 +7,8 @@ import { AuthorizationServer } from "@airbnb-clone/controller";
 import OauthLink from "../components/OauthLink";
 import AuthFormContainer from "../components/AuthFormContainer";
 import { Steps, User } from "../Auth";
+import createGithubOauthLink from "../../../utils/createGithubOauthLink";
+import createLinkedinOauthLink from "../../../utils/createLinkedinOauthLink";
 
 export default function OAuthReminder({
   user,
@@ -27,7 +29,7 @@ export default function OAuthReminder({
         href="https://google.com"
         text="Continue with LinkedIn"
         Icon={<FcGoogle />}
-        handleClick={() => {}}
+        getLink={createLinkedinOauthLink}
       />
     ),
     [AuthorizationServer.Github]: (
@@ -35,7 +37,7 @@ export default function OAuthReminder({
         href="https://github.com/login/oauth/authorize"
         text="Continue with Github"
         Icon={<FaGithub />}
-        handleClick={() => {}}
+        getLink={createGithubOauthLink}
       />
     ),
   };

@@ -7,7 +7,7 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import { useNavigate } from "react-router-dom";
 
 import { desktopMinWidth, searchBarHeight } from "../../constants/constants";
-import { Navbar } from "../auth/Navbar";
+import { Navbar } from "../navbar/Navbar";
 import { Amenities } from "./components/Amenities";
 import { Header } from "./components/Header";
 import { PhotosWideScreen } from "./components/PhotosWideScreen";

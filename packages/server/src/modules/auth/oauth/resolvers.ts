@@ -29,7 +29,6 @@ export const resolvers: Resolvers = {
           {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              // Accept: "application/json",
             },
           }
         );

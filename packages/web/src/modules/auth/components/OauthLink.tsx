@@ -6,12 +6,12 @@ export default function OauthLink({
   href,
   text,
   Icon,
-  handleClick,
+  getLink,
 }: {
   href: string;
   text: string;
   Icon: JSX.Element;
-  handleClick: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  getLink: (href: string, state: string) => string;
 }) {
   return (
     <Button
@@ -20,7 +20,13 @@ export default function OauthLink({
       fullWidth
       size="large"
       href={href}
-      onClick={handleClick}
+      onClick={(e) => {
+        e.preventDefault();
+        const state = crypto.randomUUID();
+        localStorage.setItem("latestCSRFToken", state);
+        const link = getLink((e.target as HTMLAnchorElement).href, state);
+        window.location.href = link;
+      }}
       startIcon={<SvgIcon sx={{ mr: 1 }}>{Icon}</SvgIcon>}
       sx={{
         backgroundColor: "rgb(248 249 252)",

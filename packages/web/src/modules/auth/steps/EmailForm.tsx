@@ -15,6 +15,10 @@ import AuthFormContainer from "../components/AuthFormContainer";
 import { Steps, User } from "../Auth";
 import TestUserButton from "../components/TestUserButton";
 import LoadingButton from "../../../components/LoadingButton";
+import { ConnectingAirportsOutlined } from "@mui/icons-material";
+import getGithubClientId from "../../../utils/getGithubClientId";
+import createLinkedinOauthLink from "../../../utils/createLinkedinOauthLink";
+import createGithubOauthLink from "../../../utils/createGithubOauthLink";
 
 export default function EmailForm({
   user,
@@ -103,33 +107,13 @@ export default function EmailForm({
           href="https://www.linkedin.com/oauth/v2/authorization"
           text="Continue with LinkedIn"
           Icon={<FaLinkedin color="#0077B5" />}
-          handleClick={(e) => {
-            e.preventDefault();
-            const state = crypto.randomUUID();
-            localStorage.setItem("latestCSRFToken", state);
-            let link = (e.target as HTMLAnchorElement).href;
-            link += "?response_type=code";
-            link += `&client_id=${process.env.REACT_APP_LINKEDIN_AUTH_CLIENT_ID}`;
-            link += `&redirect_uri=${process.env.REACT_APP_CLIENT_URL}/auth/linkedin`;
-            link += `&state=${state}`;
-            link += "&scope=openid profile email";
-            window.location.href = link;
-          }}
+          getLink={createLinkedinOauthLink}
         />
         <OauthLink
           href="https://github.com/login/oauth/authorize"
           text="Continue with Github"
           Icon={<FaGithub />}
-          handleClick={(e) => {
-            e.preventDefault();
-            const state = crypto.randomUUID();
-            localStorage.setItem("latestCSRFToken", state);
-            let link = (e.target as HTMLAnchorElement).href;
-            link += `?client_id=${process.env.REACT_APP_GITHUB_AUTH_CLIENT_ID}`;
-            link += `&scope=user:email`;
-            link += `&state=${state}`;
-            window.location.href = link;
-          }}
+          getLink={createGithubOauthLink}
         />
         <TestUserButton handleClick={loginAsRandomUserMutation} />
       </Stack>

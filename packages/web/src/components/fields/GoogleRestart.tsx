@@ -11,7 +11,7 @@ import { InputAdornment, Paper, Popper, Stack } from "@mui/material";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import { IoSearch } from "react-icons/io5";
 
-import { ClearButton } from "../../modules/auth/components/desktop/ClearButton";
+import { ClearButton } from "../../modules/navbar/components/desktop/ClearButton";
 import { borderRadius } from "../../constants/constants";
 import { SearchSuggestions } from "../SearchSuggestions";
 

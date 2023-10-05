@@ -17,6 +17,8 @@ require("dotenv/config");
 const node_1 = require("@graphql-yoga/node");
 const redis_event_target_1 = require("@graphql-yoga/redis-event-target");
 const ioredis_1 = __importDefault(require("ioredis"));
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const rate_limit_redis_1 = __importDefault(require("rate-limit-redis"));
 const cloudinary = require("cloudinary");
 const express = require("express");
 const graphql_middleware_1 = require("graphql-middleware");
@@ -77,6 +79,16 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         origin: "*",
     };
     app.use(cors(corsOptions));
+    const limiter = (0, express_rate_limit_1.default)({
+        windowMs: 15 * 60 * 1000,
+        max: 100,
+        standardHeaders: true,
+        legacyHeaders: false,
+        store: new rate_limit_redis_1.default({
+            sendCommand: (...args) => redis_1.redis.call(...args),
+        }),
+    });
+    app.use(limiter);
     cloudinary.v2.config({
         cloud_name: process.env.CLOUDINARY_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,

@@ -5,8 +5,8 @@ import Redis from "ioredis";
 
 // import { runSeeders } from "typeorm-extension";
 
-// import rateLimit from "express-rate-limit";
-// import RateLimitRedisStore from "rate-limit-redis";
+import rateLimit from "express-rate-limit";
+import RateLimitRedisStore from "rate-limit-redis";
 
 import cloudinary = require("cloudinary");
 import express = require("express");
@@ -107,17 +107,17 @@ export const startServer = async () => {
   };
   app.use(cors(corsOptions));
 
-  // const limiter = rateLimit({
-  //   windowMs: 15 * 60 * 1000, // 15 minutes
-  //   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-  //   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  //   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  //   store: new RateLimitRedisStore({
-  //     //@ts-ignore
-  //     sendCommand: (...args: string[]) => redis.call(...args),
-  //   }),
-  // });
-  // app.use(limiter);
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    store: new RateLimitRedisStore({
+      //@ts-ignore
+      sendCommand: (...args: string[]) => redis.call(...args),
+    }),
+  });
+  app.use(limiter);
 
   cloudinary.v2.config({
     cloud_name: process.env.CLOUDINARY_NAME,

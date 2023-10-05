@@ -7,7 +7,7 @@ import { IoCheckmarkCircle, IoMailOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 import { TextInput2 } from "../../../components/fields/TextInput2";
-import AuthFormContainer from "../components/AuthFormContainer";
+import AuthFormContainer from "./AuthFormContainer";
 import LoadingButton from "../../../components/LoadingButton";
 import { AppContainer } from "../../../components/AppContainer";
 import { theme } from "../../../MuiTheme";
