@@ -23,8 +23,7 @@ export default function OauthLink({
         const state = crypto.randomUUID();
         localStorage.setItem("latestCSRFToken", state);
         const link = getLink((e.target as HTMLAnchorElement).href, state);
-        console.log("link", link);
-        setTimeout(() => (window.location.href = link), 3000);
+        window.location.href = link;
       }}
       startIcon={<SvgIcon sx={{ mr: 1 }}>{Icon}</SvgIcon>}
       sx={{

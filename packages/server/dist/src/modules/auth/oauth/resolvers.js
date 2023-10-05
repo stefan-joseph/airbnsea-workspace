@@ -110,7 +110,6 @@ exports.resolvers = {
         }),
         authenticateUserWithOauth: (_, { code }, { redis, req }) => __awaiter(void 0, void 0, void 0, function* () {
             var _a;
-            console.log("1");
             let response;
             try {
                 const { data } = yield axios_1.default.post("https://github.com/login/oauth/access_token", {
@@ -125,7 +124,7 @@ exports.resolvers = {
                 response = data;
                 if (response.error) {
                     console.log("error", response.error);
-                    return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(response.error.message);
+                    return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(response.error);
                 }
             }
             catch (_b) {
@@ -133,7 +132,6 @@ exports.resolvers = {
             }
             let email;
             let response2;
-            console.log("2");
             try {
                 const { data } = yield (0, axios_1.default)("https://api.github.com/user", {
                     headers: { Authorization: `Bearer ${response.access_token}` },
@@ -145,7 +143,6 @@ exports.resolvers = {
             catch (_c) {
                 return (0, formatGraphQLYogaError_1.formatGraphQLYogaError)(errorMessages_1.badGithubOauthRequest);
             }
-            console.log("3");
             if (!email) {
                 try {
                     const { data } = yield (0, axios_1.default)("https://api.github.com/user/emails", {
