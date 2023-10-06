@@ -31,7 +31,7 @@ exports.resolvers = {
                 where: { email: email.toLowerCase() },
             });
             if (user) {
-                const { email, firstName, avatar, oAuth, confirmed } = user;
+                const { email, firstName, avatar, authorizationServer, confirmed } = user;
                 if (!confirmed) {
                     const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)(process.env.FRONTEND_HOST, user.id, redis);
                     if (process.env.NODE_ENV !== "test") {
@@ -52,7 +52,7 @@ exports.resolvers = {
                 }
                 return {
                     __typename: "EmailExistsWithOAuth",
-                    authorizationServer: oAuth,
+                    authorizationServer,
                     email,
                     firstName,
                     avatar,

@@ -1,7 +1,17 @@
 type Mutation {
-  authenticateUserWithOauth(code: String!): Boolean!
+  authenticateUserWithOauth(
+    code: String!
+    authServer: AuthorizationServer!
+  ): AuthenticateUserWithOauthPayload!
 }
 
-type Mutation {
-  authenticateUserWithLinkedin(code: String!): Boolean!
+union AuthenticateUserWithOauthPayload =
+    SuccessResponse
+  | UserAlreadyExists
+  | EmailExistsWithOAuth
+
+type UserAlreadyExists {
+  email: String!
+  firstName: String!
+  avatar: String
 }

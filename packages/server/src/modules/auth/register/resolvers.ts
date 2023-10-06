@@ -30,12 +30,12 @@ export const resolvers: Resolvers = {
       if (userAlreadyExists) {
         // only happens if user changes email between check-email and register auth flow screens
         // otherwise check-email will redirect to appropriate auth flow screen
-        const { oAuth, firstName, avatar } = userAlreadyExists;
-        if (oAuth) {
+        const { authorizationServer, firstName, avatar } = userAlreadyExists;
+        if (authorizationServer) {
           // already existing user can sign in with oauth
           return {
             __typename: "EmailExistsWithOAuth",
-            authorizationServer: oAuth,
+            authorizationServer,
             email,
             firstName,
             avatar,

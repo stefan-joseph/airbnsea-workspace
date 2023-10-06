@@ -26,6 +26,8 @@ export type Address = {
   zipcode: Scalars['String'];
 };
 
+export type AuthenticateUserWithOauthPayload = EmailExistsWithOAuth | SuccessResponse | UserAlreadyExists;
+
 export enum AuthorizationServer {
   Github = 'GITHUB',
   Linkedin = 'LINKEDIN'
@@ -193,8 +195,7 @@ export type Me = {
 export type Mutation = {
   __typename?: 'Mutation';
   addFruit: Scalars['Boolean'];
-  authenticateUserWithLinkedin: Scalars['Boolean'];
-  authenticateUserWithOauth: Scalars['Boolean'];
+  authenticateUserWithOauth: AuthenticateUserWithOauthPayload;
   confirmEmail: Scalars['Boolean'];
   createBooking: Booking;
   createConversation: CreateConversationResponse;
@@ -216,12 +217,8 @@ export type MutationAddFruitArgs = {
 };
 
 
-export type MutationAuthenticateUserWithLinkedinArgs = {
-  code: Scalars['String'];
-};
-
-
 export type MutationAuthenticateUserWithOauthArgs = {
+  authServer: AuthorizationServer;
   code: Scalars['String'];
 };
 
@@ -443,6 +440,13 @@ export type User = {
   lastName?: Maybe<Scalars['String']>;
 };
 
+export type UserAlreadyExists = {
+  __typename?: 'UserAlreadyExists';
+  avatar?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+};
+
 export type UserLogin = {
   __typename?: 'UserLogin';
   success: Scalars['Boolean'];
@@ -539,6 +543,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Address: Address;
+  AuthenticateUserWithOauthPayload: ResolversTypes['EmailExistsWithOAuth'] | ResolversTypes['SuccessResponse'] | ResolversTypes['UserAlreadyExists'];
   AuthorizationServer: AuthorizationServer;
   Booking: ResolverTypeWrapper<Booking>;
   BookingInput: BookingInput;
@@ -585,6 +590,7 @@ export type ResolversTypes = {
   SuccessResponse: ResolverTypeWrapper<SuccessResponse>;
   UpdateListingFields: UpdateListingFields;
   User: ResolverTypeWrapper<User>;
+  UserAlreadyExists: ResolverTypeWrapper<UserAlreadyExists>;
   UserLogin: ResolverTypeWrapper<UserLogin>;
   UserNotConfirmed: ResolverTypeWrapper<UserNotConfirmed>;
   ValidationError: ResolverTypeWrapper<ValidationError>;
@@ -595,6 +601,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Address: Address;
+  AuthenticateUserWithOauthPayload: ResolversParentTypes['EmailExistsWithOAuth'] | ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['UserAlreadyExists'];
   Booking: Booking;
   BookingInput: BookingInput;
   Boolean: Scalars['Boolean'];
@@ -638,10 +645,15 @@ export type ResolversParentTypes = {
   SuccessResponse: SuccessResponse;
   UpdateListingFields: UpdateListingFields;
   User: User;
+  UserAlreadyExists: UserAlreadyExists;
   UserLogin: UserLogin;
   UserNotConfirmed: UserNotConfirmed;
   ValidationError: ValidationError;
   VesselTypeInput: VesselTypeInput;
+};
+
+export type AuthenticateUserWithOauthPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthenticateUserWithOauthPayload'] = ResolversParentTypes['AuthenticateUserWithOauthPayload']> = {
+  __resolveType: TypeResolveFn<'EmailExistsWithOAuth' | 'SuccessResponse' | 'UserAlreadyExists', ParentType, ContextType>;
 };
 
 export type BookingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Booking'] = ResolversParentTypes['Booking']> = {
@@ -812,8 +824,7 @@ export type MeResolvers<ContextType = any, ParentType extends ResolversParentTyp
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addFruit?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddFruitArgs, 'fruit'>>;
-  authenticateUserWithLinkedin?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAuthenticateUserWithLinkedinArgs, 'code'>>;
-  authenticateUserWithOauth?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAuthenticateUserWithOauthArgs, 'code'>>;
+  authenticateUserWithOauth?: Resolver<ResolversTypes['AuthenticateUserWithOauthPayload'], ParentType, ContextType, RequireFields<MutationAuthenticateUserWithOauthArgs, 'authServer' | 'code'>>;
   confirmEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationConfirmEmailArgs, 'id'>>;
   createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input' | 'listingId'>>;
   createConversation?: Resolver<ResolversTypes['CreateConversationResponse'], ParentType, ContextType, RequireFields<MutationCreateConversationArgs, 'listingId' | 'text'>>;
@@ -919,6 +930,13 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserAlreadyExistsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAlreadyExists'] = ResolversParentTypes['UserAlreadyExists']> = {
+  avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserLoginResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserLogin'] = ResolversParentTypes['UserLogin']> = {
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -937,6 +955,7 @@ export type ValidationErrorResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type Resolvers<ContextType = any> = {
+  AuthenticateUserWithOauthPayload?: AuthenticateUserWithOauthPayloadResolvers<ContextType>;
   Booking?: BookingResolvers<ContextType>;
   CheckEmailPayload?: CheckEmailPayloadResolvers<ContextType>;
   Conversation?: ConversationResolvers<ContextType>;
@@ -971,6 +990,7 @@ export type Resolvers<ContextType = any> = {
   Subscription?: SubscriptionResolvers<ContextType>;
   SuccessResponse?: SuccessResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserAlreadyExists?: UserAlreadyExistsResolvers<ContextType>;
   UserLogin?: UserLoginResolvers<ContextType>;
   UserNotConfirmed?: UserNotConfirmedResolvers<ContextType>;
   ValidationError?: ValidationErrorResolvers<ContextType>;

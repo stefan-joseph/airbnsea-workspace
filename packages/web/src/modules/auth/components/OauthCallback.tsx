@@ -1,14 +1,10 @@
 import { Stack, Typography } from "@mui/material";
-import {
-  useSearchParams,
-  useNavigate,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import {
   AuthorizationServer,
   useAuthenticateUserWithOauthMutation,
   useAuthenticateUserWithLinkedinMutation,
+  useAuthenticateUserWithGithubMutation,
 } from "@airbnb-clone/controller";
 
 import Loader from "../../../components/Loader";
@@ -18,7 +14,7 @@ import { AppContainer } from "../../../components/AppContainer";
 import capitalizeFirstLetter from "../../../utils/capitalizeFirstLetter";
 
 export default function OauthCallback() {
-  const { authServer } = useParams();
+  let { authServer } = useParams();
 
   const navigate = useNavigate();
 
@@ -28,46 +24,69 @@ export default function OauthCallback() {
 
   const setUserAndRedirect = useSetUserAndRedirect();
 
-  const [authenticateUserWithOauthMutation, { data, error }] =
+  const [authenticateUserWithOauthMutation, { error }] =
     useAuthenticateUserWithOauthMutation();
 
-  const [authenticateUserWithLinkedinMutation, { data: data2, error: error2 }] =
-    useAuthenticateUserWithLinkedinMutation();
+  // const [authenticateUserWithLinkedinMutation, { data: data2, error: error2 }] =
+  //   useAuthenticateUserWithLinkedinMutation();
 
   const authServerStr = authServer === "linkedin" ? "linkedIn" : authServer;
 
-  useEffect(() => {
+  async function runAuthenticationProcess() {
     if (code && state2 === localStorage.getItem("latestCSRFToken")) {
-      if (authServer === AuthorizationServer["Github"].toLowerCase()) {
-        authenticateUserWithOauthMutation({ variables: { code } });
-      } else if (authServer === AuthorizationServer["Linkedin"].toLowerCase()) {
-        authenticateUserWithLinkedinMutation({ variables: { code } });
+      authServer = authServer?.toUpperCase();
+      if (
+        authServer === AuthorizationServer["Github"] ||
+        authServer === AuthorizationServer["Linkedin"]
+      ) {
+        const response = await authenticateUserWithOauthMutation({
+          variables: { code, authServer },
+        }).catch((error) =>
+          navigate("/login", {
+            state: {
+              message: error?.message,
+            },
+          })
+        );
+
+        if (!response?.data) return;
+        const { authenticateUserWithOauth } = response.data;
+        const { __typename } = authenticateUserWithOauth;
+
+        if (__typename === "SuccessResponse") {
+          setUserAndRedirect();
+        }
       }
+      // if (authServer === AuthorizationServer["Github"].toLowerCase()) {
+      //   authenticateUserWithOauthMutation({ variables: { code } });
+      // } else if (authServer === AuthorizationServer["Linkedin"].toLowerCase()) {
+      //   authenticateUserWithLinkedinMutation({ variables: { code } });
+      // }
       // don't want to navigate to './login'
       return;
     }
 
-    navigate("/login", {
-      state: {
-        message: `Could not access your ${capitalizeFirstLetter(
-          authServerStr
-        )} credentials at this time`,
-      },
-    });
-  }, []);
+    // navigate("/login", {
+    //   state: {
+    //     message: `Could not access your ${capitalizeFirstLetter(
+    //       authServerStr
+    //     )} credentials at this time`,
+    //   },
+    // });
+  }
 
   useEffect(() => {
-    if (error || error2) {
-      // const { message } = error;
-      navigate("/login", {
-        state: {
-          message: error?.message || error2?.message,
-        },
-      });
-    } else if (data || data2) {
-      setUserAndRedirect();
-    }
-  }, [error, data, error2, data2]);
+    runAuthenticationProcess();
+  }, []);
+
+  // useEffect(() => {
+  //   if (!error) return;
+  //   navigate("/login", {
+  //     state: {
+  //       message: error?.message,
+  //     },
+  //   });
+  // }, [error]);
 
   return (
     <AppContainer withoutSearch>

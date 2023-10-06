@@ -24,7 +24,8 @@ export const resolvers: Resolvers = {
       });
 
       if (user) {
-        const { email, firstName, avatar, oAuth, confirmed } = user;
+        const { email, firstName, avatar, authorizationServer, confirmed } =
+          user;
 
         // if user email not confirmed, must do this first
         if (!confirmed) {
@@ -58,7 +59,7 @@ export const resolvers: Resolvers = {
         // otherwise user must be oAuth
         return {
           __typename: "EmailExistsWithOAuth",
-          authorizationServer: oAuth,
+          authorizationServer,
           email,
           firstName,
           avatar,

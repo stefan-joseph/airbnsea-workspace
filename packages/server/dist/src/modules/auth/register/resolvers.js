@@ -34,11 +34,11 @@ exports.resolvers = {
                 where: { email },
             });
             if (userAlreadyExists) {
-                const { oAuth, firstName, avatar } = userAlreadyExists;
-                if (oAuth) {
+                const { authorizationServer, firstName, avatar } = userAlreadyExists;
+                if (authorizationServer) {
                     return {
                         __typename: "EmailExistsWithOAuth",
-                        authorizationServer: oAuth,
+                        authorizationServer,
                         email,
                         firstName,
                         avatar,

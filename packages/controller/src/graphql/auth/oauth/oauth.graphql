@@ -1,7 +1,21 @@
-mutation AuthenticateUserWithOauth($code: String!) {
-  authenticateUserWithOauth(code: $code)
-}
-
-mutation AuthenticateUserWithLinkedin($code: String!) {
-  authenticateUserWithLinkedin(code: $code)
+mutation AuthenticateUserWithOauth(
+  $code: String!
+  $authServer: AuthorizationServer!
+) {
+  authenticateUserWithOauth(code: $code, authServer: $authServer) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on UserAlreadyExists {
+      email
+      firstName
+      avatar
+    }
+    ... on EmailExistsWithOAuth {
+      email
+      firstName
+      avatar
+      authorizationServer
+    }
+  }
 }

@@ -33,7 +33,7 @@ export class User extends BaseEntity {
     enum: AuthorizationServer,
     nullable: true,
   })
-  oAuth: AuthorizationServer;
+  authorizationServer: AuthorizationServer;
 
   @Column("varchar", { length: 50 })
   firstName: string;

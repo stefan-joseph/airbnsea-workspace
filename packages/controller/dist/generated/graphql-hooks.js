@@ -23,8 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useLoginAsRandomUserMutation = exports.LoginAsRandomUserDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useAuthenticateUserWithLinkedinMutation = exports.AuthenticateUserWithLinkedinDocument = exports.useAuthenticateUserWithOauthMutation = exports.AuthenticateUserWithOauthDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.useConfirmEmailMutation = exports.ConfirmEmailDocument = exports.useCheckEmailLazyQuery = exports.useCheckEmailQuery = exports.CheckEmailDocument = exports.VesselType = exports.Status = exports.InboxType = exports.AuthorizationServer = void 0;
-exports.useUpdateInboxSubscriptionSubscription = exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = exports.usePopulateConversationQuery = exports.PopulateConversationDocument = void 0;
+exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useLoginAsRandomUserMutation = exports.LoginAsRandomUserDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useAuthenticateUserWithLinkedinMutation = exports.AuthenticateUserWithLinkedinDocument = exports.useAuthenticateUserWithGithubMutation = exports.AuthenticateUserWithGithubDocument = exports.useAuthenticateUserWithOauthMutation = exports.AuthenticateUserWithOauthDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.useConfirmEmailMutation = exports.ConfirmEmailDocument = exports.useCheckEmailLazyQuery = exports.useCheckEmailQuery = exports.CheckEmailDocument = exports.VesselType = exports.Status = exports.InboxType = exports.AuthorizationServer = void 0;
+exports.useUpdateInboxSubscriptionSubscription = exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = exports.usePopulateConversationQuery = exports.PopulateConversationDocument = exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = void 0;
 const client_1 = require("@apollo/client");
 const Apollo = __importStar(require("@apollo/client"));
 const defaultOptions = {};
@@ -161,8 +161,23 @@ function useMeLazyQuery(baseOptions) {
 }
 exports.useMeLazyQuery = useMeLazyQuery;
 exports.AuthenticateUserWithOauthDocument = (0, client_1.gql) `
-    mutation AuthenticateUserWithOauth($code: String!) {
-  authenticateUserWithOauth(code: $code)
+    mutation AuthenticateUserWithOauth($code: String!, $authServer: AuthorizationServer!) {
+  authenticateUserWithOauth(code: $code, authServer: $authServer) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on UserAlreadyExists {
+      email
+      firstName
+      avatar
+    }
+    ... on EmailExistsWithOAuth {
+      email
+      firstName
+      avatar
+      authorizationServer
+    }
+  }
 }
     `;
 function useAuthenticateUserWithOauthMutation(baseOptions) {
@@ -170,9 +185,37 @@ function useAuthenticateUserWithOauthMutation(baseOptions) {
     return Apollo.useMutation(exports.AuthenticateUserWithOauthDocument, options);
 }
 exports.useAuthenticateUserWithOauthMutation = useAuthenticateUserWithOauthMutation;
+exports.AuthenticateUserWithGithubDocument = (0, client_1.gql) `
+    mutation authenticateUserWithGithub($code: String!) {
+  authenticateUserWithGithub(code: $code) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on UserAlreadyExists {
+      email
+      firstName
+      avatar
+    }
+  }
+}
+    `;
+function useAuthenticateUserWithGithubMutation(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useMutation(exports.AuthenticateUserWithGithubDocument, options);
+}
+exports.useAuthenticateUserWithGithubMutation = useAuthenticateUserWithGithubMutation;
 exports.AuthenticateUserWithLinkedinDocument = (0, client_1.gql) `
     mutation AuthenticateUserWithLinkedin($code: String!) {
-  authenticateUserWithLinkedin(code: $code)
+  authenticateUserWithLinkedin(code: $code) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on UserAlreadyExists {
+      email
+      firstName
+      avatar
+    }
+  }
 }
     `;
 function useAuthenticateUserWithLinkedinMutation(baseOptions) {

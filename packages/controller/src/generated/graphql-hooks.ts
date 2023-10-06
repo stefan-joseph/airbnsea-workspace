@@ -27,6 +27,8 @@ export type Address = {
   zipcode: Scalars['String'];
 };
 
+export type AuthenticateUserWithOauthPayload = EmailExistsWithOAuth | SuccessResponse | UserAlreadyExists;
+
 export enum AuthorizationServer {
   Github = 'GITHUB',
   Linkedin = 'LINKEDIN'
@@ -194,8 +196,9 @@ export type Me = {
 export type Mutation = {
   __typename?: 'Mutation';
   addFruit: Scalars['Boolean'];
-  authenticateUserWithLinkedin: Scalars['Boolean'];
-  authenticateUserWithOauth: Scalars['Boolean'];
+  authenticateUserWithGithub: AuthenticateUserWithOauthPayload;
+  authenticateUserWithLinkedin: AuthenticateUserWithOauthPayload;
+  authenticateUserWithOauth: AuthenticateUserWithOauthPayload;
   confirmEmail: Scalars['Boolean'];
   createBooking: Booking;
   createConversation: CreateConversationResponse;
@@ -217,12 +220,18 @@ export type MutationAddFruitArgs = {
 };
 
 
+export type MutationAuthenticateUserWithGithubArgs = {
+  code: Scalars['String'];
+};
+
+
 export type MutationAuthenticateUserWithLinkedinArgs = {
   code: Scalars['String'];
 };
 
 
 export type MutationAuthenticateUserWithOauthArgs = {
+  authServer: AuthorizationServer;
   code: Scalars['String'];
 };
 
@@ -444,6 +453,13 @@ export type User = {
   lastName?: Maybe<Scalars['String']>;
 };
 
+export type UserAlreadyExists = {
+  __typename?: 'UserAlreadyExists';
+  avatar?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+};
+
 export type UserLogin = {
   __typename?: 'UserLogin';
   success: Scalars['Boolean'];
@@ -511,17 +527,25 @@ export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', firstNam
 
 export type AuthenticateUserWithOauthMutationVariables = Exact<{
   code: Scalars['String'];
+  authServer: AuthorizationServer;
 }>;
 
 
-export type AuthenticateUserWithOauthMutation = { __typename?: 'Mutation', authenticateUserWithOauth: boolean };
+export type AuthenticateUserWithOauthMutation = { __typename?: 'Mutation', authenticateUserWithOauth: { __typename?: 'EmailExistsWithOAuth', email: string, firstName: string, avatar?: string | null, authorizationServer: AuthorizationServer } | { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'UserAlreadyExists', email: string, firstName: string, avatar?: string | null } };
+
+export type AuthenticateUserWithGithubMutationVariables = Exact<{
+  code: Scalars['String'];
+}>;
+
+
+export type AuthenticateUserWithGithubMutation = { __typename?: 'Mutation', authenticateUserWithGithub: { __typename?: 'EmailExistsWithOAuth' } | { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'UserAlreadyExists', email: string, firstName: string, avatar?: string | null } };
 
 export type AuthenticateUserWithLinkedinMutationVariables = Exact<{
   code: Scalars['String'];
 }>;
 
 
-export type AuthenticateUserWithLinkedinMutation = { __typename?: 'Mutation', authenticateUserWithLinkedin: boolean };
+export type AuthenticateUserWithLinkedinMutation = { __typename?: 'Mutation', authenticateUserWithLinkedin: { __typename?: 'EmailExistsWithOAuth' } | { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'UserAlreadyExists', email: string, firstName: string, avatar?: string | null } };
 
 export type RegisterUserMutationVariables = Exact<{
   email: Scalars['String'];
@@ -866,8 +890,23 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const AuthenticateUserWithOauthDocument = gql`
-    mutation AuthenticateUserWithOauth($code: String!) {
-  authenticateUserWithOauth(code: $code)
+    mutation AuthenticateUserWithOauth($code: String!, $authServer: AuthorizationServer!) {
+  authenticateUserWithOauth(code: $code, authServer: $authServer) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on UserAlreadyExists {
+      email
+      firstName
+      avatar
+    }
+    ... on EmailExistsWithOAuth {
+      email
+      firstName
+      avatar
+      authorizationServer
+    }
+  }
 }
     `;
 export type AuthenticateUserWithOauthMutationFn = Apollo.MutationFunction<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
@@ -886,6 +925,7 @@ export type AuthenticateUserWithOauthMutationFn = Apollo.MutationFunction<Authen
  * const [authenticateUserWithOauthMutation, { data, loading, error }] = useAuthenticateUserWithOauthMutation({
  *   variables: {
  *      code: // value for 'code'
+ *      authServer: // value for 'authServer'
  *   },
  * });
  */
@@ -896,9 +936,58 @@ export function useAuthenticateUserWithOauthMutation(baseOptions?: Apollo.Mutati
 export type AuthenticateUserWithOauthMutationHookResult = ReturnType<typeof useAuthenticateUserWithOauthMutation>;
 export type AuthenticateUserWithOauthMutationResult = Apollo.MutationResult<AuthenticateUserWithOauthMutation>;
 export type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
+export const AuthenticateUserWithGithubDocument = gql`
+    mutation authenticateUserWithGithub($code: String!) {
+  authenticateUserWithGithub(code: $code) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on UserAlreadyExists {
+      email
+      firstName
+      avatar
+    }
+  }
+}
+    `;
+export type AuthenticateUserWithGithubMutationFn = Apollo.MutationFunction<AuthenticateUserWithGithubMutation, AuthenticateUserWithGithubMutationVariables>;
+
+/**
+ * __useAuthenticateUserWithGithubMutation__
+ *
+ * To run a mutation, you first call `useAuthenticateUserWithGithubMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthenticateUserWithGithubMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authenticateUserWithGithubMutation, { data, loading, error }] = useAuthenticateUserWithGithubMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useAuthenticateUserWithGithubMutation(baseOptions?: Apollo.MutationHookOptions<AuthenticateUserWithGithubMutation, AuthenticateUserWithGithubMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AuthenticateUserWithGithubMutation, AuthenticateUserWithGithubMutationVariables>(AuthenticateUserWithGithubDocument, options);
+      }
+export type AuthenticateUserWithGithubMutationHookResult = ReturnType<typeof useAuthenticateUserWithGithubMutation>;
+export type AuthenticateUserWithGithubMutationResult = Apollo.MutationResult<AuthenticateUserWithGithubMutation>;
+export type AuthenticateUserWithGithubMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithGithubMutation, AuthenticateUserWithGithubMutationVariables>;
 export const AuthenticateUserWithLinkedinDocument = gql`
     mutation AuthenticateUserWithLinkedin($code: String!) {
-  authenticateUserWithLinkedin(code: $code)
+  authenticateUserWithLinkedin(code: $code) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on UserAlreadyExists {
+      email
+      firstName
+      avatar
+    }
+  }
 }
     `;
 export type AuthenticateUserWithLinkedinMutationFn = Apollo.MutationFunction<AuthenticateUserWithLinkedinMutation, AuthenticateUserWithLinkedinMutationVariables>;

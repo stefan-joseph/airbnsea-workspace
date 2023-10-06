@@ -57,7 +57,7 @@ __decorate([
         nullable: true,
     }),
     __metadata("design:type", String)
-], User.prototype, "oAuth", void 0);
+], User.prototype, "authorizationServer", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { length: 50 }),
     __metadata("design:type", String)
