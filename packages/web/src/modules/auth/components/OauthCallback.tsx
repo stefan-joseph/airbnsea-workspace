@@ -3,8 +3,6 @@ import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import {
   AuthorizationServer,
   useAuthenticateUserWithOauthMutation,
-  useAuthenticateUserWithLinkedinMutation,
-  useAuthenticateUserWithGithubMutation,
 } from "@airbnb-clone/controller";
 
 import Loader from "../../../components/Loader";
@@ -12,6 +10,7 @@ import { useEffect } from "react";
 import useSetUserAndRedirect from "../../../hooks/useSetUserAndRedirect";
 import { AppContainer } from "../../../components/AppContainer";
 import capitalizeFirstLetter from "../../../utils/capitalizeFirstLetter";
+import { Steps } from "../Auth";
 
 export default function OauthCallback() {
   let { authServer } = useParams();
@@ -24,11 +23,8 @@ export default function OauthCallback() {
 
   const setUserAndRedirect = useSetUserAndRedirect();
 
-  const [authenticateUserWithOauthMutation, { error }] =
+  const [authenticateUserWithOauthMutation] =
     useAuthenticateUserWithOauthMutation();
-
-  // const [authenticateUserWithLinkedinMutation, { data: data2, error: error2 }] =
-  //   useAuthenticateUserWithLinkedinMutation();
 
   const authServerStr = authServer === "linkedin" ? "linkedIn" : authServer;
 
@@ -53,26 +49,35 @@ export default function OauthCallback() {
         const { authenticateUserWithOauth } = response.data;
         const { __typename } = authenticateUserWithOauth;
 
+        console.log("response.data", response.data);
+
         if (__typename === "SuccessResponse") {
           setUserAndRedirect();
+        } else if (__typename === "UserAlreadyExists") {
+          const { email, firstName, avatar } = authenticateUserWithOauth;
+          navigate("/login", {
+            state: {
+              step: Steps.EXISTS,
+              email,
+              firstName,
+              avatar,
+            },
+          });
+        } else if (__typename === "UserExistsWithOAuth") {
+          const { email, firstName, avatar, authorizationServer } =
+            authenticateUserWithOauth;
+          navigate("/login", {
+            state: {
+              step: Steps.OAUTHOTHER,
+              email,
+              firstName,
+              avatar,
+              authorizationServer,
+            },
+          });
         }
       }
-      // if (authServer === AuthorizationServer["Github"].toLowerCase()) {
-      //   authenticateUserWithOauthMutation({ variables: { code } });
-      // } else if (authServer === AuthorizationServer["Linkedin"].toLowerCase()) {
-      //   authenticateUserWithLinkedinMutation({ variables: { code } });
-      // }
-      // don't want to navigate to './login'
-      return;
     }
-
-    // navigate("/login", {
-    //   state: {
-    //     message: `Could not access your ${capitalizeFirstLetter(
-    //       authServerStr
-    //     )} credentials at this time`,
-    //   },
-    // });
   }
 
   useEffect(() => {

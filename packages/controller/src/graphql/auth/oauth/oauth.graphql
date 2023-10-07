@@ -11,7 +11,7 @@ mutation AuthenticateUserWithOauth(
       firstName
       avatar
     }
-    ... on EmailExistsWithOAuth {
+    ... on UserExistsWithOAuth {
       email
       firstName
       avatar

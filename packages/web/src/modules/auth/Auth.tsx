@@ -8,6 +8,7 @@ import SignUpForm from "./steps/SignUpForm";
 import OAuthReminder from "./steps/OAuthReminder";
 import { AuthorizationServer } from "@airbnb-clone/controller";
 import ConfirmEmailReminder from "./steps/ConfirmEmailReminder";
+import { useLocation } from "react-router-dom";
 
 export enum Steps {
   DEFAULT = "default",
@@ -16,6 +17,7 @@ export enum Steps {
   OAUTH = "oauth",
   CONFIRM = "confirm",
   EXISTS = "exists",
+  OAUTHOTHER = "oauth other",
 }
 
 export type User = {
@@ -26,12 +28,33 @@ export type User = {
 };
 
 export default function Auth() {
-  const [authStep, setAuthStep] = useState(Steps.DEFAULT);
+  const { state } = useLocation();
+
+  if (state?.authorizationServer) {
+  }
+  console.log(
+    Object.values(AuthorizationServer).includes(state?.authorizationServer)
+  );
+
+  // make sure step has proper cast
+  const step: Steps = Object.values(Steps).includes(state?.step)
+    ? state.step
+    : Steps.DEFAULT;
+
+  const [authStep, setAuthStep] = useState(step);
+
+  // make sure authorization server has proper cast
+  const authorizationServer: AuthorizationServer = Object.values(
+    AuthorizationServer
+  ).includes(state?.authorizationServer)
+    ? state.authorizationServer
+    : undefined;
+
   const [user, setUser] = useState<User>({
-    email: "",
-    firstName: "",
-    avatar: "",
-    // authorizationServer: AuthorizationServer["Linkedin"],
+    email: state?.email || "",
+    firstName: state?.firstName || "",
+    avatar: state?.avatar || "",
+    authorizationServer,
   });
 
   const AuthStepConfigs: Record<Steps, JSX.Element> = {
@@ -47,14 +70,15 @@ export default function Auth() {
       />
     ),
     [Steps.OAUTH]: <OAuthReminder setAuthStep={setAuthStep} user={user} />,
+    [Steps.OAUTHOTHER]: (
+      <OAuthReminder setAuthStep={setAuthStep} user={user} alreadyMessage />
+    ),
     [Steps.CONFIRM]: (
       <ConfirmEmailReminder setAuthStep={setAuthStep} user={user} />
     ),
     [Steps.EXISTS]: (
       <PasswordForm setAuthStep={setAuthStep} user={user} alreadyExists />
     ),
-
-    // need to add 'email already in use' step
   };
 
   return (

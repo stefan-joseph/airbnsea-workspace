@@ -8,8 +8,8 @@ type Mutation {
 
 union RegisterPayload =
     SuccessResponse
-  | EmailExistsWithIncorrectPassword
-  | EmailExistsWithOAuth
+  | UserExistsWithIncorrectPassword
+  | UserExistsWithOAuth
   | UserLogin
   | ValidationError
 
@@ -17,7 +17,7 @@ type UserLogin {
   success: Boolean!
 }
 
-type EmailExistsWithIncorrectPassword {
+type UserExistsWithIncorrectPassword {
   email: String!
   firstName: String!
   avatar: String

@@ -49,11 +49,11 @@ exports.resolvers = {
                 }
                 if (authorizationServer !== authServer) {
                     return {
-                        __typename: "EmailExistsWithOAuth",
+                        __typename: "UserExistsWithOAuth",
                         email,
                         firstName,
                         avatar,
-                        authorizationServer: authServer,
+                        authorizationServer,
                     };
                 }
                 if (!avatar && avatarImg) {

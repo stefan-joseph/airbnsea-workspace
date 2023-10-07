@@ -69,7 +69,7 @@ export default function EmailForm({
           if (__typename === "ValidationError") {
             const { field, message } = checkEmail;
             setFieldError(field, message);
-          } else if (__typename === "EmailExistsWithOAuth") {
+          } else if (__typename === "UserExistsWithOAuth") {
             const { authorizationServer, email, firstName, avatar } =
               checkEmail;
             setAuthStep(Steps.OAUTH);
@@ -79,7 +79,7 @@ export default function EmailForm({
               avatar: avatar || "",
               authorizationServer,
             });
-          } else if (__typename === "EmailExistsWithPassword") {
+          } else if (__typename === "UserExistsWithPassword") {
             const { email } = checkEmail;
             setAuthStep(Steps.PASSWORD);
             setUser({ ...user, email });

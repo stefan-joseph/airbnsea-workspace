@@ -56,11 +56,11 @@ export const resolvers: Resolvers = {
           // user is trying to sign in with wrong auth server
           // redirect to correct authorization server portal
           return {
-            __typename: "EmailExistsWithOAuth",
+            __typename: "UserExistsWithOAuth",
             email,
             firstName,
             avatar,
-            authorizationServer: authServer,
+            authorizationServer,
           };
         }
 

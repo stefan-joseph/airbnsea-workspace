@@ -1,7 +1,7 @@
 import { Avatar, Button, Icon, Stack, Typography } from "@mui/material";
 import { IoMailOutline } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { AuthorizationServer } from "@airbnb-clone/controller";
 
 import OauthLink from "../components/OauthLink";
@@ -9,12 +9,15 @@ import AuthFormContainer from "../components/AuthFormContainer";
 import { Steps, User } from "../Auth";
 import createGithubOauthLink from "../../../utils/createGithubOauthLink";
 import createLinkedinOauthLink from "../../../utils/createLinkedinOauthLink";
+import capitalizeFirstLetter from "../../../utils/capitalizeFirstLetter";
 
 export default function OAuthReminder({
   user,
+  alreadyMessage,
   setAuthStep,
 }: {
   user: User;
+  alreadyMessage?: boolean;
   setAuthStep: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
   const { email, firstName, avatar, authorizationServer } = user;
@@ -28,7 +31,7 @@ export default function OAuthReminder({
       <OauthLink
         href="https://google.com"
         text="Continue with LinkedIn"
-        Icon={<FcGoogle />}
+        Icon={<FaLinkedin color="#0077B5" />}
         getLink={createLinkedinOauthLink}
       />
     ),
@@ -42,8 +45,16 @@ export default function OAuthReminder({
     ),
   };
   return (
-    <AuthFormContainer header={`Welcome back, ${firstName}`}>
+    <AuthFormContainer
+      header={`Welcome back, ${capitalizeFirstLetter(firstName)}`}
+    >
       <Stack alignItems="center" width="100%" mt={2}>
+        {alreadyMessage && (
+          <Typography mb={4}>
+            Looks like you already have an account with us. Please log in with{" "}
+            {capitalizeFirstLetter(user.authorizationServer)} instead:
+          </Typography>
+        )}
         <Avatar
           src={avatar}
           alt={firstName}

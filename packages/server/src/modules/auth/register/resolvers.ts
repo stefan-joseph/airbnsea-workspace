@@ -34,7 +34,7 @@ export const resolvers: Resolvers = {
         if (authorizationServer) {
           // already existing user can sign in with oauth
           return {
-            __typename: "EmailExistsWithOAuth",
+            __typename: "UserExistsWithOAuth",
             authorizationServer,
             email,
             firstName,
@@ -68,7 +68,7 @@ export const resolvers: Resolvers = {
         } else {
           // already existing user needs to input correct password
           return {
-            __typename: "EmailExistsWithIncorrectPassword",
+            __typename: "UserExistsWithIncorrectPassword",
             email,
             firstName,
             avatar,

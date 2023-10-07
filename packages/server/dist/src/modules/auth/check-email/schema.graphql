@@ -3,18 +3,18 @@ type Query {
 }
 
 union CheckEmailPayload =
-    EmailExistsWithPassword
-  | EmailExistsWithOAuth
+    UserExistsWithPassword
+  | UserExistsWithOAuth
   | NoUserWithThisEmail
   | UserNotConfirmed
   | ValidationError
 
-type EmailExistsWithPassword {
+type UserExistsWithPassword {
   email: String!
   userExists: Boolean!
 }
 
-type EmailExistsWithOAuth {
+type UserExistsWithOAuth {
   authorizationServer: AuthorizationServer!
   email: String!
   firstName: String!

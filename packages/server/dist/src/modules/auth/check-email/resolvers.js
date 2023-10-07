@@ -45,13 +45,13 @@ exports.resolvers = {
                 }
                 if (user.password) {
                     return {
-                        __typename: "EmailExistsWithPassword",
+                        __typename: "UserExistsWithPassword",
                         email,
                         userExists: true,
                     };
                 }
                 return {
-                    __typename: "EmailExistsWithOAuth",
+                    __typename: "UserExistsWithOAuth",
                     authorizationServer,
                     email,
                     firstName,

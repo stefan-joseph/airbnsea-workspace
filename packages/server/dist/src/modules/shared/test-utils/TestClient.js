@@ -33,12 +33,12 @@ class TestClient {
               ...on SuccessResponse {
                 success
               }
-              ... on EmailExistsWithIncorrectPassword {
+              ... on UserExistsWithIncorrectPassword {
                 email
                 firstName
                 avatar
               }
-              ... on EmailExistsWithOAuth {
+              ... on UserExistsWithOAuth {
                 authorizationServer
                 email
                 firstName

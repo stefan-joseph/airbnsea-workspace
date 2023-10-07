@@ -37,7 +37,7 @@ exports.resolvers = {
                 const { authorizationServer, firstName, avatar } = userAlreadyExists;
                 if (authorizationServer) {
                     return {
-                        __typename: "EmailExistsWithOAuth",
+                        __typename: "UserExistsWithOAuth",
                         authorizationServer,
                         email,
                         firstName,
@@ -57,7 +57,7 @@ exports.resolvers = {
                 }
                 else {
                     return {
-                        __typename: "EmailExistsWithIncorrectPassword",
+                        __typename: "UserExistsWithIncorrectPassword",
                         email,
                         firstName,
                         avatar,

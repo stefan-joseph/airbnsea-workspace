@@ -1,10 +1,10 @@
 query CheckEmail($email: String!) {
   checkEmail(email: $email) {
-    ... on EmailExistsWithPassword {
+    ... on UserExistsWithPassword {
       email
       userExists
     }
-    ... on EmailExistsWithOAuth {
+    ... on UserExistsWithOAuth {
       authorizationServer
       email
       firstName

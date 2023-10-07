@@ -50,7 +50,7 @@ export const resolvers: Resolvers = {
         // if user has password, they should sign in with it
         if (user.password) {
           return {
-            __typename: "EmailExistsWithPassword",
+            __typename: "UserExistsWithPassword",
             email,
             userExists: true,
           };
@@ -58,7 +58,7 @@ export const resolvers: Resolvers = {
 
         // otherwise user must be oAuth
         return {
-          __typename: "EmailExistsWithOAuth",
+          __typename: "UserExistsWithOAuth",
           authorizationServer,
           email,
           firstName,

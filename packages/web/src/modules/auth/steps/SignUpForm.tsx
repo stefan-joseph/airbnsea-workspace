@@ -83,7 +83,7 @@ export default function SignUpForm({
             register.success && setSignUpComplete(true);
           } else if (__typename === "UserLogin") {
             register.success && setUserAndRedirect();
-          } else if (__typename === "EmailExistsWithOAuth") {
+          } else if (__typename === "UserExistsWithOAuth") {
             const { authorizationServer, email, firstName, avatar } = register;
             setAuthStep(Steps.OAUTH);
             setUser({
@@ -92,7 +92,7 @@ export default function SignUpForm({
               avatar: avatar || "",
               authorizationServer,
             });
-          } else if (__typename === "EmailExistsWithIncorrectPassword") {
+          } else if (__typename === "UserExistsWithIncorrectPassword") {
             const { email, firstName, avatar } = register;
             setAuthStep(Steps.EXISTS);
             setUser({
