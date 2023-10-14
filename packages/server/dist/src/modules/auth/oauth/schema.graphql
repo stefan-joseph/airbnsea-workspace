@@ -3,15 +3,28 @@ type Mutation {
     code: String!
     authServer: AuthorizationServer!
   ): AuthenticateUserWithOauthPayload!
+  registerUserWithOauth(
+    key: String!
+    firstName: String!
+  ): RegisterUserIwthOauthPayload!
 }
 
 union AuthenticateUserWithOauthPayload =
     SuccessResponse
   | UserAlreadyExists
   | UserExistsWithOAuth
+  | UserMustRegister
 
 type UserAlreadyExists {
   email: String!
   firstName: String!
   avatar: String
 }
+
+type UserMustRegister {
+  key: String!
+  email: String!
+  suggestedFirstName: String
+}
+
+union RegisterUserIwthOauthPayload = SuccessResponse | ValidationError

@@ -6,6 +6,7 @@ import { useSearchParams, useLocation } from "react-router-dom";
 import { Results } from "./components/Results";
 import { AppContainer } from "../../components/AppContainer";
 import { RequestErrorMessage } from "../../components/RequestErrorMessage";
+import PaginationComponent from "./components/PaginationComponent";
 
 interface Search {
   input: { beds: number | undefined; guests: number | undefined };
@@ -27,7 +28,7 @@ export const Search = () => {
   const [searchListings, { data, error, fetchMore }] =
     useSearchListingsLazyQuery();
 
-  const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     searchParams.set("page", `${value}`);
     setSearchParams(searchParams);
     window.scrollTo(0, 0);
@@ -59,26 +60,10 @@ export const Search = () => {
       ) : (
         <Results data={data?.searchListings}>
           {pageCount && pageCount > 1 ? (
-            <Pagination
-              count={pageCount}
-              page={page ? +page : 1}
-              onChange={handleChange}
-              size="large"
-              color="secondary"
-              renderItem={(item) => (
-                <PaginationItem {...item} sx={{ fontWeight: 600 }} />
-              )}
-              sx={{
-                display: "center",
-                justifyContent: "center",
-                mt: 7,
-                mb: 10,
-                fontWeight: 600,
-                "& .Mui-selected": {
-                  cursor: "default",
-                  pointerEvents: "none",
-                },
-              }}
+            <PaginationComponent
+              pageCount={pageCount}
+              page={page}
+              handleChange={handlePageChange}
             />
           ) : undefined}
         </Results>

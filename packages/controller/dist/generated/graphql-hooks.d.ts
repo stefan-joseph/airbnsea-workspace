@@ -30,7 +30,7 @@ export declare type Address = {
     street: Scalars['String'];
     zipcode: Scalars['String'];
 };
-export declare type AuthenticateUserWithOauthPayload = SuccessResponse | UserAlreadyExists | UserExistsWithOAuth;
+export declare type AuthenticateUserWithOauthPayload = SuccessResponse | UserAlreadyExists | UserExistsWithOAuth | UserMustRegister;
 export declare enum AuthorizationServer {
     Github = "GITHUB",
     Linkedin = "LINKEDIN"
@@ -171,6 +171,7 @@ export declare type Mutation = {
     loginAsRandomUser: Scalars['Boolean'];
     logout?: Maybe<Scalars['Boolean']>;
     register: RegisterPayload;
+    registerUserWithOauth: RegisterUserIwthOauthPayload;
     resetPassword: ResetPasswordPayload;
     sendForgotPasswordEmail: SendForgotPasswordEmailPayload;
     updateListing?: Maybe<Scalars['ID']>;
@@ -211,6 +212,10 @@ export declare type MutationRegisterArgs = {
     email: Scalars['String'];
     firstName: Scalars['String'];
     password: Scalars['String'];
+};
+export declare type MutationRegisterUserWithOauthArgs = {
+    firstName: Scalars['String'];
+    key: Scalars['String'];
 };
 export declare type MutationResetPasswordArgs = {
     key: Scalars['String'];
@@ -281,6 +286,7 @@ export declare type Redirect = {
     redirect: Scalars['String'];
 };
 export declare type RegisterPayload = SuccessResponse | UserExistsWithIncorrectPassword | UserExistsWithOAuth | UserLogin | ValidationError;
+export declare type RegisterUserIwthOauthPayload = SuccessResponse | ValidationError;
 export declare type ResetPasswordPayload = SuccessResponse | ValidationError;
 export declare type SearchListingResult = {
     __typename?: 'SearchListingResult';
@@ -372,6 +378,12 @@ export declare type UserExistsWithPassword = {
 export declare type UserLogin = {
     __typename?: 'UserLogin';
     success: Scalars['Boolean'];
+};
+export declare type UserMustRegister = {
+    __typename?: 'UserMustRegister';
+    email: Scalars['String'];
+    key: Scalars['String'];
+    suggestedFirstName?: Maybe<Scalars['String']>;
 };
 export declare type UserNotConfirmed = {
     __typename?: 'UserNotConfirmed';
@@ -493,6 +505,26 @@ export declare type AuthenticateUserWithOauthMutation = {
         firstName: string;
         avatar?: string | null;
         authorizationServer: AuthorizationServer;
+    } | {
+        __typename?: 'UserMustRegister';
+        key: string;
+        email: string;
+        suggestedFirstName?: string | null;
+    };
+};
+export declare type RegisterUserWithOauthMutationVariables = Exact<{
+    key: Scalars['String'];
+    firstName: Scalars['String'];
+}>;
+export declare type RegisterUserWithOauthMutation = {
+    __typename?: 'Mutation';
+    registerUserWithOauth: {
+        __typename?: 'SuccessResponse';
+        success: boolean;
+    } | {
+        __typename?: 'ValidationError';
+        field: string;
+        message: string;
     };
 };
 export declare type RegisterUserMutationVariables = Exact<{
@@ -828,6 +860,15 @@ export declare function useAuthenticateUserWithOauthMutation(baseOptions?: Apoll
 export declare type AuthenticateUserWithOauthMutationHookResult = ReturnType<typeof useAuthenticateUserWithOauthMutation>;
 export declare type AuthenticateUserWithOauthMutationResult = Apollo.MutationResult<AuthenticateUserWithOauthMutation>;
 export declare type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
+export declare const RegisterUserWithOauthDocument: Apollo.DocumentNode;
+export declare type RegisterUserWithOauthMutationFn = Apollo.MutationFunction<RegisterUserWithOauthMutation, RegisterUserWithOauthMutationVariables>;
+export declare function useRegisterUserWithOauthMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserWithOauthMutation, RegisterUserWithOauthMutationVariables>): Apollo.MutationTuple<RegisterUserWithOauthMutation, Exact<{
+    key: string;
+    firstName: string;
+}>, Apollo.DefaultContext, Apollo.ApolloCache<any>>;
+export declare type RegisterUserWithOauthMutationHookResult = ReturnType<typeof useRegisterUserWithOauthMutation>;
+export declare type RegisterUserWithOauthMutationResult = Apollo.MutationResult<RegisterUserWithOauthMutation>;
+export declare type RegisterUserWithOauthMutationOptions = Apollo.BaseMutationOptions<RegisterUserWithOauthMutation, RegisterUserWithOauthMutationVariables>;
 export declare const RegisterUserDocument: Apollo.DocumentNode;
 export declare type RegisterUserMutationFn = Apollo.MutationFunction<RegisterUserMutation, RegisterUserMutationVariables>;
 export declare function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserMutation, RegisterUserMutationVariables>): Apollo.MutationTuple<RegisterUserMutation, Exact<{

@@ -26,7 +26,7 @@ export type Address = {
   zipcode: Scalars['String'];
 };
 
-export type AuthenticateUserWithOauthPayload = SuccessResponse | UserAlreadyExists | UserExistsWithOAuth;
+export type AuthenticateUserWithOauthPayload = SuccessResponse | UserAlreadyExists | UserExistsWithOAuth | UserMustRegister;
 
 export enum AuthorizationServer {
   Github = 'GITHUB',
@@ -185,6 +185,7 @@ export type Mutation = {
   loginAsRandomUser: Scalars['Boolean'];
   logout?: Maybe<Scalars['Boolean']>;
   register: RegisterPayload;
+  registerUserWithOauth: RegisterUserIwthOauthPayload;
   resetPassword: ResetPasswordPayload;
   sendForgotPasswordEmail: SendForgotPasswordEmailPayload;
   updateListing?: Maybe<Scalars['ID']>;
@@ -245,6 +246,12 @@ export type MutationRegisterArgs = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationRegisterUserWithOauthArgs = {
+  firstName: Scalars['String'];
+  key: Scalars['String'];
 };
 
 
@@ -341,6 +348,8 @@ export type Redirect = {
 };
 
 export type RegisterPayload = SuccessResponse | UserExistsWithIncorrectPassword | UserExistsWithOAuth | UserLogin | ValidationError;
+
+export type RegisterUserIwthOauthPayload = SuccessResponse | ValidationError;
 
 export type ResetPasswordPayload = SuccessResponse | ValidationError;
 
@@ -452,6 +461,13 @@ export type UserLogin = {
   success: Scalars['Boolean'];
 };
 
+export type UserMustRegister = {
+  __typename?: 'UserMustRegister';
+  email: Scalars['String'];
+  key: Scalars['String'];
+  suggestedFirstName?: Maybe<Scalars['String']>;
+};
+
 export type UserNotConfirmed = {
   __typename?: 'UserNotConfirmed';
   email: Scalars['String'];
@@ -543,7 +559,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Address: Address;
-  AuthenticateUserWithOauthPayload: ResolversTypes['SuccessResponse'] | ResolversTypes['UserAlreadyExists'] | ResolversTypes['UserExistsWithOAuth'];
+  AuthenticateUserWithOauthPayload: ResolversTypes['SuccessResponse'] | ResolversTypes['UserAlreadyExists'] | ResolversTypes['UserExistsWithOAuth'] | ResolversTypes['UserMustRegister'];
   AuthorizationServer: AuthorizationServer;
   Booking: ResolverTypeWrapper<Booking>;
   BookingInput: BookingInput;
@@ -575,6 +591,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   Redirect: ResolverTypeWrapper<Redirect>;
   RegisterPayload: ResolversTypes['SuccessResponse'] | ResolversTypes['UserExistsWithIncorrectPassword'] | ResolversTypes['UserExistsWithOAuth'] | ResolversTypes['UserLogin'] | ResolversTypes['ValidationError'];
+  RegisterUserIwthOauthPayload: ResolversTypes['SuccessResponse'] | ResolversTypes['ValidationError'];
   ResetPasswordPayload: ResolversTypes['SuccessResponse'] | ResolversTypes['ValidationError'];
   SearchListingResult: ResolverTypeWrapper<SearchListingResult>;
   SearchListingsInput: SearchListingsInput;
@@ -592,6 +609,7 @@ export type ResolversTypes = {
   UserExistsWithOAuth: ResolverTypeWrapper<UserExistsWithOAuth>;
   UserExistsWithPassword: ResolverTypeWrapper<UserExistsWithPassword>;
   UserLogin: ResolverTypeWrapper<UserLogin>;
+  UserMustRegister: ResolverTypeWrapper<UserMustRegister>;
   UserNotConfirmed: ResolverTypeWrapper<UserNotConfirmed>;
   ValidationError: ResolverTypeWrapper<ValidationError>;
   VesselType: VesselType;
@@ -601,7 +619,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Address: Address;
-  AuthenticateUserWithOauthPayload: ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['UserAlreadyExists'] | ResolversParentTypes['UserExistsWithOAuth'];
+  AuthenticateUserWithOauthPayload: ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['UserAlreadyExists'] | ResolversParentTypes['UserExistsWithOAuth'] | ResolversParentTypes['UserMustRegister'];
   Booking: Booking;
   BookingInput: BookingInput;
   Boolean: Scalars['Boolean'];
@@ -631,6 +649,7 @@ export type ResolversParentTypes = {
   Query: {};
   Redirect: Redirect;
   RegisterPayload: ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['UserExistsWithIncorrectPassword'] | ResolversParentTypes['UserExistsWithOAuth'] | ResolversParentTypes['UserLogin'] | ResolversParentTypes['ValidationError'];
+  RegisterUserIwthOauthPayload: ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['ValidationError'];
   ResetPasswordPayload: ResolversParentTypes['SuccessResponse'] | ResolversParentTypes['ValidationError'];
   SearchListingResult: SearchListingResult;
   SearchListingsInput: SearchListingsInput;
@@ -647,13 +666,14 @@ export type ResolversParentTypes = {
   UserExistsWithOAuth: UserExistsWithOAuth;
   UserExistsWithPassword: UserExistsWithPassword;
   UserLogin: UserLogin;
+  UserMustRegister: UserMustRegister;
   UserNotConfirmed: UserNotConfirmed;
   ValidationError: ValidationError;
   VesselTypeInput: VesselTypeInput;
 };
 
 export type AuthenticateUserWithOauthPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthenticateUserWithOauthPayload'] = ResolversParentTypes['AuthenticateUserWithOauthPayload']> = {
-  __resolveType: TypeResolveFn<'SuccessResponse' | 'UserAlreadyExists' | 'UserExistsWithOAuth', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'SuccessResponse' | 'UserAlreadyExists' | 'UserExistsWithOAuth' | 'UserMustRegister', ParentType, ContextType>;
 };
 
 export type BookingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Booking'] = ResolversParentTypes['Booking']> = {
@@ -814,6 +834,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   loginAsRandomUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   register?: Resolver<ResolversTypes['RegisterPayload'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'firstName' | 'password'>>;
+  registerUserWithOauth?: Resolver<ResolversTypes['RegisterUserIwthOauthPayload'], ParentType, ContextType, RequireFields<MutationRegisterUserWithOauthArgs, 'firstName' | 'key'>>;
   resetPassword?: Resolver<ResolversTypes['ResetPasswordPayload'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'key' | 'newPassword'>>;
   sendForgotPasswordEmail?: Resolver<ResolversTypes['SendForgotPasswordEmailPayload'], ParentType, ContextType, RequireFields<MutationSendForgotPasswordEmailArgs, 'email'>>;
   updateListing?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationUpdateListingArgs, 'fields' | 'listingId'>>;
@@ -852,6 +873,10 @@ export type RedirectResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type RegisterPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterPayload'] = ResolversParentTypes['RegisterPayload']> = {
   __resolveType: TypeResolveFn<'SuccessResponse' | 'UserExistsWithIncorrectPassword' | 'UserExistsWithOAuth' | 'UserLogin' | 'ValidationError', ParentType, ContextType>;
+};
+
+export type RegisterUserIwthOauthPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterUserIwthOauthPayload'] = ResolversParentTypes['RegisterUserIwthOauthPayload']> = {
+  __resolveType: TypeResolveFn<'SuccessResponse' | 'ValidationError', ParentType, ContextType>;
 };
 
 export type ResetPasswordPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResetPasswordPayload'] = ResolversParentTypes['ResetPasswordPayload']> = {
@@ -942,6 +967,13 @@ export type UserLoginResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserMustRegisterResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserMustRegister'] = ResolversParentTypes['UserMustRegister']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  suggestedFirstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserNotConfirmedResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserNotConfirmed'] = ResolversParentTypes['UserNotConfirmed']> = {
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   userExists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -979,6 +1011,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Redirect?: RedirectResolvers<ContextType>;
   RegisterPayload?: RegisterPayloadResolvers<ContextType>;
+  RegisterUserIwthOauthPayload?: RegisterUserIwthOauthPayloadResolvers<ContextType>;
   ResetPasswordPayload?: ResetPasswordPayloadResolvers<ContextType>;
   SearchListingResult?: SearchListingResultResolvers<ContextType>;
   SearchListingsResponse?: SearchListingsResponseResolvers<ContextType>;
@@ -992,6 +1025,7 @@ export type Resolvers<ContextType = any> = {
   UserExistsWithOAuth?: UserExistsWithOAuthResolvers<ContextType>;
   UserExistsWithPassword?: UserExistsWithPasswordResolvers<ContextType>;
   UserLogin?: UserLoginResolvers<ContextType>;
+  UserMustRegister?: UserMustRegisterResolvers<ContextType>;
   UserNotConfirmed?: UserNotConfirmedResolvers<ContextType>;
   ValidationError?: ValidationErrorResolvers<ContextType>;
 };

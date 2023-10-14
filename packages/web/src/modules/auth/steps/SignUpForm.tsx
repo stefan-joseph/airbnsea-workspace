@@ -11,6 +11,7 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import { theme } from "../../../MuiTheme";
 import LoadingButton from "../../../components/LoadingButton";
 import useSetUserAndRedirect from "../../../hooks/useSetUserAndRedirect";
+import TermsOfService from "../components/TermsOfService";
 
 export default function SignUpForm({
   email,
@@ -113,12 +114,7 @@ export default function SignUpForm({
               label="Password"
               component={TextInput2}
             />
-            <Typography fontSize="0.75rem">
-              By selecting <b>Agree and continue</b>, I agree to Airbnsea’s
-              Terms of Service, Payments Terms of Service, and Nondiscrimination
-              Policy and acknowledge the Privacy Policy.
-            </Typography>
-
+            <TermsOfService />
             <LoadingButton text="Agree and continue" loading={loading} />
           </Stack>
         )}

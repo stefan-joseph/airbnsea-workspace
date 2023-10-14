@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack } from "@mui/material";
+import { Stack, useMediaQuery } from "@mui/material";
 
 import { AppContainer } from "../../components/AppContainer";
 import EmailForm from "./steps/EmailForm";
@@ -9,6 +9,8 @@ import OAuthReminder from "./steps/OAuthReminder";
 import { AuthorizationServer } from "@airbnb-clone/controller";
 import ConfirmEmailReminder from "./steps/ConfirmEmailReminder";
 import { useLocation } from "react-router-dom";
+import OauthSignUpForm from "./steps/OauthSignUpForm";
+import { desktopMinWidth } from "../../constants/constants";
 
 export enum Steps {
   DEFAULT = "default",
@@ -18,6 +20,7 @@ export enum Steps {
   CONFIRM = "confirm",
   EXISTS = "exists",
   OAUTHOTHER = "oauth other",
+  OAUTHREGISTER = "oauth register",
 }
 
 export type User = {
@@ -29,6 +32,8 @@ export type User = {
 
 export default function Auth() {
   const { state } = useLocation();
+
+  const matches = useMediaQuery(desktopMinWidth);
 
   if (state?.authorizationServer) {
   }
@@ -79,11 +84,23 @@ export default function Auth() {
     [Steps.EXISTS]: (
       <PasswordForm setAuthStep={setAuthStep} user={user} alreadyExists />
     ),
+    [Steps.OAUTHREGISTER]: (
+      <OauthSignUpForm
+        setAuthStep={setAuthStep}
+        setUser={setUser}
+        user={user}
+      />
+    ),
   };
 
   return (
     <AppContainer withoutSearch>
-      <Stack justifyContent="center" alignItems="center" mt={10} mb={5}>
+      <Stack
+        justifyContent="center"
+        alignItems="center"
+        mt={matches ? 10 : 0}
+        mb={matches ? 5 : 0}
+      >
         {AuthStepConfigs[authStep]}
       </Stack>
     </AppContainer>

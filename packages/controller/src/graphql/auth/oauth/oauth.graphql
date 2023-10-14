@@ -17,5 +17,22 @@ mutation AuthenticateUserWithOauth(
       avatar
       authorizationServer
     }
+    ... on UserMustRegister {
+      key
+      email
+      suggestedFirstName
+    }
+  }
+}
+
+mutation RegisterUserWithOauth($key: String!, $firstName: String!) {
+  registerUserWithOauth(key: $key, firstName: $firstName) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
+      message
+    }
   }
 }

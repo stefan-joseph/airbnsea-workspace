@@ -27,7 +27,7 @@ export type Address = {
   zipcode: Scalars['String'];
 };
 
-export type AuthenticateUserWithOauthPayload = SuccessResponse | UserAlreadyExists | UserExistsWithOAuth;
+export type AuthenticateUserWithOauthPayload = SuccessResponse | UserAlreadyExists | UserExistsWithOAuth | UserMustRegister;
 
 export enum AuthorizationServer {
   Github = 'GITHUB',
@@ -186,6 +186,7 @@ export type Mutation = {
   loginAsRandomUser: Scalars['Boolean'];
   logout?: Maybe<Scalars['Boolean']>;
   register: RegisterPayload;
+  registerUserWithOauth: RegisterUserIwthOauthPayload;
   resetPassword: ResetPasswordPayload;
   sendForgotPasswordEmail: SendForgotPasswordEmailPayload;
   updateListing?: Maybe<Scalars['ID']>;
@@ -246,6 +247,12 @@ export type MutationRegisterArgs = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationRegisterUserWithOauthArgs = {
+  firstName: Scalars['String'];
+  key: Scalars['String'];
 };
 
 
@@ -342,6 +349,8 @@ export type Redirect = {
 };
 
 export type RegisterPayload = SuccessResponse | UserExistsWithIncorrectPassword | UserExistsWithOAuth | UserLogin | ValidationError;
+
+export type RegisterUserIwthOauthPayload = SuccessResponse | ValidationError;
 
 export type ResetPasswordPayload = SuccessResponse | ValidationError;
 
@@ -453,6 +462,13 @@ export type UserLogin = {
   success: Scalars['Boolean'];
 };
 
+export type UserMustRegister = {
+  __typename?: 'UserMustRegister';
+  email: Scalars['String'];
+  key: Scalars['String'];
+  suggestedFirstName?: Maybe<Scalars['String']>;
+};
+
 export type UserNotConfirmed = {
   __typename?: 'UserNotConfirmed';
   email: Scalars['String'];
@@ -519,7 +535,15 @@ export type AuthenticateUserWithOauthMutationVariables = Exact<{
 }>;
 
 
-export type AuthenticateUserWithOauthMutation = { __typename?: 'Mutation', authenticateUserWithOauth: { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'UserAlreadyExists', email: string, firstName: string, avatar?: string | null } | { __typename?: 'UserExistsWithOAuth', email: string, firstName: string, avatar?: string | null, authorizationServer: AuthorizationServer } };
+export type AuthenticateUserWithOauthMutation = { __typename?: 'Mutation', authenticateUserWithOauth: { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'UserAlreadyExists', email: string, firstName: string, avatar?: string | null } | { __typename?: 'UserExistsWithOAuth', email: string, firstName: string, avatar?: string | null, authorizationServer: AuthorizationServer } | { __typename?: 'UserMustRegister', key: string, email: string, suggestedFirstName?: string | null } };
+
+export type RegisterUserWithOauthMutationVariables = Exact<{
+  key: Scalars['String'];
+  firstName: Scalars['String'];
+}>;
+
+
+export type RegisterUserWithOauthMutation = { __typename?: 'Mutation', registerUserWithOauth: { __typename?: 'SuccessResponse', success: boolean } | { __typename?: 'ValidationError', field: string, message: string } };
 
 export type RegisterUserMutationVariables = Exact<{
   email: Scalars['String'];
@@ -880,6 +904,11 @@ export const AuthenticateUserWithOauthDocument = gql`
       avatar
       authorizationServer
     }
+    ... on UserMustRegister {
+      key
+      email
+      suggestedFirstName
+    }
   }
 }
     `;
@@ -910,6 +939,46 @@ export function useAuthenticateUserWithOauthMutation(baseOptions?: Apollo.Mutati
 export type AuthenticateUserWithOauthMutationHookResult = ReturnType<typeof useAuthenticateUserWithOauthMutation>;
 export type AuthenticateUserWithOauthMutationResult = Apollo.MutationResult<AuthenticateUserWithOauthMutation>;
 export type AuthenticateUserWithOauthMutationOptions = Apollo.BaseMutationOptions<AuthenticateUserWithOauthMutation, AuthenticateUserWithOauthMutationVariables>;
+export const RegisterUserWithOauthDocument = gql`
+    mutation RegisterUserWithOauth($key: String!, $firstName: String!) {
+  registerUserWithOauth(key: $key, firstName: $firstName) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
+      message
+    }
+  }
+}
+    `;
+export type RegisterUserWithOauthMutationFn = Apollo.MutationFunction<RegisterUserWithOauthMutation, RegisterUserWithOauthMutationVariables>;
+
+/**
+ * __useRegisterUserWithOauthMutation__
+ *
+ * To run a mutation, you first call `useRegisterUserWithOauthMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterUserWithOauthMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerUserWithOauthMutation, { data, loading, error }] = useRegisterUserWithOauthMutation({
+ *   variables: {
+ *      key: // value for 'key'
+ *      firstName: // value for 'firstName'
+ *   },
+ * });
+ */
+export function useRegisterUserWithOauthMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserWithOauthMutation, RegisterUserWithOauthMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterUserWithOauthMutation, RegisterUserWithOauthMutationVariables>(RegisterUserWithOauthDocument, options);
+      }
+export type RegisterUserWithOauthMutationHookResult = ReturnType<typeof useRegisterUserWithOauthMutation>;
+export type RegisterUserWithOauthMutationResult = Apollo.MutationResult<RegisterUserWithOauthMutation>;
+export type RegisterUserWithOauthMutationOptions = Apollo.BaseMutationOptions<RegisterUserWithOauthMutation, RegisterUserWithOauthMutationVariables>;
 export const RegisterUserDocument = gql`
     mutation RegisterUser($email: String!, $password: String!, $firstName: String!) {
   register(email: $email, password: $password, firstName: $firstName) {

@@ -23,8 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usePopulateConversationQuery = exports.PopulateConversationDocument = exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useLoginAsRandomUserMutation = exports.LoginAsRandomUserDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useAuthenticateUserWithOauthMutation = exports.AuthenticateUserWithOauthDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.useConfirmEmailMutation = exports.ConfirmEmailDocument = exports.useCheckEmailLazyQuery = exports.useCheckEmailQuery = exports.CheckEmailDocument = exports.VesselType = exports.Status = exports.InboxType = exports.AuthorizationServer = void 0;
-exports.useUpdateInboxSubscriptionSubscription = exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = void 0;
+exports.usePopulateInboxLazyQuery = exports.usePopulateInboxQuery = exports.PopulateInboxDocument = exports.useCreateConversationMutation = exports.CreateConversationDocument = exports.useCreateMessageMutation = exports.CreateMessageDocument = exports.useViewListingLazyQuery = exports.useViewListingQuery = exports.ViewListingDocument = exports.useUpdateListingMutation = exports.UpdateListingDocument = exports.useSearchListingsLazyQuery = exports.useSearchListingsQuery = exports.SearchListingsDocument = exports.useCreateListingMutation = exports.CreateListingDocument = exports.useGetListingUnavailabilityLazyQuery = exports.useGetListingUnavailabilityQuery = exports.GetListingUnavailabilityDocument = exports.useCreateBookingMutation = exports.CreateBookingDocument = exports.useLoginAsRandomUserMutation = exports.LoginAsRandomUserDocument = exports.useResetPasswordMutation = exports.ResetPasswordDocument = exports.useRegisterUserMutation = exports.RegisterUserDocument = exports.useRegisterUserWithOauthMutation = exports.RegisterUserWithOauthDocument = exports.useAuthenticateUserWithOauthMutation = exports.AuthenticateUserWithOauthDocument = exports.useMeLazyQuery = exports.useMeQuery = exports.MeDocument = exports.useLogoutUserMutation = exports.LogoutUserDocument = exports.useLoginUserMutation = exports.LoginUserDocument = exports.useSendForgotPasswordEmailMutation = exports.SendForgotPasswordEmailDocument = exports.useConfirmEmailMutation = exports.ConfirmEmailDocument = exports.useCheckEmailLazyQuery = exports.useCheckEmailQuery = exports.CheckEmailDocument = exports.VesselType = exports.Status = exports.InboxType = exports.AuthorizationServer = void 0;
+exports.useUpdateInboxSubscriptionSubscription = exports.UpdateInboxSubscriptionDocument = exports.useNewMessageSubscriptionSubscription = exports.NewMessageSubscriptionDocument = exports.usePopulateConversationLazyQuery = exports.usePopulateConversationQuery = exports.PopulateConversationDocument = void 0;
 const client_1 = require("@apollo/client");
 const Apollo = __importStar(require("@apollo/client"));
 const defaultOptions = {};
@@ -177,6 +177,11 @@ exports.AuthenticateUserWithOauthDocument = (0, client_1.gql) `
       avatar
       authorizationServer
     }
+    ... on UserMustRegister {
+      key
+      email
+      suggestedFirstName
+    }
   }
 }
     `;
@@ -185,6 +190,24 @@ function useAuthenticateUserWithOauthMutation(baseOptions) {
     return Apollo.useMutation(exports.AuthenticateUserWithOauthDocument, options);
 }
 exports.useAuthenticateUserWithOauthMutation = useAuthenticateUserWithOauthMutation;
+exports.RegisterUserWithOauthDocument = (0, client_1.gql) `
+    mutation RegisterUserWithOauth($key: String!, $firstName: String!) {
+  registerUserWithOauth(key: $key, firstName: $firstName) {
+    ... on SuccessResponse {
+      success
+    }
+    ... on ValidationError {
+      field
+      message
+    }
+  }
+}
+    `;
+function useRegisterUserWithOauthMutation(baseOptions) {
+    const options = Object.assign(Object.assign({}, defaultOptions), baseOptions);
+    return Apollo.useMutation(exports.RegisterUserWithOauthDocument, options);
+}
+exports.useRegisterUserWithOauthMutation = useRegisterUserWithOauthMutation;
 exports.RegisterUserDocument = (0, client_1.gql) `
     mutation RegisterUser($email: String!, $password: String!, $firstName: String!) {
   register(email: $email, password: $password, firstName: $firstName) {

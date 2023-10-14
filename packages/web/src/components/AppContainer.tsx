@@ -30,7 +30,7 @@ export const AppContainer = ({
       <Navbar withoutSearch={!!withoutSearch} />
       {children}
       {!matches && <BottomNavbar />}
-      {!location.pathname.includes("inbox") && !error && (
+      {!location.pathname.includes("inbox") && !error && matches && (
         <Box mt="auto">
           <SiteMap />
         </Box>

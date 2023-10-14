@@ -75,6 +75,15 @@ export default function OauthCallback() {
               authorizationServer,
             },
           });
+        } else if (__typename === "UserMustRegister") {
+          const { key, email, suggestedFirstName } = authenticateUserWithOauth;
+          navigate(`/login?key=${key}`, {
+            state: {
+              step: Steps.OAUTHREGISTER,
+              email,
+              firstName: suggestedFirstName,
+            },
+          });
         }
       }
     }

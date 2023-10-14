@@ -5,18 +5,11 @@ import {
   Paper,
 } from "@mui/material";
 import { useState } from "react";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
-import SailingOutlinedIcon from "@mui/icons-material/SailingOutlined";
-import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
-import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
-import { FiSearch } from "react-icons/fi";
+
 import {
   IoSearchOutline,
-  IoSearch,
   IoBoatOutline,
   IoChatboxOutline,
-  IoChatbox,
   IoPersonCircleOutline,
 } from "react-icons/io5";
 import { IoMdHeartEmpty } from "react-icons/io";
@@ -38,18 +31,18 @@ export const BottomNavbar = () => {
       unselectedIcon: <IoSearchOutline />,
       href: "/",
     },
-    {
-      label: "Wishlists",
-      selectedIcon: <IoMdHeartEmpty />,
-      unselectedIcon: <IoMdHeartEmpty />,
-      href: "",
-    },
-    {
-      label: "Trips",
-      selectedIcon: <IoBoatOutline />,
-      unselectedIcon: <IoBoatOutline />,
-      href: "",
-    },
+    // {
+    //   label: "Wishlists",
+    //   selectedIcon: <IoMdHeartEmpty />,
+    //   unselectedIcon: <IoMdHeartEmpty />,
+    //   href: "",
+    // },
+    // {
+    //   label: "Trips",
+    //   selectedIcon: <IoBoatOutline />,
+    //   unselectedIcon: <IoBoatOutline />,
+    //   href: "",
+    // },
     {
       label: "Messages",
       selectedIcon: <IoChatboxOutline />,
@@ -60,7 +53,7 @@ export const BottomNavbar = () => {
       label: "Profile",
       selectedIcon: <IoPersonCircleOutline />,
       unselectedIcon: <IoPersonCircleOutline />,
-      href: "",
+      href: "/login",
     },
   ];
 

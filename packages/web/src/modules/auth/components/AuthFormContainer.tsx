@@ -1,7 +1,7 @@
-import { IconButton, Stack, Typography } from "@mui/material";
+import { IconButton, Stack, Typography, useMediaQuery } from "@mui/material";
 import { IoChevronBack } from "react-icons/io5";
 
-import { borderRadius } from "../../../constants/constants";
+import { borderRadius, desktopMinWidth } from "../../../constants/constants";
 import { Steps } from "../Auth";
 import TransitionAlerts from "./TransitionAlerts";
 
@@ -22,11 +22,13 @@ export default function AuthFormContainer({
   error?: string;
   setAuthStep?: React.Dispatch<React.SetStateAction<Steps>>;
 }) {
+  const matches = useMediaQuery(desktopMinWidth);
+
   return (
     <Stack
-      maxWidth={568}
+      maxWidth={matches ? 568 : undefined}
       width="100%"
-      border="1px solid #B0B0B0"
+      border={matches ? "1px solid #B0B0B0" : undefined}
       borderRadius={borderRadius}
     >
       <Stack pl={3} pr={3} minHeight={64} borderBottom="1px solid #EBEBEB">
