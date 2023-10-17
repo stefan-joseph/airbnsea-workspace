@@ -37,8 +37,8 @@ export default function PasswordForm({
           password: "",
         }}
         validationSchema={loginSchema}
-        validateOnBlur={false}
-        validateOnChange={false}
+        // validateOnBlur={false}
+        // validateOnChange={false}
         onSubmit={async (values, { setFieldError }) => {
           const { data } = await loginUserMutation({ variables: values });
 

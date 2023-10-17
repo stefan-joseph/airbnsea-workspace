@@ -59,8 +59,6 @@ export default function ResetPasswordForm() {
               newPassword2: "",
             }}
             validationSchema={resetPasswordSchemaWithPassword2}
-            validateOnBlur={false}
-            validateOnChange={false}
             onSubmit={async (values, { setFieldError }) => {
               const { data } = await resetPasswordMutation({
                 variables: { ...values, key: key as string },

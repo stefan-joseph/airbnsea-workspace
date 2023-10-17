@@ -55,8 +55,8 @@ export default function EmailForm({
           email: user.email,
         }}
         validationSchema={checkEmailSchema}
-        validateOnBlur={false}
-        validateOnChange={false}
+        // validateOnBlur={false}
+        // validateOnChange={false}
         onSubmit={async ({ email }, { setFieldError }) => {
           const { data } = await checkEmailLazyQuery({
             variables: { email: email.trim() },

@@ -62,8 +62,6 @@ export default function ForgotPasswordForm() {
               email: "",
             }}
             validationSchema={forgotPasswordSchema}
-            validateOnBlur={false}
-            validateOnChange={false}
             onSubmit={async (values, { setFieldError }) => {
               const { data } = await sendForgotPasswordEmailMutation({
                 variables: values,

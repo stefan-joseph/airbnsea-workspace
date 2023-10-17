@@ -17,18 +17,29 @@ const User_1 = require("../../../entity/User");
 const createConfirmEmailLink_1 = require("../../../utils/createConfirmEmailLink");
 const createTypeormConnection_1 = require("../../../utils/createTypeormConnection");
 const graphql_request_1 = require("graphql-request");
+const TestClient_1 = require("../../shared/test-utils/TestClient");
+const errorMessages_1 = require("../login/errorMessages");
 let userId = "";
 const redis = new ioredis_1.default();
+const email = "bob@bob.com";
+const password = "dsjkvd";
+const firstName = "Bob";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, createTypeormConnection_1.createTypeormConnection)();
     const user = yield User_1.User.create({
-        email: "bob@bob.gmail.com",
-        password: "cjdkvbndsjvk",
-        firstName: "Bob",
+        email,
+        password,
+        firstName,
     }).save();
     userId = user.id;
 }));
 describe("test createConfirmEmailLink", () => {
+    const client = new TestClient_1.TestClient("graphql");
+    test("make sure user cannot sign in until email confirmed", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield client.login(email, password);
+        expect(response.errors[0].message).toEqual(errorMessages_1.confirmEmailError);
+        expect(response.data).toBeNull();
+    }));
     test("makes sure to confirm user and clears key in redis", () => __awaiter(void 0, void 0, void 0, function* () {
         const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)(process.env.TEST_HOST, userId, redis);
         const urlChunks = url.split("/");

@@ -68,8 +68,8 @@ export default function SignUpForm({
           password: "",
         }}
         validationSchema={registerUserSchema}
-        validateOnBlur={false}
-        validateOnChange={false}
+        // validateOnBlur={false}
+        // validateOnChange={false}
         onSubmit={async (values, { setFieldError }) => {
           const { data } = await registerUserMutation({ variables: values });
 
