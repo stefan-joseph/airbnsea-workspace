@@ -34,7 +34,7 @@ export const resolvers: Resolvers = {
             user.id,
             redis
           );
-
+          console.log(email);
           if (process.env.NODE_ENV !== "test") {
             // resend confirmation email
             await sendEmail(email, url, "Click here to confirm your email");
@@ -46,7 +46,7 @@ export const resolvers: Resolvers = {
             userExists: true,
           };
         }
-
+        console.log(email);
         // if user has password, they should sign in with it
         if (user.password) {
           return {
@@ -55,6 +55,7 @@ export const resolvers: Resolvers = {
             userExists: true,
           };
         }
+        console.log(email);
 
         // otherwise user must be oAuth
         return {

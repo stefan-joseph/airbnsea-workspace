@@ -18,6 +18,42 @@ export class TestClient {
     };
   }
 
+  async checkEmail(email: string) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+          query {
+            checkEmail (email: "${email}") {
+              ...on UserExistsWithPassword {
+                email
+                userExists
+              }
+              ...on UserExistsWithOAuth {
+                authorizationServer
+                email
+                firstName
+                avatar
+              }
+              ... on NoUserWithThisEmail{
+                email
+                userExists
+              }
+              ... on UserNotConfirmed {
+                email
+                userExists
+              }
+              ... on ValidationError {
+                message
+                field
+              }
+            } 
+          }
+        `,
+      },
+    });
+  }
+
   async register(email: string, password: string, firstName: string) {
     return rp.post(this.url, {
       ...this.options,

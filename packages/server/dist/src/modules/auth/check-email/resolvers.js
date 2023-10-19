@@ -34,6 +34,7 @@ exports.resolvers = {
                 const { email, firstName, avatar, authorizationServer, confirmed } = user;
                 if (!confirmed) {
                     const url = yield (0, createConfirmEmailLink_1.createConfirmEmailLink)(process.env.FRONTEND_HOST, user.id, redis);
+                    console.log(email);
                     if (process.env.NODE_ENV !== "test") {
                         yield (0, sendEmail_1.sendEmail)(email, url, "Click here to confirm your email");
                     }
@@ -43,6 +44,7 @@ exports.resolvers = {
                         userExists: true,
                     };
                 }
+                console.log(email);
                 if (user.password) {
                     return {
                         __typename: "UserExistsWithPassword",
@@ -50,6 +52,7 @@ exports.resolvers = {
                         userExists: true,
                     };
                 }
+                console.log(email);
                 return {
                     __typename: "UserExistsWithOAuth",
                     authorizationServer,

@@ -20,6 +20,40 @@ class TestClient {
             json: true,
         };
     }
+    checkEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
+                    query: `
+          query {
+            checkEmail (email: "${email}") {
+              ...on UserExistsWithPassword {
+                email
+                userExists
+              }
+              ...on UserExistsWithOAuth {
+                authorizationServer
+                email
+                firstName
+                avatar
+              }
+              ... on NoUserWithThisEmail{
+                email
+                userExists
+              }
+              ... on UserNotConfirmed {
+                email
+                userExists
+              }
+              ... on ValidationError {
+                message
+                field
+              }
+            } 
+          }
+        `,
+                } }));
+        });
+    }
     register(email, password, firstName) {
         return __awaiter(this, void 0, void 0, function* () {
             return rp.post(this.url, Object.assign(Object.assign({}, this.options), { body: {
