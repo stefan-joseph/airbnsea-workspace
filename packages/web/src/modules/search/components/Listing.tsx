@@ -18,6 +18,8 @@ export const Listing: React.FC<{
 
   const [isHovering, setIsHovering] = useState<boolean>(false);
 
+  const [showListing, setShowListing] = useState(false);
+
   const handleNavigation = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: string
@@ -54,11 +56,16 @@ export const Listing: React.FC<{
           borderRadius={4}
           overflow="hidden"
           position="relative"
-          // DO NOT REMOVE: for safari borderRadius/overflow: hidden bug
+          // DO NOT REMOVE: for safari 'borderRadius/overflow:hidden' bug
           sx={{ isolation: "isolate" }}
         >
           {data?.photos ? (
-            <PhotoCarousel photos={data.photos} showArrowButtons={isHovering} />
+            <PhotoCarousel
+              photos={data.photos}
+              showArrowButtons={isHovering}
+              setShowListing={setShowListing}
+              showListing={showListing}
+            />
           ) : (
             <Skeleton
               variant="rounded"
@@ -67,7 +74,21 @@ export const Listing: React.FC<{
             />
           )}
         </Box>
-        <Box p={0.4} pt={1}>
+        <Box
+          p={0.4}
+          pt={1}
+          sx={{
+            animation: `500ms linear appear`,
+            "@keyframes appear": {
+              "0%": {
+                opacity: 0,
+              },
+              "100%": {
+                opacity: 1,
+              },
+            },
+          }}
+        >
           <Stack direction="row" justifyContent="space-between">
             <Typography
               fontWeight={600}
@@ -76,21 +97,17 @@ export const Listing: React.FC<{
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 paddingRight: 1,
-                width: data ? "unset" : "60%",
+                width: data && showListing ? "unset" : "60%",
               }}
             >
-              {data ? (
+              {showListing && data ? (
                 `${data.city}, ${data.state ? data.state : ""} ${data.country}`
               ) : (
                 <Skeleton width={"100%"} sx={{ fontSize: "16px" }} />
               )}
             </Typography>
-            {data?.rating ? (
-              <Rating
-                rating={data.rating}
-                fontSize={15}
-                // starSize={"1em"}
-              />
+            {data?.rating && showListing ? (
+              <Rating rating={data.rating} fontSize={15} />
             ) : (
               <Skeleton width={"10%"} sx={{ fontSize: "16px" }} />
             )}
@@ -100,7 +117,7 @@ export const Listing: React.FC<{
               fontWeight={200}
               sx={{ color: "grey.700", marginBottom: -0.2 }}
             >
-              {data?.distance ? (
+              {data?.distance && showListing ? (
                 Math.round(data.distance) === 0 ? (
                   "Less than 1 km away"
                 ) : (
@@ -112,7 +129,7 @@ export const Listing: React.FC<{
             </Typography>
           )}
           <Typography fontWeight={200} gutterBottom sx={{ color: "grey.700" }}>
-            {data ? (
+            {data && showListing ? (
               `${data?.beds} bed${data?.beds === 1 ? "" : "s"} · ${
                 data?.guests
               } guest${data?.guests === 1 ? "" : "s"}`
@@ -121,7 +138,7 @@ export const Listing: React.FC<{
             )}
           </Typography>
           <Typography fontWeight={600}>
-            {data ? (
+            {data && showListing ? (
               <>
                 ${data?.price} USD{" "}
                 <Box

@@ -26,7 +26,7 @@ let mainPhotos = [
     "v1677170336/airbnsea/nysajczbp6x5f8jjyslm.jpg",
     "v1677170330/airbnsea/rjwz1jo6irczd30hiwqg.jpg",
     "v1676151770/airbnsea/tpwnxmuvgpulzjibidrk.jpg",
-    "v1690992040/airbnsea/6678139_xaifn9.jpg",
+    "v1697916193/airbnsea/6678139_xaifn9_-_9_16_Ratio_dv8xbc.png",
 ];
 const refreshMainPhotos = [...mainPhotos];
 const secondaryPhotos = [

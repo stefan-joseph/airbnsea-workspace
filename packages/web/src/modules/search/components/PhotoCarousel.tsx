@@ -1,17 +1,30 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Skeleton, Stack } from "@mui/material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Property } from "csstype";
+import { Dispatch, SetStateAction, useState } from "react";
+
+import React from "react";
+
+declare module "react" {
+  interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
+    fetchPriority?: "high" | "low" | "auto";
+  }
+}
 
 export const PhotoCarousel = ({
   photos,
   showArrowButtons,
   aspectRatio,
+  setShowListing,
+  showListing,
 }: {
   photos: string[];
   showArrowButtons?: boolean;
   aspectRatio?: Property.AspectRatio;
+  setShowListing?: Dispatch<SetStateAction<boolean>>;
+  showListing?: boolean;
 }) => {
   const CarouselArrowButton = ({
     clickHandler,
@@ -56,6 +69,8 @@ export const PhotoCarousel = ({
     );
   };
 
+  // const [isLoadingImage, setIsLoadingImage] = useState(true);
+
   return (
     <Box position="relative">
       <Carousel
@@ -93,16 +108,35 @@ export const PhotoCarousel = ({
         )}
       >
         {photos.map((photo, index) => (
-          <Box
-            key={index}
-            component="img"
-            src={photo}
-            sx={{
-              aspectRatio: aspectRatio || "1/1",
-              objectFit: "cover",
-              width: "100%",
-            }}
-          />
+          <Stack>
+            <Box
+              key={index}
+              component="img"
+              src={photo}
+              fetchPriority={index === 0 ? "high" : "low"}
+              onLoad={() => {
+                if (index !== 0) return;
+                console.log(`loaded ${photo}`);
+                setShowListing && setShowListing(true);
+              }}
+              sx={{
+                aspectRatio: aspectRatio || "1/1",
+                objectFit: "cover",
+                width: "100%",
+                opacity: showListing ? 1 : 0,
+                transition: "opacity 500ms",
+              }}
+            />
+            <Skeleton
+              width="100%"
+              height="100%"
+              variant="rectangular"
+              sx={{
+                position: "absolute",
+                visibility: showListing ? "hidden" : "initial",
+              }}
+            />
+          </Stack>
         ))}
       </Carousel>
     </Box>
