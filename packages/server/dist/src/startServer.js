@@ -17,7 +17,6 @@ require("dotenv/config");
 const node_1 = require("@graphql-yoga/node");
 const redis_event_target_1 = require("@graphql-yoga/redis-event-target");
 const ioredis_1 = __importDefault(require("ioredis"));
-const typeorm_extension_1 = require("typeorm-extension");
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const rate_limit_redis_1 = __importDefault(require("rate-limit-redis"));
 const cloudinary = require("cloudinary");
@@ -64,12 +63,7 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         subscribeClient,
     });
     const pubSub = (0, node_1.createPubSub)({ eventTarget });
-    yield (0, getTypeormConnection_1.getTypeormConnection)()
-        .initialize()
-        .then(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, getTypeormConnection_1.getTypeormConnection)().synchronize(true);
-        yield (0, typeorm_extension_1.runSeeders)((0, getTypeormConnection_1.getTypeormConnection)());
-    }));
+    yield (0, getTypeormConnection_1.getTypeormConnection)().initialize();
     const yoga = (0, node_1.createServer)({
         schema: schemaWithMiddleware,
         context: ({ request }) => ({

@@ -24,7 +24,13 @@ export const AppContainer = ({
     <Stack
       flexDirection="column"
       pt={!matches && withoutSearch ? undefined : `${searchBarHeight}px`}
-      pb={!matches ? `${bottomNavbarHeight}px` : "46.2px"}
+      pb={
+        !matches
+          ? `${bottomNavbarHeight}px`
+          : !location.pathname.includes("inbox")
+          ? "46.2px"
+          : undefined
+      }
       minHeight="100vh"
     >
       <Navbar withoutSearch={!!withoutSearch} />
