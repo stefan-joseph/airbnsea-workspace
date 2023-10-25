@@ -51,6 +51,13 @@ describe("forgot password", () => {
             },
         });
     }));
+    test("try changing password with invalid key", () => __awaiter(void 0, void 0, void 0, function* () {
+        const url = yield (0, createForgotPasswordLink_1.createForgotPasswordLink)("", userId, redis);
+        const urlChunks = url.split("/");
+        key = urlChunks[urlChunks.length - 1];
+        const response = yield client.resetPassword(newPassword, key + "q");
+        expect(response.errors[0].message).toEqual("The forgot password process has expired. Please try again");
+    }));
     test("change password is successful", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield client.resetPassword(newPassword, key);
         expect(response.data).toEqual({

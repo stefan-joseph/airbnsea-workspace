@@ -82,6 +82,7 @@ export const SearchSuggestions = ({
                           cursor: "pointer",
                           backgroundColor: "grey.50",
                           "&:hover": { borderColor: "initial" },
+                          isolation: "isolate",
                         }}
                       >
                         {svg}

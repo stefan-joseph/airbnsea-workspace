@@ -128,7 +128,7 @@ export default function Marker({
                       onClickAway={(e) => handleClose(e)}
                       mouseEvent={"onMouseUp"}
                     >
-                      <Box>
+                      <Box sx={{ isolation: "isolate" }}>
                         <PhotoCarousel
                           photos={photos}
                           showArrowButtons={true}

@@ -8,7 +8,7 @@ export const PhotosNarrowScreen: React.FC<{ photos: string[] | undefined }> = ({
   const { delay } = useLoadingDelay(!!photos, 1000);
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: "relative", isolation: "isolate" }}>
       {photos && !delay ? (
         <>
           <Box

@@ -42,6 +42,16 @@ describe("forgot password", () => {
     });
   });
 
+  test("try changing password with invalid key", async () => {
+    const url = await createForgotPasswordLink("", userId, redis);
+    const urlChunks = url.split("/");
+    key = urlChunks[urlChunks.length - 1];
+    const response = await client.resetPassword(newPassword, key + "q");
+    expect(response.errors[0].message).toEqual(
+      "The forgot password process has expired. Please try again"
+    );
+  });
+
   test("change password is successful", async () => {
     const response = await client.resetPassword(newPassword, key);
     expect(response.data).toEqual({
