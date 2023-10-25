@@ -9,7 +9,7 @@ import React from "react";
 
 declare module "react" {
   interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
-    fetchPriority?: "high" | "low" | "auto";
+    fetchpriority?: "high" | "low" | "auto";
   }
 }
 
@@ -108,15 +108,14 @@ export const PhotoCarousel = ({
         )}
       >
         {photos.map((photo, index) => (
-          <Stack>
+          <Stack key={photo}>
             <Box
               key={index}
               component="img"
               src={photo}
-              fetchPriority={index === 0 ? "high" : "low"}
+              fetchpriority={index === 0 ? "high" : "low"}
               onLoad={() => {
                 if (index !== 0) return;
-                console.log(`loaded ${photo}`);
                 setShowListing && setShowListing(true);
               }}
               sx={{

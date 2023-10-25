@@ -7,7 +7,7 @@ import {
   Popper,
   Typography,
 } from "@mui/material";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 
 import OverlayView from "./OverlayView";
@@ -52,6 +52,8 @@ export default function Marker({
     price,
     rating,
   } = listing;
+
+  const [showListing, setShowListing] = useState(false);
 
   return (
     <>
@@ -133,6 +135,8 @@ export default function Marker({
                           photos={photos}
                           showArrowButtons={true}
                           aspectRatio="3/2"
+                          showListing={showListing}
+                          setShowListing={setShowListing}
                         />
                         <Box padding={2}>
                           <Box display="flex" justifyContent="space-between">
